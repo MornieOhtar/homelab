@@ -1,0 +1,76 @@
+## Install Prometheus Operator CRDs
+##
+crds:
+  enabled: true
+
+## Use standalone grafana installation
+##
+grafana:
+  enabled: false
+
+## Component scraping the kube controller manager
+##
+kubeControllerManager:
+  service:
+    enabled: true
+    ports:
+      http: 10257
+    targetPorts:
+      http: 10257
+  serviceMonitor:
+    https: false
+    insecureSkipVerify: "true"
+
+## Component scraping kube proxy
+##
+kubeProxy:
+  enabled: true
+  service:
+    enabled: true
+    port: 10249
+    targetPort: 10249
+  serviceMonitor:
+    https: false
+    insecureSkipVerify: "true"
+
+## Component scraping kube scheduler
+##
+kubeScheduler:
+  service:
+    enabled: true
+    ports:
+      http: 10259
+    targetPorts:
+      http: 10259
+  serviceMonitor:
+    https: false
+    insecureSkipVerify: "true"
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false # Primarily for empty default namespace selectors
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+    podMonitorSelectorNilUsesHelmValues: false # Primarily for empty default namespace selectors
+    podMonitorSelector: {}
+    podMonitorNamespaceSelector: {}
+    scrapeConfigSelectorNilUsesHelmValues: false # Primarily for empty default namespace selectors
+    scrapeConfigSelector: {}
+    scrapeConfigNamespaceSelector: {}
+    scrapeInterval: 30s
+    retention: 3650d
+    retentionSize: 100GiB
+    storageSpec:
+      volumeClaimTemplate:
+        metadata:
+          name: prometheus
+          annotations:
+            'k8up.io/backup': 'true'
+        spec:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 20Gi
+  additionalServiceMonitors: []
+  additionalPodMonitors: []
