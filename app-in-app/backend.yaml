@@ -1,0 +1,40 @@
+###################################################################################################
+#
+# Backend (generic, shared) applications, that are usually not used directly, but provide services
+# to other applications or to Kubernetes cluster itself
+#
+###################################################################################################
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: backend
+spec:
+  project: homelab
+
+  source:
+    repoURL: https://github.com/MornieOhtar/homelab.git
+    targetRevision: HEAD
+    path: backend
+    directory:
+      recurse: false
+      include: '*.yaml'
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
