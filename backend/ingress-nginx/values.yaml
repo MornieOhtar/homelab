@@ -1,0 +1,35 @@
+controller:
+  hostNetwork: false
+  ingressClass: nginx
+  tolerations: []
+  ## Enable cert manager for Virtual Server resources. Requires controller.enableCustomResources.
+  enableCertManager: false
+  publishService:
+    enabled: true
+  service:
+    ## The list of external IPs for the Ingress Controller service.
+    type: LoadBalancer
+    externalTrafficPolicy: Local
+    loadBalancerClass: homelab-metallb
+    # -- Annotations to be added to the external controller service. See `controller.service.internal.annotations` for annotations to be added to the internal controller service.
+    annotations:
+      metallb.universe.tf/loadBalancerIPs: 192.168.30.240
+    ipFamilies:
+      - IPv4
+  resources:
+    requests:
+      cpu: 100m
+      memory: 150m
+  replicaCount: 1
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution: # Ensure only one instance is started on each node
+        - labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - ingress-nginx-controller
+          topologyKey: "kubernetes.io/hostname"
+prometheus:
+  create: false
