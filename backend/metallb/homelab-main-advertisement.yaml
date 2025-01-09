@@ -1,0 +1,9 @@
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: homelab-main-advertisement
+spec:
+  ipAddressPools:
+    - homelab-main-pool
+  interfaces:
+    - end1

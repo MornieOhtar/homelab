@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+spec:
+  project: homelab
+
+  sources:
+    - repoURL: https://github.com/MornieOhtar/homelab.git
+      targetRevision: HEAD
+      ref: homelab
+      path: "backend/metallb"
+      directory:
+        recurse: true
+        include: "*.yaml"
+        exclude: 'values.yaml'
+    - repoURL: https://metallb.github.io/metallb
+      targetRevision: 0.14.8
+      chart: metallb
+      helm:
+        valueFiles:
+          - $homelab/backend/metallb/values.yaml
+          -
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
+
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  ignoreDifferences:
+    # Sort out, why differences appear at all in CRD
+    - group: "apiextensions.k8s.io"
+      kind: CustomResourceDefinition
+      name: "bgppeers.metallb.io"
+      jsonPointers:
+        - /spec/conversion/webhook/clientConfig/caBundle
