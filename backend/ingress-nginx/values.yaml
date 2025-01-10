@@ -20,7 +20,7 @@ controller:
     requests:
       cpu: 100m
       memory: 150m
-  replicaCount: 1
+  replicaCount: 2 # Ensure running on all nodes for local policy
   affinity:
     podAntiAffinity:
       requiredDuringSchedulingIgnoredDuringExecution: # Ensure only one instance is started on each node
