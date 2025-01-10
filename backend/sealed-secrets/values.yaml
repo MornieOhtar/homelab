@@ -1,0 +1,13 @@
+namespace: backend
+commonLabels:
+  app.kubernetes.io/name: sealed-secrets
+keyrenewperiod: "0"
+
+ingress:
+  enabled: false
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    namespace: "operators"
+    selector: {}
