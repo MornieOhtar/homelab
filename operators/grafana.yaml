@@ -15,7 +15,7 @@ spec:
       helm:
         valueFiles:
           - $homelab/operators/grafana/values.yaml
-          -
+
   destination:
     server: https://kubernetes.default.svc
     namespace: operators
