@@ -32,7 +32,6 @@ configs:
       url: https://bitnami-labs.github.io/sealed-secrets
       name: Bitnami Labs
       type: helm
-      enableOCI: "true"
     ingress-nginx:
       url: https://kubernetes.github.io/ingress-nginx
       name: Ingress-Nginx
@@ -41,7 +40,6 @@ configs:
       url: https://metallb.github.io/metallb
       name: MetalLB
       type: helm
-      enableOCI: "true"
     mornieohtar:
       url: https://github.com/MornieOhtar/homelab
       name: Mornery homelab
