@@ -23,13 +23,23 @@ configs:
       url: https://argoproj.github.io/argo-helm
       name: Argo-CD
       type: helm
+    bitnamicharts:
+      url: registry-1.docker.io/bitnamicharts
+      name: Bitnami Charts
+      type: helm
+      enableOCI: "true"
+    bitnami-labs:
+      url: https://bitnami-labs.github.io/sealed-secrets
+      name: Bitnami Labs
+      type: helm
+      enableOCI: "true"
     ingress-nginx:
       url: https://kubernetes.github.io/ingress-nginx
       name: Ingress-Nginx
       type: helm
-    bitnamicharts:
-      url: registry-1.docker.io/bitnamicharts
-      name: Bitnami Charts
+    metallb:
+      url: https://metallb.github.io/metallb
+      name: MetalLB
       type: helm
       enableOCI: "true"
     mornieohtar:

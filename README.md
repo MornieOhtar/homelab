@@ -14,7 +14,8 @@ installation, reference should be updated (can be found by 'repoURL: ' anchor)
 ## Installation
 - Install ArgoCD. It is recommended to use official ArgoCD repository (reference and values.yaml used by me can be found
 in this repository, in folder 'backend')
-- Create project and configure destination to match target used cluster and source to list all required repositories
+  - Create project and configure destination to match target used cluster and source to list all required repositories
+  - Add Cluster Resource whitelist. You can go with \*/\* or start without them configured and add the one you need on-the-go
 - Apply [app-in-app config](homelab.yaml) file to argocd namespace. This should create argocd Application,
 that will recursively pull all other applications
 - This will also install SealedSecrets instance. For backing up and restoring, please refer to official documentation.
