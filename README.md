@@ -16,6 +16,8 @@ installation, reference should be updated (can be found by 'repoURL: ' anchor)
 in this repository, in folder 'backend')
   - Create project and configure destination to match target used cluster and source to list all required repositories
   - Add Cluster Resource whitelist. You can go with \*/\* or start without them configured and add the one you need on-the-go
+- In case in-cluster Hashicorp Vault was used - install Vault and restore from backup (installation can be done by installing
+vault application from this repository)
 - Apply [app-in-app config](homelab.yaml) file to argocd namespace. This should create argocd Application,
 that will recursively pull all other applications
 - This will also install SealedSecrets instance. For backing up and restoring, please refer to official documentation.
