@@ -28,6 +28,7 @@ spec:
       - PrunePropagationPolicy=foreground
       - PruneLast=true
       - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true # For ArgoCD to properly manage himself it is safer to sync only changed resources
     retry:
       limit: 5
       backoff:

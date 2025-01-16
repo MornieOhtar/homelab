@@ -20,7 +20,7 @@ spec:
       helm:
         valueFiles:
           - $homelab/operators/prometheus/values.yaml
-          -
+
   destination:
     server: https://kubernetes.default.svc
     namespace: operators
