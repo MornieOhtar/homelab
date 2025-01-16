@@ -32,6 +32,10 @@ configs:
       url: https://bitnami-labs.github.io/sealed-secrets
       name: Bitnami Labs
       type: helm
+    cert-manager:
+      url: https://charts.jetstack.io
+      name: Bitnami Labs
+      type: helm
     grafana:
       url: ghcr.io/grafana/helm-charts
       name: Grafana
