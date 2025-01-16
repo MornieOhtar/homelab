@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+spec:
+  project: homelab
+
+  sources:
+    - repoURL: https://github.com/MornieOhtar/homelab.git
+      targetRevision: HEAD
+      ref: homelab
+    - repoURL: 'registry-1.docker.io/bitnamicharts'
+      path: 'keycloak'
+      targetRevision: 24.4.4
+      chart: keycloak
+      helm:
+        valueFiles:
+          - $homelab/backend/keycloak/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backend
+
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  ignoreDifferences:
+    - kind: Secret
+      name: "keycloak-crt"
+      jsonPointers:
+        - /data/ca.crt
+        - /data/tls.crt
+        - /data/tls.key
