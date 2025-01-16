@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hashicorp-vault
+spec:
+  project: homelab
+
+  sources:
+    - repoURL: https://github.com/MornieOhtar/homelab.git
+      targetRevision: HEAD
+      ref: homelab
+    - repoURL: https://helm.releases.hashicorp.com
+      targetRevision: 0.29.1
+      chart: vault
+      helm:
+        valueFiles:
+          - $homelab/backend/vault/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backend
+
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

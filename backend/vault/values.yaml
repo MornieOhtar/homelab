@@ -1,0 +1,23 @@
+global:
+  namespace: backend
+
+injector:
+  metrics:
+    enabled: true
+
+server:
+  dataStorage:
+    storageClass: local-path
+    annotations:
+      'k8up.io/backup': 'true'
+  auditStorage:
+    storageClass: local-path
+    annotations:
+      'k8up.io/backup': 'true'
+
+ui:
+  enabled: true
+
+serverTelemetry:
+  serviceMonitor:
+    enabled: true
