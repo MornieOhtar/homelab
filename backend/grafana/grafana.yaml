@@ -1,0 +1,43 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana-cluster-main
+  labels:
+    dashboards: "grafana-cluster-main"
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  deployment:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: grafana
+              env:
+                - name: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
+                  value: <grafana-cluster-main-keycloak_client-id>
+                - name: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
+                  value: <grafana-cluster-main-keycloak_client-secret>
+                - name: GF_AUTH_GENERIC_OAUTH_API_URL
+                  value: <grafana-cluster-main-keycloak_api-url>
+                - name: GF_AUTH_GENERIC_OAUTH_AUTH_URL
+                  value: <grafana-cluster-main-keycloak_auth-url>
+                - name: GF_AUTH_GENERIC_OAUTH_TOKEN_URL
+                  value: <grafana-cluster-main-keycloak_token-url>
+  config:
+    log:
+      mode: "console"
+    auth:
+      disable_login_form: "true"
+    auth.generic_oauth:
+      enabled: "true"
+      name: "Mornery Homelab"
+      allow_sign_up: "true"
+      scopes: "openid email profile offline_access roles groups"
+      email_attribute_path: email
+      login_attribute_path: username
+      name_attribute_path: fullName
+      groups_attribute_path: groups
+      role_attribute_path: "contains(groups[*], 'Developer') && 'Admin'"
+    server:
+      root_url: https://grafana.<homelab-domain>
