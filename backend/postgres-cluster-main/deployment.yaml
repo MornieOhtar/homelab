@@ -1,0 +1,59 @@
+apiVersion: kubegres.reactive-tech.io/v1
+kind: Kubegres
+metadata:
+  name: postgres-cluster-main
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  replicas: 2
+  image: pgvector/pgvector:pg16
+  database:
+    size: 10Gi
+    storageClassName: local-path
+  backup:
+    schedule: "0 0 * * *"
+    pvcName: postgres-cluster-main-backup
+    volumeMount: /var/lib/backup
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "250m"
+  scheduler:
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - postgres-cluster-main
+            topologyKey: "kubernetes.io/hostname"
+  probe:
+    livenessProbe:
+      exec:
+        command:
+          - sh
+          - -c
+          - exec pg_isready -U postgres -h $POD_IP
+      failureThreshold: 10
+      initialDelaySeconds: 60
+      periodSeconds: 20
+      successThreshold: 1
+      timeoutSeconds: 15
+    readinessProbe:
+      exec:
+        command:
+          - sh
+          - -c
+          - exec pg_isready -U postgres -h $POD_IP
+      failureThreshold: 3
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 3
+  env:
+    - name: POSTGRES_PASSWORD
+      value: <kubegres-postgres-cluster-main-password>
+    - name: POSTGRES_REPLICATION_PASSWORD
+      value: <kubegres-postgres-cluster-main-replication-password>
