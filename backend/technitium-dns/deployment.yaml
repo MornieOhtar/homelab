@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: technitium-dns
+  labels:
+    app: dns
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.30.250
+spec:
+  selector:
+    app: technitium-dns
+  ports:
+    - name: dns-tcp
+      protocol: TCP
+      port: 53
+      targetPort: 53
+    - name: dns-udp
+      protocol: UDP
+      port: 53
+      targetPort: 53
+    - name: dns-http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: dns-https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+    - name: web-http
+      protocol: TCP
+      port: 5380
+      targetPort: 5380
+    - name: web-https
+      protocol: TCP
+      port: 53443
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  loadBalancerClass: homelab-metallb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: technitium-admin
+  labels:
+    app: dns
+spec:
+  selector:
+    app: technitium-dns
+  ports:
+    - name: web-http
+      protocol: TCP
+      port: 5380
+      targetPort: 5380
+    - name: web-https
+      protocol: TCP
+      port: 53443
+      targetPort: 53443
+    - name: metrics
+      protocol: TCP
+      port: 4001
+      targetPort: 4001
+  type: ClusterIP
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: technitium-dns
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+  labels:
+    app: technitium-dns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: technitium-dns
+  template:
+    metadata:
+      labels:
+        app: technitium-dns
+    spec:
+      containers:
+        - name: technitium-dns
+          image: technitium/dns-server:13.3.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 53 # DNS port
+            - containerPort: 80 # DNS-over-HTTP
+            - containerPort: 443 # DNS-over-HTTPS
+            - containerPort: 5380 # Web console (HTTP)
+            - containerPort: 53443 #Web console (HTTPS)
+          env:
+            - name: DNS_SERVER_ADMIN_PASSWORD
+              value: <technitium-admin-password>
+            - name: DNS_SERVER_WEB_SERVICE_HTTP_PORT
+              value: "5380"
+            - name: DNS_SERVER_WEB_SERVICE_HTTPS_PORT
+              value: "53443"
+            - name: DNS_SERVER_WEB_SERVICE_ENABLE_HTTPS
+              value: "true"
+            - name: DNS_SERVER_WEB_SERVICE_USE_SELF_SIGNED_CERT
+              value: "true"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+              ephemeral-storage: 1Gi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/dns
+      securityContext:
+        sysctls:
+          - name: net.ipv4.ip_local_port_range
+            value: "1024 65000"
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: technitium-data
