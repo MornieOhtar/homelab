@@ -1,0 +1,63 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: minio-scrape-cluster
+  labels:
+    app.kubernetes.io/instance: minio
+    release: prometheus-operator
+spec:
+  jobName: minio-job
+  honorTimestamps: true
+  metricsPath: /minio/v2/metrics/cluster
+  scheme: HTTP
+  staticConfigs:
+    - targets:
+        - minio.backend:9000
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: minio-scrape-nodes
+  labels:
+    app.kubernetes.io/instance: minio
+    release: prometheus-operator
+spec:
+  jobName: minio-job-nodes
+  honorTimestamps: true
+  metricsPath: /minio/v2/metrics/cluster
+  scheme: HTTP
+  staticConfigs:
+    - targets:
+        - minio.backend:9000
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: minio-scrape-bucket
+  labels:
+    app.kubernetes.io/instance: minio
+    release: prometheus-operator
+spec:
+  jobName: minio-job-bucket
+  honorTimestamps: true
+  metricsPath: /minio/v2/metrics/bucket
+  scheme: HTTP
+  staticConfigs:
+    - targets:
+        - minio.backend:9000
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: minio-scrape-resource
+  labels:
+    app.kubernetes.io/instance: minio
+    release: prometheus-operator
+spec:
+  jobName: minio-job-resource
+  honorTimestamps: true
+  metricsPath: /minio/v2/metrics/resource
+  scheme: HTTP
+  staticConfigs:
+    - targets:
+        - minio.backend:9000
