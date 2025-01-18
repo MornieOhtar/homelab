@@ -1,0 +1,39 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: immich-server
+  namespace: operators
+  labels:
+    release: prometheus-operator
+    jobLabel: immich
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/service: immich-server
+      app.kubernetes.io/instance: immich
+  namespaceSelector:
+    matchNames:
+      - home
+  endpoints:
+    - path: /metrics
+      port: metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: immich-ml
+  namespace: operators
+  labels:
+    release: prometheus-operator
+    jobLabel: immich
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/service: immich-machine-learning
+      app.kubernetes.io/instance: immich
+  namespaceSelector:
+    matchNames:
+      - home
+  endpoints:
+    - path: /metrics
+      port: metrics
