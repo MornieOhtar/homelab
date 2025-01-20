@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    application.name: barassistant
+  name: bar-meili
+spec:
+  ports:
+    - port: 7700
+      targetPort: 7700
+  selector:
+    app: bar-meili
+  type: ClusterIP
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bar-meili
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bar-meili
+  template:
+    metadata:
+      labels:
+        app: bar-meili
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: meili
+          image: getmeili/meilisearch:v1.12.5
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MEILI_MASTER_KEY
+              value: <barassistant-meili-master-key>
+            - name: MEILI_ENV
+              value: production
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+              ephemeral-storage: 128Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi
+              ephemeral-storage: 128Mi
+          ports:
+            - containerPort: 7700
+          volumeMounts:
+            - mountPath: /meili_data
+              name: bar-meili-data
+      volumes:
+        - name: bar-meili-data
+          persistentVolumeClaim:
+            claimName: barassistant-data-meili
