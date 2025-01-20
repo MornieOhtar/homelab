@@ -7,7 +7,7 @@ metadata:
 spec:
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: http
   selector:
     app: audiobookshelf
   type: ClusterIP
@@ -36,6 +36,8 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: http
+              protocol: TCP
           volumeMounts:
             - mountPath: /config
               name: abs-config
@@ -49,7 +51,27 @@ spec:
             requests:
               cpu: 100m
               memory: 128Mi
-              ephemeral-storage: 1Gi
+              ephemeral-storage: 256Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+              ephemeral-storage: 256Mi
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthcheck
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthcheck
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 1
       volumes:
         - name: abs-config
           persistentVolumeClaim:
