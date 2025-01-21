@@ -1,9 +1,9 @@
+# IMPORTANT:
+# Keep PG passwords in separate secret due to Kubegres not being able to set replica pod env var, if inlined
 apiVersion: kubegres.reactive-tech.io/v1
 kind: Kubegres
 metadata:
   name: postgres-cluster-main
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   replicas: 2
   image: pgvector/pgvector:pg16
@@ -54,6 +54,12 @@ spec:
       timeoutSeconds: 3
   env:
     - name: POSTGRES_PASSWORD
-      value: <kubegres-postgres-cluster-main-password>
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secret
+          key: superUserPassword
     - name: POSTGRES_REPLICATION_PASSWORD
-      value: <kubegres-postgres-cluster-main-replication-password>
+      valueFrom:
+        secretKeyRef:
+          name: postgres-secret
+          key: replicationUserPassword
