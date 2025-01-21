@@ -36,7 +36,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: API_URL
-              value: https://bar.<homelab-domain>
+              value: https://bar.<homelab-domain>/bar
             - name: MEILISEARCH_URL
               value: https://bar.<homelab-domain>/search
             - name: BAR_NAME
