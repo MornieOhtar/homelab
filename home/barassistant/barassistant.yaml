@@ -58,7 +58,7 @@ spec:
               ephemeral-storage: 128Mi
             limits:
               cpu: 200m
-              memory: 128Mi
+              memory: 512Mi
               ephemeral-storage: 128Mi
           ports:
             - containerPort: 8080
