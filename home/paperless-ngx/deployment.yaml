@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: paperless-ngx
+  labels:
+    app: paperless-ngx
+spec:
+  selector:
+    app: paperless-ngx
+  ports:
+    - port: 8000
+      targetPort: web
+      name: web
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless-ngx
+  labels:
+    app: paperless-ngx
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: paperless-ngx
+  template:
+    metadata:
+      labels:
+        app: paperless-ngx
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Always
+      containers:
+        - name: paperless
+          image: ghcr.io/paperless-ngx/paperless-ngx:2.14.5
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PAPERLESS_DBHOST
+              value: postgres-cluster-main.backend
+            - name: PAPERLESS_DBNAME
+              value: <paperless-db-name>
+            - name: PAPERLESS_DBPASS
+              value: <paperless-db-pass>
+            - name: PAPERLESS_DBUSER
+              value: <paperless-db-user>
+            - name: PAPERLESS_OCR_LANGUAGES
+              value: eng ukr
+            - name: PAPERLESS_REDIS
+              value: redis://redis-cluster-main-master.backend
+            - name: PAPERLESS_TIME_ZONE
+              value: Europe/Kyiv
+            - name: PAPERLESS_URL
+              value: https://paperless.<homelab-domain>
+          envFrom:
+            - secretRef:
+                name: paperless-ngx
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+              name: web
+          volumeMounts:
+            - mountPath: /usr/src/paperless/data
+              name: data
+            - mountPath: /usr/src/paperless/media
+              name: media
+            - mountPath: /usr/src/paperless/export
+              name: export
+            - mountPath: /usr/src/paperless/consume
+              name: consume
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: paperless-data
+        - name: media
+          persistentVolumeClaim:
+            claimName: paperless-media
+        - name: export
+          persistentVolumeClaim:
+            claimName: paperless-export
+        - name: consume
+          persistentVolumeClaim:
+            claimName: paperless-consume
