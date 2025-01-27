@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: qbittorrent
+  namespace: operators
+  labels:
+    release: prometheus-operator
+    jobLabel: qbittorrent
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: qbittorrent
+  namespaceSelector:
+    matchNames:
+      - home
+  endpoints:
+    - path: /metrics
+      port: metrics

@@ -1,0 +1,116 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: qbittorrent
+  labels:
+    app: qbittorrent
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.30.230
+spec:
+  selector:
+    app: qbittorrent
+  type: LoadBalancer
+  loadBalancerClass: homelab-metallb
+  ports:
+    - port: 80
+      targetPort: webui
+      name: webui
+      protocol: TCP
+    - port: 6881
+      targetPort: torrent-tcp
+      name: torrent-tcp
+      protocol: TCP
+    - port: 6881
+      targetPort: torrent-udp
+      name: torrent-udp
+      protocol: UDP
+    - port: 17871
+      targetPort: metrics
+      name: metrics
+      protocol: TCP
+    - port: 9117
+      targetPort: jackett
+      name: jackett
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  labels:
+    app: qbittorrent
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Always
+      containers:
+        - name: torrent
+          image: lscr.io/linuxserver/qbittorrent:5.0.3-r0-ls376
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+              name: webui
+            - containerPort: 6881
+              protocol: TCP
+              name: torrent-tcp
+            - containerPort: 6881
+              protocol: UDP
+              name: torrent-udp
+          volumeMounts:
+            - mountPath: /downloads
+              name: qbittorrent-downloads
+            - mountPath: /config
+              name: qbittorrent-config
+        - name: jackett
+          image: lscr.io/linuxserver/jackett:v0.22.1316-ls659
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9117
+              protocol: TCP
+              name: jackett
+          volumeMounts:
+            - mountPath: /config
+              name: jackett-config
+          env:
+            - name: TZ
+              value: Europe/Kyiv
+        - name: exporter
+          image: caseyscarborough/qbittorrent-exporter:v1.3.5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 17871
+              protocol: TCP
+              name: metrics
+          env:
+            - name: TZ
+              value: Europe/Kyiv
+            - name: QBITTORRENT_BASE_URL
+              value: <qbittorrent-base-url>
+            - name: QBITTORRENT_USERNAME
+              value: <qbittorrent-username>
+            - name: QBITTORRENT_PASSWORD
+              value: <qbittorrent-password>
+      volumes:
+        - name: qbittorrent-config
+          persistentVolumeClaim:
+            claimName: qbittorrent
+        - name: jackett-config
+          persistentVolumeClaim:
+            claimName: jackett
+        - name: qbittorrent-downloads
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/multimedia/torrent/

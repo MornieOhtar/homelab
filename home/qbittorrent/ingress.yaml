@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+    nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/16,10.0.0.0/8
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  name: qbittorrent
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: torrent.<homelab-domain>
+      http:
+        paths:
+          - path: /
+            backend:
+              service:
+                name: qbittorrent
+                port:
+                  name: webui
+            pathType: Prefix
+          - path: /jackett
+            backend:
+              service:
+                name: qbittorrent
+                port:
+                  name: jackett
+            pathType: Prefix
+  tls:
+    - hosts:
+        - torrent.<homelab-domain>
+      secretName: "torrent.<homelab-domain>-cert"
