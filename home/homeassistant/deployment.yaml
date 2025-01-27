@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    application.name: home-assistant
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.30.100
+  name: home-assistant
+spec:
+  ports:
+    - port: 8123
+      targetPort: 8123
+  selector:
+    app: home-assistant
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  loadBalancerClass: homelab-metallb
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: home-assistant
+  template:
+    metadata:
+      labels:
+        app: home-assistant
+    spec:
+      hostNetwork: true
+      containers:
+        - name: home-assistant
+          image: homeassistant/home-assistant:2025.1.2
+          resources:
+            requests:
+              cpu: 400m
+              memory: 768Mi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: 1500m
+              memory: 2Gi
+              ephemeral-storage: 1Gi
+          ports:
+            - containerPort: 8123
+          volumeMounts:
+            - name: home-assistant-config
+              mountPath: /config
+            - mountPath: /dev/ttyUSB0
+              name: must-invertor-usb
+          env:
+            - name: TZ
+              value: Europe/Kyiv
+      volumes:
+        - name: home-assistant-config
+          persistentVolumeClaim:
+            claimName: home-assistant-config
+        - name: must-invertor-usb
+          hostPath:
+            path: /dev/ttyUSB0
