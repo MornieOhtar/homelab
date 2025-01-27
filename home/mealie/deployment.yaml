@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mealie
+  labels:
+    app: mealie
+spec:
+  selector:
+    app: mealie
+  ports:
+    - port: 9000
+      targetPort: web
+      name: web
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mealie
+  labels:
+    app: mealie
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mealie
+  template:
+    metadata:
+      labels:
+        app: mealie
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Always
+      containers:
+        - name: mealie
+          image: hkotel/mealie:v2.5.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: BASE_URL
+              value: https://mealie.<homelab-domain>
+            - name: DB_ENGINE
+              value: postgres
+            - name: OIDC_ADMIN_GROUP
+              value: <mealie-oidc-admin-group>
+            - name: OIDC_AUTH_ENABLED
+              value: "true"
+            - name: OIDC_CLIENT_ID
+              value: <mealie-oidc-client-id>
+            - name: OIDC_CLIENT_SECRET
+              value: <mealie-oidc-client-secret>
+            - name: OIDC_CONFIGURATION_URL
+              value: <mealie-oidc-config-url>
+            - name: OIDC_GROUPS_CLAIM
+              value: groups
+            - name: OIDC_NAME_CLAIM
+              value: nickname
+            - name: OIDC_PROVIDER_NAME
+              value: Mornery Homelab
+            - name: OIDC_SIGNUP_ENABLED
+              value: "true"
+            - name: OIDC_USER_CLAIM
+              value: preferred_username
+            - name: OIDC_USER_GROUP
+              value: <mealie-oidc-user-group>
+            - name: POSTGRES_DB
+              value: <mealie-db-name>
+            - name: POSTGRES_PASSWORD
+              value: <mealie-db-pass>
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_SERVER
+              value: postgres-cluster-main.backend
+            - name: POSTGRES_USER
+              value: <mealie-db-user>
+          ports:
+            - containerPort: 9000
+              protocol: TCP
+              name: web
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+              ephemeral-storage: 128Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+              ephemeral-storage: 256Mi
+          volumeMounts:
+            - mountPath: /app/data/
+              name: data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mealie-data
