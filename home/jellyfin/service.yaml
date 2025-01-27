@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    application.name: jellyfin
+  name: jellyfin
+spec:
+  ports:
+  - port: 8096
+    targetPort: web
+    name: web
+  selector:
+    app: jellyfin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+        - name: jellyfin
+          image: 'jellyfin/jellyfin:10.10.5'
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          ports:
+            - containerPort: 8096
+              name: web
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /media
+              name: jellyfin-video
+            - mountPath: /config
+              name: jellyfin-config
+            # TEMP
+            - mountPath: /cache
+              name: jellyfin-cache
+            - mountPath: /transcodes
+              name: jellyfin-transcodes
+            # VIDEO
+            - mountPath: /dev/mali0
+              name: jellyfin-mali0
+            - mountPath: /dev/dri
+              name: jellyfin-dri
+            - mountPath: /dev/mpp_service
+              name: jellyfin-mpp-service
+            - mountPath: /dev/dma_heap
+              name: jellyfin-dma-heap
+            - mountPath: /dev/rga
+              name: jellyfin-rga
+      volumes:
+        # LIBRARY
+        - name: jellyfin-video
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/multimedia/video/
+        # CONFIG
+        - name: jellyfin-config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        # TEMP
+        - name: jellyfin-cache
+          persistentVolumeClaim:
+            claimName: jellyfin-cache-pvc
+        - name: jellyfin-transcodes
+          persistentVolumeClaim:
+            claimName: jellyfin-transcodes-pvc
+        # VIDEO
+        - name: jellyfin-mali0
+          hostPath:
+            path: /dev/mali0
+        - name: jellyfin-dri
+          hostPath:
+            path: /dev/dri
+        - name: jellyfin-mpp-service
+          hostPath:
+            path: /dev/mpp_service
+        - name: jellyfin-dma-heap
+          hostPath:
+            path: /dev/dma_heap
+        - name: jellyfin-rga
+          hostPath:
+            path: /dev/rga
+
