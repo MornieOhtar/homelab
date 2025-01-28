@@ -1,0 +1,39 @@
+edition: ""
+community:
+  enabled: true
+
+persistence:
+  enabled: true
+  existingClaim: sonarqube-data
+
+jdbcOverwrite:
+  # If enable the JDBC Overwrite, make sure to set `postgresql.enabled=false`
+  enable: true
+  # The JDBC url of the external DB
+  jdbcUrl: "jdbc:postgresql://postgres-cluster-main.backend/sonarqube?socketTimeout=1500"
+  # The DB user that should be used for the JDBC connection
+  jdbcUsername: "sonarqube"
+  ## Alternatively, use a pre-existing k8s secret containing the DB password
+  jdbcSecretName: "sonarqube-db"
+  ## and the secretValueKey of the password found within that secret
+  jdbcSecretPasswordKey: "jdbc-password"
+
+postgresql:
+  enabled: false
+
+podLabels:
+  app: sonarqube
+
+initFs:
+  enabled: false
+
+plugins:
+  install:
+    - "https://github.com/spotbugs/sonar-findbugs/releases/download/v4.3.0/sonar-findbugs-plugin-4.3.0.jar"
+    - "https://github.com/dependency-check/dependency-check-sonar-plugin/releases/download/5.0.0/sonar-dependency-check-plugin-5.0.0.jar"
+    - "https://github.com/green-code-initiative/ecoCode-java/releases/download/1.6.1/ecocode-java-plugin-1.6.1.jar"
+    - "https://github.com/green-code-initiative/ecoCode-javascript/releases/download/1.5.0/ecocode-javascript-plugin-1.5.0.jar"
+    - "https://github.com/kwoding/sonar-webdriver-plugin/releases/download/sonar-webdriver-plugin-1.0.10/sonar-webdriver-plugin-1.0.10.jar"
+
+monitoringPasscodeSecretName: "sonarqube-monitoring"
+monitoringPasscodeSecretKey: "passcode"
