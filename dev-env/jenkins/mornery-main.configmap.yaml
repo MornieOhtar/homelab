@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mornery-main
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+data:
+  1-system.yaml: |
+    jenkins:
+      systemMessage: "Mornery CI/CD automation"
+    unclassified:
+      location:
+        adminAddress: "<jenkins-mornery-admin>"
+        url: "https://jenkins.<homelab-domain>"
+  2-sonar.yaml: |
+    unclassified:
+      sonarGlobalConfiguration:
+        buildWrapperEnabled: false
+        installations:
+        - credentialsId: "jenkins-sonarkube"
+          name: "SonarKube"
+          serverUrl: "https://sonarqube.<homelab-domain>"
+          triggers:
+            skipScmCause: false
+            skipUpstreamCause: false
+          webhookSecretId: "sonarqube-webhook"
+  3-gitea.yaml: |
+    unclassified:
+      giteaServers:
+        servers:
+        - displayName: "Mornery"
+          manageHooks: false
+          serverUrl: "https://git.<homelab-domain>"
+  4-prometheus.yaml: |
+    unclassified:
+      prometheusConfiguration:
+        appendParamLabel: false
+        appendStatusLabel: true
+        collectCodeCoverage: true
+        collectDiskUsage: false
+        collectNodeStatus: true
+        collectingMetricsPeriodInSeconds: 120
+        countAbortedBuilds: true
+        countFailedBuilds: true
+        countNotBuiltBuilds: true
+        countSuccessfulBuilds: true
+        countUnstableBuilds: true
+        defaultNamespace: "<jenkins-mornery-prometheus-default-namespace>"
+        fetchTestResults: true
+        jobAttributeName: "jenkins_job"
+        path: "prometheus"
+        perBuildMetrics: false
+        processingDisabledBuilds: false
+        useAuthenticatedEndpoint: false
+  5-maven.yaml: |
+    tool:
+      pipelineMaven:
+        publisherOptions:
+        - artifactsPublisher:
+            disabled: true
+  6-oic.yaml: |
+    jenkins:
+      securityRealm:
+        oic:
+          serverConfiguration:
+            # Automatic config of endpoint
+            wellKnown:
+              wellKnownOpenIDConfigurationUrl: https://keycloak.<homelab-domain>/realms/homelab/.well-known/openid-configuration
+              scopesOverride: "address phone openid profile offline_access groups email"
+          # Credentials
+          clientId: <jenkins-mornery-client-id>
+          clientSecret: <jenkins-mornery-client-secret>
+          # claims
+          userNameField: preferred_username
+          groupsFieldName: groups
+          fullNameFieldName: name
+          emailFieldName: email
+          # Security
+          allowTokenAccessWithoutOicSession: false
+          allowedTokenExpirationClockSkewSeconds: 30
+  7-role-strategy.yaml: |
+    jenkins:
+      authorizationStrategy:
+        roleBased:
+          roles:
+            global:
+              - entries:
+                  - user: "jenkins-operator"
+                  - group: "Developer"
+                name: "admin"
+                pattern: ".*"
+                permissions:
+                  - "Overall/Administer"
