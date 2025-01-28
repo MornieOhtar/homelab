@@ -45,6 +45,8 @@ spec:
               ephemeral-storage: 1Gi
           ports:
             - containerPort: 8123
+          securityContext:
+            privileged: true
           volumeMounts:
             - name: home-assistant-config
               mountPath: /config
