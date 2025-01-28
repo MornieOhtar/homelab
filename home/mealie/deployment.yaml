@@ -57,7 +57,7 @@ spec:
             - name: OIDC_GROUPS_CLAIM
               value: groups
             - name: OIDC_NAME_CLAIM
-              value: nickname
+              value: preferred_username
             - name: OIDC_PROVIDER_NAME
               value: Mornery Homelab
             - name: OIDC_SIGNUP_ENABLED
