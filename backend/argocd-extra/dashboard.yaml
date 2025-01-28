@@ -1,0 +1,33 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: argocd-application-overview
+spec:
+  allowCrossNamespaceImport: true
+  resyncPeriod: 30s
+  folder: 'Backend'
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana-cluster-main"
+  grafanaCom:
+    id: 19974
+  datasources:
+    - inputName: "DS_PROMETHEUS"
+      datasourceName: "prometheus"
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: argocd-operational-overview
+spec:
+  allowCrossNamespaceImport: true
+  resyncPeriod: 30s
+  folder: 'Backend'
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana-cluster-main"
+  grafanaCom:
+    id: 19993
+  datasources:
+    - inputName: "DS_PROMETHEUS"
+      datasourceName: "prometheus"

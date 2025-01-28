@@ -1,0 +1,16 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: kubernetes-nodes
+spec:
+  allowCrossNamespaceImport: true
+  resyncPeriod: 30s
+  folder: 'Cluster'
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana-cluster-main"
+  grafanaCom:
+    id: 22153
+  datasources:
+    - inputName: "DS_PROMETHEUS"
+      datasourceName: "prometheus"
