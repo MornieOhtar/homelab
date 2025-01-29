@@ -2,5 +2,5 @@ crds:
   install: true
 
 s3:
-  endpointUrl: "http://minio.backend:9000"
+  endpointUrl: "minio.backend:9000"
   existingSecret: s3-operator-minio
