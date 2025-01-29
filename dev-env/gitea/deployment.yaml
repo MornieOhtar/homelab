@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    application.name: gitea
+  name: gitea
+spec:
+  ports:
+    - port: 3000
+      targetPort: web
+      name: web
+  selector:
+    app: gitea
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitea
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: gitea
+          image: 'gitea/gitea:1.23.1'
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GITEA__database__DB_TYPE
+              value: postgres
+            - name: GITEA__database__HOST
+              value: postgres-cluster-main.backend:5432
+            - name: GITEA__database__NAME
+              value: <gitea-db-name>
+            - name: GITEA__database__USER
+              value: <gitea-db-user>
+            - name: GITEA__database__PASSWD
+              value: <gitea-db-pass>
+            - name: GITEA__server__DISABLE_SSH
+              value: "true"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+              ephemeral-storage: 1Gi
+          ports:
+            - containerPort: 3000
+              name: web
+          volumeMounts:
+            - mountPath: /data
+              name: gitea-data
+      volumes:
+        - name: gitea-data
+          persistentVolumeClaim:
+            claimName: gitea-data
