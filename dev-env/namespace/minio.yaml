@@ -1,0 +1,64 @@
+apiVersion: s3.onyxia.sh/v1alpha1
+kind: Bucket
+metadata:
+  labels:
+    app.kubernetes.io/name: k8up-dev
+    app.kubernetes.io/instance: k8up-dev
+    app.kubernetes.io/part-of: s3-operator
+  name: k8up-dev
+spec:
+  # Bucket name (on S3 server, as opposed to the name of the CR)
+  name: k8up-dev
+
+  # Quota to set on the bucket, in bytes (so 1000000000 would be 1GB).
+  quota:
+    default: 1000000000000 # 1TB
+---
+apiVersion: s3.onyxia.sh/v1alpha1
+kind: Policy
+metadata:
+  labels:
+    app.kubernetes.io/name: k8up-dev-local
+    app.kubernetes.io/instance: k8up-dev-local
+    app.kubernetes.io/part-of: s3-operator
+  name: k8up-dev-local
+spec:
+  # Policy name (on S3 server, as opposed to the name of the CR)
+  name: k8up-dev-local
+
+  # Content of the policy, as a multiline string
+  # This should be IAM compliant JSON - follow the guidelines of the actual
+  # S3 provider you're using, as sometimes only a subset is available.
+  policyContent: >-
+    {
+      "Version": "2012-10-17",
+      "Statement": 
+      [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:DeleteObject",
+            "s3:GetObject",
+            "s3:ListBucket",
+            "s3:PutObject"
+          ],
+          "Resource": [
+            "arn:aws:s3:::k8up-dev",
+            "arn:aws:s3:::k8up-dev/*"
+          ]
+        }
+      ]
+    }
+---
+apiVersion: s3.onyxia.sh/v1alpha1
+kind: S3User
+metadata:
+  labels:
+    app.kubernetes.io/name: k8up
+    app.kubernetes.io/instance: k8up
+    app.kubernetes.io/part-of: s3-operator
+  name: k8up-dev-local-minio
+spec:
+  accessKey: k8up-dev-local
+  policies:
+    - k8up-dev-local
