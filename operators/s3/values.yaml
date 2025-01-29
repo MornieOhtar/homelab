@@ -1,6 +1,11 @@
 crds:
   install: true
 
+controllerManager:
+  manager:
+    extraArgs:
+      - --useSsl=false
+
 s3:
   endpointUrl: "minio.backend:9000"
   existingSecret: s3-operator-minio
