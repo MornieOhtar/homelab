@@ -1,0 +1,11 @@
+replicaCount: 1
+k8up:
+  timezone: 'Europe/Kyiv'
+  skipWithoutAnnotation: true
+  operatorNamespace: "operators"
+
+metrics:
+  serviceMonitor:
+    enabled: true
+  prometheusRule:
+    enabled: true
