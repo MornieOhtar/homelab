@@ -17,7 +17,7 @@ spec:
       name: k8up-local-restic
       key: restic-password
   backup:
-    schedule: '@every 2h'
+    schedule: '0 */2 * * *'
     failedJobsHistoryLimit: 2
     successfulJobsHistoryLimit: 0
     promURL: http://prometheus-pushgateway.operators:9091
