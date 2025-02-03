@@ -42,10 +42,15 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - key: node-role.kubernetes.io/nfs
+                  - key: node-role.kubernetes.io/nas
                     operator: In
                     values:
-                      - "nfs"
+                      - "nas"
+      tolerations:
+        - key: "nas"
+          operator: "Equal"
+          value: "true"
+          effect: NoSchedule
       containers:
         - name: minio
           image: minio/minio:latest
@@ -85,4 +90,4 @@ spec:
         - name: localvolume
           hostPath: # MinIO generally recommends using locally-attached volumes
             path: <NFS_STOR_0_PATH>/minio # Specify a path to a local drive or volume on the Kubernetes worker node
-            type: DirectoryOrCreate # The path to the last directory must exist
+            type: Directory # The path to the last directory must exist
