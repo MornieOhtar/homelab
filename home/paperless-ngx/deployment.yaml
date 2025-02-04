@@ -56,9 +56,6 @@ spec:
               value: Europe/Kyiv
             - name: PAPERLESS_URL
               value: https://paperless.<homelab-domain>
-          envFrom:
-            - secretRef:
-                name: paperless-ngx
           ports:
             - containerPort: 8000
               protocol: TCP
