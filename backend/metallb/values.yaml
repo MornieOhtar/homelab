@@ -29,6 +29,11 @@ controller:
   enabled: true
   # -- Controller log level. Must be one of: `all`, `debug`, `info`, `warn`, `error` or `none`
   logLevel: info
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule
 
 # speaker contains configuration specific to the MetalLB speaker
 # daemonset.
@@ -37,6 +42,11 @@ speaker:
   # command: /speaker
   # -- Speaker log level. Must be one of: `all`, `debug`, `info`, `warn`, `error` or `none`
   logLevel: info
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule
 
 crds:
   enabled: true
