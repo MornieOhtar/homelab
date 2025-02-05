@@ -55,6 +55,20 @@ spec:
     spec:
       automountServiceAccountToken: false
       restartPolicy: Always
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/nas
+                    operator: In
+                    values:
+                      - "nas"
+      tolerations:
+        - key: "nas"
+          operator: "Equal"
+          value: "true"
+          effect: NoSchedule
       containers:
         - name: torrent
           image: lscr.io/linuxserver/qbittorrent:5.0.3-r0-ls376
@@ -105,12 +119,14 @@ spec:
               value: <qbittorrent-password>
       volumes:
         - name: qbittorrent-config
-          persistentVolumeClaim:
-            claimName: qbittorrent
+          hostPath: # Torrent generally recommends using locally-attached volumes
+            path: <NFS_STOR_0_PATH>/system/qbittorrent/ # Specify a path to a local drive or volume on the Kubernetes worker node
+            type: Directory # The path to the last directory must exist
         - name: jackett-config
-          persistentVolumeClaim:
-            claimName: jackett
+          hostPath: # Torrent generally recommends using locally-attached volumes
+            path: <NFS_STOR_0_PATH>/system/jackett/ # Specify a path to a local drive or volume on the Kubernetes worker node
+            type: Directory # The path to the last directory must exist
         - name: qbittorrent-downloads
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/multimedia/torrent/
+          hostPath: # Torrent generally recommends using locally-attached volumes
+            path: <NFS_STOR_0_PATH>/multimedia/torrent/ # Specify a path to a local drive or volume on the Kubernetes worker node
+            type: Directory # The path to the last directory must exist

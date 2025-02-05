@@ -7,3 +7,4 @@ spec:
     - homelab-main-pool
   interfaces:
     - end1
+    - enp1s0
