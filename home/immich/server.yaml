@@ -83,7 +83,7 @@ spec:
               ephemeral-storage: 128Mi
             limits:
               cpu: 2000m
-              memory: 1Gi
+              memory: 4Gi
               ephemeral-storage: 256Mi
           volumeMounts:
             - name: library
