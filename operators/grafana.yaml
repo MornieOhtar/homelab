@@ -10,7 +10,7 @@ spec:
       targetRevision: HEAD
       ref: homelab
     - repoURL: ghcr.io/grafana/helm-charts
-      targetRevision: v5.15.1
+      targetRevision: v5.16.0
       chart: grafana-operator
       helm:
         valueFiles:

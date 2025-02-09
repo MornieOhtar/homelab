@@ -77,7 +77,7 @@ spec:
               memory: 512Mi
               ephemeral-storage: 256Mi
         - name: radarr
-          image: lscr.io/linuxserver/radarr:5.17.2.9580-ls256
+          image: lscr.io/linuxserver/radarr:5.18.4.9674-ls258
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7878
