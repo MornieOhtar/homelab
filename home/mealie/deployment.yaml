@@ -6,7 +6,7 @@ metadata:
     app: mealie
 spec:
   selector:
-    app: mealie
+    app.kubernetes.io/name: mealie
   ports:
     - port: 9000
       targetPort: web
@@ -18,7 +18,7 @@ kind: Deployment
 metadata:
   name: mealie
   labels:
-    app: mealie
+    app.kubernetes.io/name: mealie
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
 spec:
@@ -27,11 +27,11 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: mealie
+      app.kubernetes.io/name: mealie
   template:
     metadata:
       labels:
-        app: mealie
+        app.kubernetes.io/name: mealie
     spec:
       automountServiceAccountToken: false
       restartPolicy: Always

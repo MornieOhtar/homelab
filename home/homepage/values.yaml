@@ -1,0 +1,53 @@
+image:
+  tag: v0.10.9
+
+# Enable RBAC. RBAC is necessary to use Kubernetes integration
+enableRbac: true
+
+config:
+  widgets:
+    - resources:
+        backend: kubernetes
+        expanded: true
+        cpu: true
+        memory: true
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "cluster"
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+  settings:
+    title: Mornery Homelab
+    layout:
+      Dev Env:
+        style: row
+        columns: 4
+        initiallyCollapsed: true
+        useEqualHeights: true
+      Global:
+        style: row
+        columns: 4
+        initiallyCollapsed: true
+        useEqualHeights: true
+      Home:
+        style: row
+        columns: 4
+        useEqualHeights: true
+  kubernetes:
+    mode: cluster
+  services: {}
+
+env:
+  TZ: Europe/Kyiv
+  PASSWD:
+    valueFrom:
+      secretKeyRef:
+        name: homepage
+        key: password

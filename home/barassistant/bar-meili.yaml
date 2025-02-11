@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    application.name: barassistant
+    app.kubernetes.io/name: bar-meili
   name: bar-meili
 spec:
   ports:
     - port: 7700
       targetPort: 7700
   selector:
-    app: bar-meili
+    app.kubernetes.io/name: bar-meili
   type: ClusterIP
   clusterIP: None
 ---
@@ -19,15 +19,17 @@ metadata:
   name: bar-meili
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
+  labels:
+    app.kubernetes.io/name: bar-meili
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bar-meili
+      app.kubernetes.io/name: bar-meili
   template:
     metadata:
       labels:
-        app: bar-meili
+        app.kubernetes.io/name: bar-meili
     spec:
       automountServiceAccountToken: false
       containers:

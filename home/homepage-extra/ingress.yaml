@@ -1,42 +1,32 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: calibre
+  name: homepage
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/16,10.0.0.0/8
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Electronic books
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: calibre-web.png
-    gethomepage.dev/name: Calibre
-    gethomepage.dev/widget.type: "calibreweb"
-    gethomepage.dev/widget.url: "http://calibre:8083"
-    gethomepage.dev/widget.username: "<homepage-calibre-username>"
-    gethomepage.dev/widget.password: "<homepage-calibre-password>"
 spec:
   ingressClassName: nginx
   rules:
-    - host: books.<homelab-domain>
+    - host: home.<homelab-domain>
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: calibre
+                name: homepage
                 port:
-                  number: 8083
+                  number: 3000
   tls:
     - hosts:
-        - books.<homelab-domain>
-      secretName: "books.<homelab-domain>-cert"
+        - home.<homelab-domain>
+      secretName: "home.<homelab-domain>-cert"

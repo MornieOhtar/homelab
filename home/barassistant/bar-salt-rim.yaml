@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    application.name: barassistant
+    app.kubernetes.io/name: bar-salt-rim
   name: bar-salt-rim
 spec:
   ports:
     - port: 8080
       targetPort: 8080
   selector:
-    app: bar-salt-rim
+    app.kubernetes.io/name: bar-salt-rim
   type: ClusterIP
   clusterIP: None
 ---
@@ -19,15 +19,17 @@ metadata:
   name: bar-salt-rim
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
+  labels:
+    app.kubernetes.io/name: bar-salt-rim
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: bar-salt-rim
+      app.kubernetes.io/name: bar-salt-rim
   template:
     metadata:
       labels:
-        app: bar-salt-rim
+        app.kubernetes.io/name: bar-salt-rim
     spec:
       automountServiceAccountToken: false
       containers:

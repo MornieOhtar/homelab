@@ -10,7 +10,6 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/service: immich-server
-      app.kubernetes.io/instance: immich
   namespaceSelector:
     matchNames:
       - home
@@ -30,7 +29,6 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/service: immich-machine-learning
-      app.kubernetes.io/instance: immich
   namespaceSelector:
     matchNames:
       - home
