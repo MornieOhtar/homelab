@@ -33,15 +33,15 @@ spec:
       hostNetwork: true
       containers:
         - name: home-assistant
-          image: homeassistant/home-assistant:2025.1.2
+          image: homeassistant/home-assistant:2025.2.2
           resources:
             requests:
               cpu: 400m
               memory: 768Mi
               ephemeral-storage: 1Gi
             limits:
-              cpu: 1500m
-              memory: 2Gi
+              cpu: 2000m
+              memory: 3Gi
               ephemeral-storage: 1Gi
           ports:
             - containerPort: 8123
