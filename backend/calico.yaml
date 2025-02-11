@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: calico
+spec:
+  project: homelab
+
+  source:
+    repoURL: https://github.com/MornieOhtar/homelab.git
+    targetRevision: HEAD
+    path: backend/calico
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tigera-operator
+
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  ignoreDifferences:
+    - kind: Secret
+      name: "csi-node-driver"
+      jsonPointers:
+        - /data
+        - /data/ca.crt
+        - /data/namespace
+        - /data/token
