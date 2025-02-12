@@ -3,20 +3,41 @@ kind: Service
 metadata:
   name: jellyseerr
   labels:
-    app: jellyseerr
+    app.kubernetes.io/name: jellyseerr
 spec:
   selector:
-    app: jellyseerr
-    environment: production
+    app.kubernetes.io/name: jellyseerr
   ports:
     - port: 5055
       targetPort: jellyseerr
       name: jellyseerr
       protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: radarr
+  labels:
+    app.kubernetes.io/name: radarr
+spec:
+  selector:
+    app.kubernetes.io/name: jellyseerr
+  ports:
     - port: 7878
       targetPort: radarr
       name: radarr
       protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr
+  labels:
+    app.kubernetes.io/name: sonarr
+spec:
+  selector:
+    app.kubernetes.io/name: jellyseerr
+  ports:
     - port: 8989
       targetPort: sonarr
       name: sonarr
@@ -27,8 +48,7 @@ kind: Deployment
 metadata:
   name: jellyseerr
   labels:
-    app: jellyseerr
-    environment: production
+    app.kubernetes.io/name: jellyseerr
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
 spec:
@@ -37,13 +57,11 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: jellyseerr
-      environment: production
+      app.kubernetes.io/name: jellyseerr
   template:
     metadata:
       labels:
-        app: jellyseerr
-        environment: production
+        app.kubernetes.io/name: jellyseerr
     spec:
       automountServiceAccountToken: false
       restartPolicy: Always

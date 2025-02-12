@@ -10,6 +10,12 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
     nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/16,10.0.0.0/8
     cert-manager.io/cluster-issuer: letsencrypt-production
+    # Get Homepage configuration
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: OIDC provider
+    gethomepage.dev/group: Global
+    gethomepage.dev/icon: keycloak.png
+    gethomepage.dev/name: Keycloak
 spec:
   ingressClassName: nginx
   rules:

@@ -91,6 +91,12 @@ server:
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
       nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+      # Get Homepage configuration
+      gethomepage.dev/enabled: "true"
+      gethomepage.dev/description: Kubernetes CI/CD
+      gethomepage.dev/group: Global
+      gethomepage.dev/icon: argo-cd.png
+      gethomepage.dev/name: ArgoCD
 
 repoServer:
   automountServiceAccountToken: true

@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: paperless-ngx
   labels:
-    app: paperless-ngx
+    app.kubernetes.io/name: paperless-ngx
 spec:
   selector:
-    app: paperless-ngx
+    app.kubernetes.io/name: paperless-ngx
   ports:
     - port: 8000
       targetPort: web
@@ -18,7 +18,7 @@ kind: Deployment
 metadata:
   name: paperless-ngx
   labels:
-    app: paperless-ngx
+    app.kubernetes.io/name: paperless-ngx
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
 spec:
@@ -27,11 +27,11 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: paperless-ngx
+      app.kubernetes.io/name: paperless-ngx
   template:
     metadata:
       labels:
-        app: paperless-ngx
+        app.kubernetes.io/name: paperless-ngx
     spec:
       automountServiceAccountToken: false
       restartPolicy: Always

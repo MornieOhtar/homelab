@@ -2,11 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: it-tools
+  labels:
+    app.kubernetes.io/name: it-tools
 spec:
   type: ClusterIP
   clusterIP: None
   selector:
-    app: it-tools
+    app.kubernetes.io/name: it-tools
   ports:
     - name: it-tools
       port: 80
@@ -19,12 +21,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: it-tools
+      app.kubernetes.io/name: it-tools
   replicas: 1
   template:
     metadata:
       labels:
-        app: it-tools
+        app.kubernetes.io/name: it-tools
     spec:
       automountServiceAccountToken: false
       containers:

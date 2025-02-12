@@ -3,12 +3,12 @@ kind: Service
 metadata:
   name: qbittorrent
   labels:
-    app: qbittorrent
+    app.kubernetes.io/name: qbittorrent
   annotations:
     metallb.universe.tf/loadBalancerIPs: 192.168.30.230
 spec:
   selector:
-    app: qbittorrent
+    app.kubernetes.io/name: qbittorrent
   type: LoadBalancer
   loadBalancerClass: homelab-metallb
   ports:
@@ -33,12 +33,27 @@ spec:
       name: jackett
       protocol: TCP
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jackett
+  labels:
+    app.kubernetes.io/name: jackett
+spec:
+  selector:
+    app.kubernetes.io/name: qbittorrent
+  ports:
+    - port: 9117
+      targetPort: jackett
+      name: jackett
+      protocol: TCP
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: qbittorrent
   labels:
-    app: qbittorrent
+    app.kubernetes.io/name: qbittorrent
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
 spec:
@@ -47,11 +62,11 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: qbittorrent
+      app.kubernetes.io/name: qbittorrent
   template:
     metadata:
       labels:
-        app: qbittorrent
+        app.kubernetes.io/name: qbittorrent
     spec:
       automountServiceAccountToken: false
       restartPolicy: Always
