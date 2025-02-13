@@ -2,6 +2,8 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: local-path-config
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
 data:
   config.json: |-
     {
@@ -9,6 +11,10 @@ data:
         {
           "node":"DEFAULT_PATH_FOR_NON_LISTED_NODES",
           "paths":["/opt/local-path-provisioner"]
+        },
+        {
+          "node":"nas001.<NODES_DOMAIN>",
+          "paths":["<NFS_STOR_0_PATH>/local-path-provisioner"]
         }
       ]
     }
