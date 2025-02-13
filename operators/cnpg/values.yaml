@@ -1,0 +1,8 @@
+replicaCount: 1
+
+service:
+  ipFamilyPolicy: SingleStack
+  ipFamilies: ["IPv4"]
+
+monitoring:
+  podMonitorEnabled: true
