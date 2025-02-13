@@ -22,7 +22,7 @@ metadata:
     gethomepage.dev/pod-selector: app.kubernetes.io/name=jellyseerr
     gethomepage.dev/widget.type: "jellyseerr"
     gethomepage.dev/widget.url: "http://jellyseerr:5055"
-    gethomepage.dev/widget.key: "<homepage-jellyseer-key>"
+    gethomepage.dev/widget.key: "<path:kv/data/homepage#jellyseer-key>"
 spec:
   ingressClassName: nginx
   rules:
@@ -65,7 +65,7 @@ metadata:
     gethomepage.dev/pod-selector: app.kubernetes.io/name=jellyseerr
     gethomepage.dev/widget.type: "radarr"
     gethomepage.dev/widget.url: "http://radarr:7878"
-    gethomepage.dev/widget.key: "<homepage-radarr-key>"
+    gethomepage.dev/widget.key: "<path:kv/data/homepage#radarr-key>"
     gethomepage.dev/widget.enableQueue: "true"
 spec:
   ingressClassName: nginx
@@ -109,7 +109,7 @@ metadata:
     gethomepage.dev/pod-selector: app.kubernetes.io/name=jellyseerr
     gethomepage.dev/widget.type: "sonarr"
     gethomepage.dev/widget.url: "http://sonarr:8989"
-    gethomepage.dev/widget.key: "<homepage-sonarr-key>"
+    gethomepage.dev/widget.key: "<path:kv/data/homepage#sonarr-key>"
     gethomepage.dev/widget.enableQueue: "true"
 spec:
   ingressClassName: nginx

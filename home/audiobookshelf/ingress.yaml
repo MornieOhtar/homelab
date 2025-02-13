@@ -21,7 +21,7 @@ metadata:
     gethomepage.dev/name: Audio Bookshelf
     gethomepage.dev/widget.type: "audiobookshelf"
     gethomepage.dev/widget.url: "http://audiobookshelf"
-    gethomepage.dev/widget.key: "<homepage-audiobookshelf-key>"
+    gethomepage.dev/widget.key: "<path:kv/data/homepage#audiobookshelf-key>"
 spec:
   ingressClassName: nginx
   rules:

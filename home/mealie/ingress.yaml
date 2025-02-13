@@ -20,7 +20,7 @@ metadata:
     gethomepage.dev/name: Mealie
     gethomepage.dev/widget.type: "mealie"
     gethomepage.dev/widget.url: "http://mealie:9000"
-    gethomepage.dev/widget.key: "<homepage-mealie-key>"
+    gethomepage.dev/widget.key: "<path:kv/data/homepage#mealie-key>"
     gethomepage.dev/widget.version: "2"
   name: mealie
 spec:

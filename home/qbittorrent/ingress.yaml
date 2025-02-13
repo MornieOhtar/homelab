@@ -22,8 +22,8 @@ metadata:
     gethomepage.dev/name: QBittorrent
     gethomepage.dev/widget.type: "qbittorrent"
     gethomepage.dev/widget.url: "http://qbittorrent"
-    gethomepage.dev/widget.username: "<homepage-qbittorrent-login>"
-    gethomepage.dev/widget.password: "<homepage-qbiittorrent-pass>"
+    gethomepage.dev/widget.username: "<path:kv/data/homepage#qbittorrent-login>"
+    gethomepage.dev/widget.password: "<path:kv/data/homepage#qbittorrent-pass>"
 spec:
   ingressClassName: nginx
   rules:
@@ -67,7 +67,7 @@ metadata:
     gethomepage.dev/pod-selector: app.kubernetes.io/name=qbittorrent
     gethomepage.dev/widget.type: "jackett"
     gethomepage.dev/widget.url: "http://qbittorrent:9117"
-    gethomepage.dev/widget.password: "<homepage-jackett-pass>"
+    gethomepage.dev/widget.password: "<path:kv/data/homepage#jackett-pass>"
 spec:
   ingressClassName: nginx
   rules:

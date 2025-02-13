@@ -21,8 +21,8 @@ metadata:
     gethomepage.dev/name: Calibre
     gethomepage.dev/widget.type: "calibreweb"
     gethomepage.dev/widget.url: "http://calibre:8083"
-    gethomepage.dev/widget.username: "<homepage-calibre-username>"
-    gethomepage.dev/widget.password: "<homepage-calibre-password>"
+    gethomepage.dev/widget.username: "<path:kv/data/homepage#calibre-username>"
+    gethomepage.dev/widget.password: "<path:kv/data/homepage#calibre-password>"
 spec:
   ingressClassName: nginx
   rules:

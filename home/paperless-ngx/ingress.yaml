@@ -21,7 +21,7 @@ metadata:
     gethomepage.dev/name: Paperless ngx
     gethomepage.dev/widget.type: "paperlessngx"
     gethomepage.dev/widget.url: "http://paperless-ngx:8000"
-    gethomepage.dev/widget.key: "<homepage-paperless-token>"
+    gethomepage.dev/widget.key: "<path:kv/data/homepage#paperless-token>"
 spec:
   ingressClassName: nginx
   rules:
