@@ -71,14 +71,18 @@ spec:
               name: consume
       volumes:
         - name: data
-          persistentVolumeClaim:
-            claimName: paperless-data
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/paperless/data
         - name: media
-          persistentVolumeClaim:
-            claimName: paperless-media
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/paperless/media
         - name: export
-          persistentVolumeClaim:
-            claimName: paperless-export
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/paperless/export
         - name: consume
-          persistentVolumeClaim:
-            claimName: paperless-consume
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/paperless/consume
