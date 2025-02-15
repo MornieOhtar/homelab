@@ -83,6 +83,20 @@ spec:
               value: "Europe/Kyiv"
             - name: PORT
               value: "5055"
+            - name: DB_TYPE
+              value: "postgres"
+            - name: DB_HOST
+              value: "postgres-cluster-main.backend"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "<servarr-db-username>"
+            - name: DB_PASS
+              value: "<servarr-db-password>"
+            - name: DB_NAME
+              value: "jellyseerr"
+            - name: DB_LOG_QUERIES
+              value: "false"
           securityContext:
             runAsUser: 65534
           resources:
@@ -91,8 +105,8 @@ spec:
               memory: 128Mi
               ephemeral-storage: 128Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 750m
+              memory: 1Gi
               ephemeral-storage: 256Mi
         - name: radarr
           image: lscr.io/linuxserver/radarr:5.18.4.9674-ls258
@@ -117,8 +131,8 @@ spec:
               memory: 128Mi
               ephemeral-storage: 128Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 750m
+              memory: 1Gi
               ephemeral-storage: 256Mi
         - name: sonarr
           image: lscr.io/linuxserver/sonarr:4.0.12
@@ -143,19 +157,22 @@ spec:
               memory: 128Mi
               ephemeral-storage: 128Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 750m
+              memory: 1Gi
               ephemeral-storage: 256Mi
       volumes:
         - name: jellyseerr-config
-          persistentVolumeClaim:
-            claimName: jellyseerr-config
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/jellyseerr/
         - name: radarr-config
-          persistentVolumeClaim:
-            claimName: radarr
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/radarr/
         - name: sonarr-config
-          persistentVolumeClaim:
-            claimName: sonarr
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/sonarr/
         - name: jellyfin-video
           nfs:
             server: <NFS_STOR_0_SERVER>
