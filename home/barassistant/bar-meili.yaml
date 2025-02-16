@@ -57,5 +57,6 @@ spec:
               name: bar-meili-data
       volumes:
         - name: bar-meili-data
-          persistentVolumeClaim:
-            claimName: barassistant-data-meili
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/barassistant/meili

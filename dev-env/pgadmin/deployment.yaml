@@ -61,8 +61,9 @@ spec:
             server: <NFS_STOR_0_SERVER>
             path: <NFS_STOR_0_PATH>/backup
         - name: configdir
-          persistentVolumeClaim:
-            claimName: pgadmin-config
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/pgadmin
         - name: keycloak-config
           secret:
             secretName: pgadmin-keycloak

@@ -56,11 +56,13 @@ spec:
               ephemeral-storage: 256Mi
       volumes:
         - name: calibre-config
-          persistentVolumeClaim:
-            claimName: calibre-config
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/calibre/config
         - name: calibre-db
-          persistentVolumeClaim:
-            claimName: calibre-db
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/calibre/db
         - name: calibre-library
           nfs:
             server: <NFS_STOR_0_SERVER>

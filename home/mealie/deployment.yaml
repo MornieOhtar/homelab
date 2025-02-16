@@ -94,5 +94,6 @@ spec:
               name: data
       volumes:
         - name: data
-          persistentVolumeClaim:
-            claimName: mealie-data
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/mealie/

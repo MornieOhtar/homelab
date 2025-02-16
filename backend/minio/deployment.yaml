@@ -88,6 +88,6 @@ spec:
               protocol: TCP
       volumes:
         - name: localvolume
-          hostPath: # MinIO generally recommends using locally-attached volumes
-            path: <NFS_STOR_0_PATH>/minio # Specify a path to a local drive or volume on the Kubernetes worker node
-            type: Directory # The path to the last directory must exist
+          hostPath:
+            path: <NFS_STOR_0_PATH>/minio
+            type: Directory

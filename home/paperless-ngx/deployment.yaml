@@ -33,11 +33,23 @@ spec:
       labels:
         app.kubernetes.io/name: paperless-ngx
     spec:
-      automountServiceAccountToken: false
-      restartPolicy: Always
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/nas
+                    operator: In
+                    values:
+                      - "nas"
+      tolerations:
+        - key: "nas"
+          operator: "Equal"
+          value: "true"
+          effect: NoSchedule
       containers:
         - name: paperless
-          image: ghcr.io/paperless-ngx/paperless-ngx:2.14.5
+          image: ghcr.io/paperless-ngx/paperless-ngx:2.14.7
           imagePullPolicy: IfNotPresent
           env:
             - name: PAPERLESS_DBHOST
@@ -50,6 +62,12 @@ spec:
               value: <paperless-db-user>
             - name: PAPERLESS_OCR_LANGUAGES
               value: eng ukr
+            - name: PAPERLESS_OCR_MODE
+              value: skip
+            - name: PAPERLESS_OCR_DESKEW
+              value: "false"
+            - name: PAPERLESS_OCR_ROTATE_PAGES
+              value: "false"
             - name: PAPERLESS_REDIS
               value: redis://redis-cluster-main-master.backend
             - name: PAPERLESS_TIME_ZONE
@@ -71,18 +89,18 @@ spec:
               name: consume
       volumes:
         - name: data
-          nfs:
-            server: <NFS_STOR_0_SERVER>
+          hostPath:
             path: <NFS_STOR_0_PATH>/system/paperless/data
+            type: Directory
         - name: media
-          nfs:
-            server: <NFS_STOR_0_SERVER>
+          hostPath:
             path: <NFS_STOR_0_PATH>/system/paperless/media
+            type: Directory
         - name: export
-          nfs:
-            server: <NFS_STOR_0_SERVER>
+          hostPath:
             path: <NFS_STOR_0_PATH>/system/paperless/export
+            type: Directory
         - name: consume
-          nfs:
-            server: <NFS_STOR_0_SERVER>
+          hostPath:
             path: <NFS_STOR_0_PATH>/system/paperless/consume
+            type: Directory
