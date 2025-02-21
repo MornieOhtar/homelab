@@ -89,5 +89,5 @@ spec:
       volumes:
         - name: localvolume
           hostPath:
-            path: <NFS_STOR_0_PATH>/minio
+            path: <NFS_N0_PATH>/minio
             type: Directory
