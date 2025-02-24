@@ -6,3 +6,5 @@ service:
 
 monitoring:
   podMonitorEnabled: true
+  podMonitorAdditionalLabels:
+    prometheus: prometheus-operator
