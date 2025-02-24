@@ -14,7 +14,7 @@ data:
         },
         {
           "node":"nas001.<NODES_DOMAIN>",
-          "paths":["<NFS_STOR_0_PATH>/local-path-provisioner"]
+          "paths":["<NFS_N0_PATH>/local-path-provisioner"]
         }
       ]
     }
