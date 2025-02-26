@@ -86,15 +86,27 @@ spec:
             - name: DB_TYPE
               value: "postgres"
             - name: DB_HOST
-              value: "postgres-cluster-main.backend"
+              valueFrom:
+                secretKeyRef:
+                  name: pg-jellyseerr-app
+                  key: host
             - name: DB_PORT
               value: "5432"
             - name: DB_USER
-              value: "<servarr-db-username>"
+              valueFrom:
+                secretKeyRef:
+                  name: pg-jellyseerr-app
+                  key: user
             - name: DB_PASS
-              value: "<servarr-db-password>"
+              valueFrom:
+                secretKeyRef:
+                  name: pg-jellyseerr-app
+                  key: password
             - name: DB_NAME
-              value: "jellyseerr"
+              valueFrom:
+                secretKeyRef:
+                  name: pg-jellyseerr-app
+                  key: dbname
             - name: DB_LOG_QUERIES
               value: "false"
           securityContext:
