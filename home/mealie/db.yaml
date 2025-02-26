@@ -11,7 +11,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: pg-immich
+  name: pg-mealie
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
 spec:
@@ -35,7 +35,7 @@ spec:
   bootstrap:
     initdb: null
     recovery:
-      source: pg-immich
+      source: pg-mealie
 
   # Backup strategy
   backup:
@@ -58,7 +58,7 @@ spec:
 
   # WAL backup clusters
   externalClusters:
-    - name: pg-immich
+    - name: pg-mealie
       barmanObjectStore:
         data:
           compression: bzip2
@@ -92,9 +92,9 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: pg-immich-local-schedule
+  name: pg-mealie-local-schedule
 spec:
-  schedule: "0 5 */12 * * *" # For local store - backup every hour
+  schedule: "0 10 */12 * * *" # For local store - backup every hour
   backupOwnerReference: self
   cluster:
-    name: pg-immich
+    name: pg-mealie

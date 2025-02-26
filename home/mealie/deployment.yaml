@@ -67,15 +67,27 @@ spec:
             - name: OIDC_USER_GROUP
               value: <mealie-oidc-user-group>
             - name: POSTGRES_DB
-              value: <mealie-db-name>
+              valueFrom:
+                secretKeyRef:
+                  name: pg-mealie-app
+                  key: dbname
             - name: POSTGRES_PASSWORD
-              value: <mealie-db-pass>
+              valueFrom:
+                secretKeyRef:
+                  name: pg-mealie-app
+                  key: password
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_SERVER
-              value: postgres-cluster-main.backend
+              valueFrom:
+                secretKeyRef:
+                  name: pg-mealie-app
+                  key: host
             - name: POSTGRES_USER
-              value: <mealie-db-user>
+              valueFrom:
+                secretKeyRef:
+                  name: pg-mealie-app
+                  key: user
           ports:
             - containerPort: 9000
               protocol: TCP
