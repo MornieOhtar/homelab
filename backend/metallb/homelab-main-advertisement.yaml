@@ -8,3 +8,4 @@ spec:
   interfaces:
     - end1
     - enp1s0
+    - enp2s0
