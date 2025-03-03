@@ -121,7 +121,7 @@ spec:
               memory: 1Gi
               ephemeral-storage: 256Mi
         - name: radarr
-          image: lscr.io/linuxserver/radarr:5.18.4.9674-ls258
+          image: lscr.io/linuxserver/radarr:5.19.3.9730-ls261
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7878
@@ -137,6 +137,52 @@ spec:
           env:
             - name: TZ
               value: Europe/Kyiv
+            - name: RADARR__APP__INSTANCENAME
+              value: Mornery Radarr
+            - name: RADARR__AUTH__APIKEY
+              value: <radarr-api-key>
+            - name: RADARR__AUTH__ENABLED
+              value: "true"
+            - name: RADARR__AUTH__METHOD
+              value: "2"
+            - name: RADARR__AUTH__REQUIRED
+              value: "true"
+            - name: RADARR__LOG__DBENABLED
+              value: "false"
+            - name: RADARR__POSTGRES__HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pg-radarr-data-app
+                  key: host
+            - name: RADARR__POSTGRES__PORT
+              value: "5432"
+            - name: RADARR__POSTGRES__USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-radarr-data-app
+                  key: user
+            - name: RADARR__POSTGRES__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-radarr-data-app
+                  key: password
+            - name: RADARR__POSTGRES__MAINDB
+              valueFrom:
+                secretKeyRef:
+                  name: pg-radarr-data-app
+                  key: dbname
+            - name: RADARR__SERVER__URLBASE
+              value: "/"
+            - name: RADARR__SERVER__BINDADDRESS
+              value: "*"
+            - name: RADARR__SERVER__PORT
+              value: "7878"
+            - name: RADARR__SERVER__ENABLESSL
+              value: "False"
+            - name: RADARR__SERVER__SSLPORT
+              value: "9898"
+            - name: RADARR__LOG__LEVEL
+              value: "warning"
           resources:
             requests:
               cpu: 50m
