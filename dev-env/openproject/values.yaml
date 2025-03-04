@@ -43,15 +43,15 @@ s3:
 postgresql:
   bundled: false
   connection:
-    host: "postgres-cluster-main.backend"
+    host: "pg-openproject-rw"
     port: "5432"
   auth:
-    existingSecret: "openproject-postgres"
+    existingSecret: "pg-openproject-app"
     secretKeys:
-      adminPasswordKey: "postgres-password"
+      adminPasswordKey: "password"
       userPasswordKey: "password"
-    username: "openproject"
-    database: "openproject"
+    username: "app"
+    database: "app"
 
 # Do not use builtin job deletion, as ArgoCD will report descrepancy
 # for resource. Use ArgoCD hook instead
