@@ -82,7 +82,7 @@ spec:
     spec:
       containers:
         - name: technitium-dns
-          image: technitium/dns-server:13.3.0
+          image: technitium/dns-server:13.4.3
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 53 # DNS port
