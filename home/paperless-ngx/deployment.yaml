@@ -53,13 +53,25 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: PAPERLESS_DBHOST
-              value: postgres-cluster-main.backend
+              valueFrom:
+                secretKeyRef:
+                  name: pg-paperless-app
+                  key: host
             - name: PAPERLESS_DBNAME
-              value: <paperless-db-name>
+              valueFrom:
+                secretKeyRef:
+                  name: pg-paperless-app
+                  key: dbname
             - name: PAPERLESS_DBPASS
-              value: <paperless-db-pass>
+              valueFrom:
+                secretKeyRef:
+                  name: pg-paperless-app
+                  key: password
             - name: PAPERLESS_DBUSER
-              value: <paperless-db-user>
+              valueFrom:
+                secretKeyRef:
+                  name: pg-paperless-app
+                  key: user
             - name: PAPERLESS_OCR_LANGUAGES
               value: eng ukr
             - name: PAPERLESS_OCR_MODE
