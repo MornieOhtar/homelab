@@ -10,13 +10,13 @@ jdbcOverwrite:
   # If enable the JDBC Overwrite, make sure to set `postgresql.enabled=false`
   enable: true
   # The JDBC url of the external DB
-  jdbcUrl: "jdbc:postgresql://postgres-cluster-main.backend/sonarqube?socketTimeout=1500"
+  jdbcUrl: "jdbc:postgresql://pg-sonarqube-rw/app?socketTimeout=1500"
   # The DB user that should be used for the JDBC connection
-  jdbcUsername: "sonarqube"
+  jdbcUsername: "app"
   ## Alternatively, use a pre-existing k8s secret containing the DB password
-  jdbcSecretName: "sonarqube-db"
+  jdbcSecretName: "pg-sonarqube-app"
   ## and the secretValueKey of the password found within that secret
-  jdbcSecretPasswordKey: "jdbc-password"
+  jdbcSecretPasswordKey: "password"
 
 postgresql:
   enabled: false
