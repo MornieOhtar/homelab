@@ -34,7 +34,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: audiobookshelf
-          image: 'ghcr.io/advplyr/audiobookshelf:2.19.0'
+          image: 'ghcr.io/advplyr/audiobookshelf:2.19.5'
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -55,8 +55,8 @@ spec:
               memory: 128Mi
               ephemeral-storage: 256Mi
             limits:
-              cpu: 200m
-              memory: 512Mi
+              cpu: 500m
+              memory: 1024Mi
               ephemeral-storage: 256Mi
           livenessProbe:
             failureThreshold: 3
