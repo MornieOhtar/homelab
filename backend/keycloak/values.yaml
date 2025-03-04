@@ -30,9 +30,9 @@ postgresql:
   enabled: false
 
 externalDatabase:
-  existingSecret: "keycloak-db-pass"
+  existingSecret: "pg-keycloak-app"
   existingSecretHostKey: "host"
   existingSecretPortKey: "port"
   existingSecretUserKey: "user"
-  existingSecretDatabaseKey: "db"
-  existingSecretPasswordKey: "pwd"
+  existingSecretDatabaseKey: "dbname"
+  existingSecretPasswordKey: "password"
