@@ -94,7 +94,7 @@ kind: ScheduledBackup
 metadata:
   name: pg-radarr-data-local-schedule
 spec:
-  schedule: "0 10 * * * *" # For local store - backup every hour
+  schedule: "0 20 */12 * * *" # For local store - backup every hour
   backupOwnerReference: self
   cluster:
     name: pg-radarr-data

@@ -94,7 +94,7 @@ kind: ScheduledBackup
 metadata:
   name: pg-sonarr-data-local-schedule
 spec:
-  schedule: "0 10 * * * *" # For local store - backup every hour
+  schedule: "0 25 */12 * * *" # For local store - backup every hour
   backupOwnerReference: self
   cluster:
     name: pg-sonarr-data
