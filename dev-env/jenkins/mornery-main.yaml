@@ -20,41 +20,41 @@ spec:
     disableCSRFProtection: false
     basePlugins:
     - name: kubernetes
-      version: "4306.vc91e951ea_eb_d"
+      version: "4324.vfec199a_33512"
     - name: workflow-job
-      version: "1498.v33a_0c6f3a_4b_4"
+      version: "1505.vea_4b_20a_4a_495"
     - name: workflow-aggregator
       version: "600.vb_57cdd26fdd7"
     - name: git
       version: "5.7.0"
     - name: job-dsl
-      version: "1.90"
+      version: "1.91"
     - name: configuration-as-code
-      version: "1915.vcdd0a_d0d2625"
+      version: "1932.v75cb_b_f1b_698d"
     - name: kubernetes-credentials-provider
       version: "1.273.v15e69b_55ea_8e"
     plugins:
     - name: junit
-      version: "1312.v1a_235a_b_94a_31"
+      version: "1317.v5b_35d792b_06a_"
     - name: pipeline-maven
-      version: "1469.ve15ca_a_b_90b_44"
+      version: "1488.vfd8c04864236"
     - name: gitea
-      version: "234.v60def593ec50"
+      version: "238.v626a_cf5e1940"
     - name: gitea-pat-kubernetes-credentials
       version: 17.vfe3747cad95a
     - name: sonar
-      version: 2.17.3
+      version: "2.18"
     - name: metrics
       version: 4.2.21-461.v881e35d8fa_b_a_
     - name: prometheus
-      version: 801.v98e119d8eeda_
+      version: 819.v50953a_c560dd
     - name: oic-auth
-      version: 4.457.v8d7c72676cfe
+      version: 4.487.v5eb_cdf31cf09
     - name:  role-strategy
       version: 756.v978cb_392eb_d3
     containers:
       - name: jenkins-master
-        image: jenkins/jenkins:2.494-jdk21
+        image: jenkins/jenkins:2.500-jdk21
         imagePullPolicy: IfNotPresent
         env:
         - name: TZ
