@@ -76,11 +76,13 @@ spec:
             timeoutSeconds: 1
       volumes:
         - name: abs-config
-          persistentVolumeClaim:
-            claimName: abs-config
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/audiobookshelf/config
         - name: abs-metadata
-          persistentVolumeClaim:
-            claimName: abs-metadata
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/audiobookshelf/metadata
         - name: abs-audiobooks
           nfs:
             server: <NFS_STOR_0_SERVER>
