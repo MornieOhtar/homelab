@@ -1,0 +1,54 @@
+apiVersion: s3.onyxia.sh/v1alpha1
+kind: Policy
+metadata:
+  name: mimir
+spec:
+  # Policy name (on S3 server, as opposed to the name of the CR)
+  name: mimir
+
+  # Content of the policy, as a multiline string
+  # This should be IAM compliant JSON - follow the guidelines of the actual
+  # S3 provider you're using, as sometimes only a subset is available.
+  policyContent: >-
+    {
+      "Version": "2012-10-17",
+      "Statement": 
+      [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:DeleteObject",
+            "s3:GetObject",
+            "s3:ListBucket",
+            "s3:PutObject"
+          ],
+          "Resource": [
+            "arn:aws:s3:::mimir-blocks",
+            "arn:aws:s3:::mimir-blocks/*",
+            "arn:aws:s3:::mimir-alertmanager",
+            "arn:aws:s3:::mimir-alertmanager/*",
+            "arn:aws:s3:::mimir-ruler",
+            "arn:aws:s3:::mimir-ruler/*"
+          ]
+        }
+      ]
+    }
+---
+apiVersion: s3.onyxia.sh/v1alpha1
+kind: S3User
+metadata:
+  name: mimir-minio
+spec:
+  accessKey: mimir
+  policies:
+    - mimir
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minio-host
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+type: Opaque
+stringData:
+  minio-host-https: "minio.<homelab-domain>:443"

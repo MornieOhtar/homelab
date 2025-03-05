@@ -72,5 +72,7 @@ prometheus:
           resources:
             requests:
               storage: 20Gi
+    remote_write:
+      - url: http://localhost:9009/api/v1/push
   additionalServiceMonitors: []
   additionalPodMonitors: []

@@ -1,0 +1,62 @@
+global:
+  extraArgs:
+    - -config.expand-env=true
+  extraEnvFrom:
+    - secretRef:
+        name: mimir-minio
+    - secretRef:
+        name: minio-host
+mimir:
+  structuredConfig:
+    common:
+      storage:
+        backend: s3
+        s3:
+          endpoint: ${minio-host-https} # This is a secret injected via an environment variable
+          secret_access_key: ${secretKey} # This is a secret injected via an environment variable
+          access_key_id: ${accessKey} # This is a secret injected via an environment variable
+
+    blocks_storage:
+      s3:
+        bucket_name: mimir-blocks
+    alertmanager_storage:
+      s3:
+        bucket_name: mimir-alertmanager
+    ruler_storage:
+      s3:
+        bucket_name: mimir-ruler
+
+alertmanager:
+  replicas: 1
+  zoneAwareReplication:
+    enabled: false
+ingester:
+  replicas: 1
+  zoneAwareReplication:
+    enabled: false
+store_gateway:
+  replicas: 1
+  zoneAwareReplication:
+    enabled: false
+distributor:
+  replicas: 1
+querier:
+  replicas: 1
+query_scheduler:
+  replicas: 1
+ruler_query_scheduler:
+  replicas: 1
+
+index-cache:
+  replicas: 1
+metadata-cache:
+  replicas: 1
+results-cache:
+  replicas: 1
+chunks-cache:
+  replicas: 1
+admin-cache:
+  replicas: 1
+
+minio:
+  enabled: false
