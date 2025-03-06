@@ -13,4 +13,4 @@ spec:
     id: 17391
   datasources:
     - inputName: "DS_PROMETHEUS"
-      datasourceName: "prometheus"
+      datasourceName: "mimir"

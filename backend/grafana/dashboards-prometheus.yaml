@@ -17,7 +17,7 @@ spec:
             "builtIn": 1,
             "datasource": {
               "type": "grafana",
-              "uid": "-- Grafana --"
+              "uid": "mimir"
             },
             "enable": true,
             "hide": true,
@@ -49,7 +49,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -141,7 +141,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "avg(100 - (rate(node_cpu_seconds_total{mode=\"idle\"}[1m])) * 100) by (instance)",
@@ -157,7 +157,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -250,7 +250,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "((((sum by (instance) (node_memory_MemTotal_bytes{})) - (sum by (instance)(node_memory_MemAvailable_bytes{}))) / (sum by (instance) (node_memory_MemTotal_bytes{}))) * 100)",
@@ -266,7 +266,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -363,7 +363,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "mimir"
               },
               "editorMode": "builder",
               "exemplar": false,
@@ -382,7 +382,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -475,7 +475,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "((((sum by (instance) (node_filesystem_size_bytes{device="/dev/mmcblk0p2"})) - (sum by (instance) (node_filesystem_free_bytes{device="/dev/mmcblk0p2"}))) / (sum by (instance) (node_filesystem_size_bytes{device="/dev/mmcblk0p2"}))) * 100)",
@@ -504,7 +504,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -592,7 +592,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "sum (rate(container_cpu_usage_seconds_total{}[5m]) / 2) by (namespace)",
@@ -608,7 +608,7 @@ spec:
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "mimir"
           },
           "fieldConfig": {
             "defaults": {
@@ -692,7 +692,7 @@ spec:
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus"
+                "uid": "mimir"
               },
               "editorMode": "code",
               "expr": "sort_desc(sum by (namespace) (container_memory_working_set_bytes{pod!=\"\",container!=\"POD\", container!=\"\"}) / 2)",

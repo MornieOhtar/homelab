@@ -25,38 +25,111 @@ mimir:
     ruler_storage:
       s3:
         bucket_name: mimir-ruler
+runtimeConfig:
+ ingester_limits: # limits that each ingester replica enforces
+    max_ingestion_rate: 20000
+    max_series: 1500000
+    max_tenants: 1000
+    max_inflight_push_requests: 30000
+ distributor_limits: # limits that each distributor replica enforces
+   max_ingestion_rate: 20000
+   max_inflight_push_requests: 30000
+   max_inflight_push_requests_bytes: 50000000
 
 alertmanager:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
   zoneAwareReplication:
     enabled: false
 ingester:
-  replicas: 1
+  replicas: 2
+  extraArgs:
+    usage-stats.enabled: false
   zoneAwareReplication:
     enabled: false
+overrides_exporter:
+  extraArgs:
+    usage-stats.enabled: false
 store_gateway:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
   zoneAwareReplication:
     enabled: false
 distributor:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
 querier:
+  replicas: 2
+  extraArgs:
+    usage-stats.enabled: false
+query_frontend:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
 query_scheduler:
+  replicas: 2
+  extraArgs:
+    usage-stats.enabled: false
+ruler:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
+ruler_querier:
+  replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
+ruler_query_frontend:
+  replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
 ruler_query_scheduler:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
+compactor:
+  replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
+    compactor.block-upload-enabled: true
+    compactor.block-ranges: 14400h
+    compactor.block-upload-max-block-size-bytes: "15000000000"
 
 index-cache:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
 metadata-cache:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
 results-cache:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
 chunks-cache:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
 admin-cache:
   replicas: 1
+  extraArgs:
+    usage-stats.enabled: false
 
+nginx:
+  # Deprecated, use gateway
+  enabled: false
+gateway:
+  enabledNonEnterprise: true
+  replicas: 1
+  ingress:
+    enabled: false
+  nginx:
+    config:
+      clientMaxBodySize: 15G
+
+# Use standalone minio installation
 minio:
   enabled: false

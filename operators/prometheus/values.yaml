@@ -58,21 +58,11 @@ prometheus:
     scrapeConfigSelector: {}
     scrapeConfigNamespaceSelector: {}
     scrapeInterval: 30s
-    retention: 3650d
-    retentionSize: 100GiB
-    storageSpec:
-      volumeClaimTemplate:
-        metadata:
-          name: prometheus
-          annotations:
-            'k8up.io/backup': 'true'
-        spec:
-          storageClassName: local-path
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 20Gi
-    remote_write:
-      - url: http://localhost:9009/api/v1/push
+    retention: 7d
+    retentionSize: 10GiB
+    remoteRead:
+      - url: http://grafana-mimir-gateway.backend/api/v1/push
+    remoteWrite:
+      - url: http://grafana-mimir-gateway.backend/api/v1/push
   additionalServiceMonitors: []
   additionalPodMonitors: []

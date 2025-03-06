@@ -13,7 +13,7 @@ spec:
     id: 19974
   datasources:
     - inputName: "DS_PROMETHEUS"
-      datasourceName: "prometheus"
+      datasourceName: "mimir"
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
@@ -30,4 +30,4 @@ spec:
     id: 19993
   datasources:
     - inputName: "DS_PROMETHEUS"
-      datasourceName: "prometheus"
+      datasourceName: "mimir"
