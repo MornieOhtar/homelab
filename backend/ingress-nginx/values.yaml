@@ -1,7 +1,11 @@
 controller:
   hostNetwork: false
   ingressClass: nginx
-  tolerations: []
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule
   ## Enable cert manager for Virtual Server resources. Requires controller.enableCustomResources.
   enableCertManager: false
   publishService:
@@ -16,20 +20,15 @@ controller:
       metallb.universe.tf/loadBalancerIPs: 192.168.30.240
     ipFamilies:
       - IPv4
+  kind: DaemonSet
+  hostPort:
+    enabled: true
+    ports:
+      http: 80
+      https: 443
   resources:
     requests:
       cpu: 100m
       memory: 150m
-  replicaCount: 2 # Ensure running on all nodes for local policy
-  affinity:
-    podAntiAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution: # Ensure only one instance is started on each node
-        - labelSelector:
-            matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - ingress-nginx-controller
-          topologyKey: "kubernetes.io/hostname"
 prometheus:
   create: false
