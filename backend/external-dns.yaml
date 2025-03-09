@@ -1,18 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-extra
+  name: external-dns
 spec:
   project: homelab
 
-  source:
-    repoURL: https://github.com/MornieOhtar/homelab.git
-    targetRevision: HEAD
-    path: backend/argocd-extra
+  sources:
+    - repoURL: https://github.com/MornieOhtar/homelab.git
+      targetRevision: HEAD
+      ref: homelab
+    - repoURL: https://kubernetes-sigs.github.io/external-dns/
+      targetRevision: 1.15.2
+      chart: external-dns
+      helm:
+        valueFiles:
+          - $homelab/backend/external-dns/values.yaml
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: backend
 
   syncPolicy:
     automated:
@@ -22,6 +28,7 @@ spec:
       - PrunePropagationPolicy=foreground
       - PruneLast=true
       - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
     retry:
       limit: 5
       backoff:

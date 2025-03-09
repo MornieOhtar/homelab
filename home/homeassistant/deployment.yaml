@@ -20,6 +20,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: home-assistant
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   replicas: 1
   selector:
@@ -52,6 +54,8 @@ spec:
               mountPath: /config
             - mountPath: /dev/ttyUSB0
               name: must-invertor-usb
+            - mountPath: /cert
+              name: tls-cert
           env:
             - name: TZ
               value: Europe/Kyiv
@@ -62,3 +66,6 @@ spec:
         - name: must-invertor-usb
           hostPath:
             path: /dev/ttyUSB0
+        - name: tls-cert
+          secret:
+            secretName: ha.<homelab-domain>-cert

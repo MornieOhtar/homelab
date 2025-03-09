@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-extra
+  name: external-dns-extra
 spec:
   project: homelab
 
   source:
     repoURL: https://github.com/MornieOhtar/homelab.git
     targetRevision: HEAD
-    path: backend/argocd-extra
+    path: backend/external-dns-extra
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: backend
 
   syncPolicy:
     automated:
