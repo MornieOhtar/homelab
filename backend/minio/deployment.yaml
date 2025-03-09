@@ -4,6 +4,8 @@ metadata:
   name: minio
   labels:
     app: minio
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   selector:
     app: minio

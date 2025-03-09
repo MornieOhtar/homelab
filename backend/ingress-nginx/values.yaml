@@ -9,11 +9,12 @@ controller:
   ## Enable cert manager for Virtual Server resources. Requires controller.enableCustomResources.
   enableCertManager: false
   publishService:
-    enabled: true
+    enabled: false
   service:
     ## The list of external IPs for the Ingress Controller service.
     type: LoadBalancer
     externalTrafficPolicy: Local
+    trafficDistribution: PreferClose
     loadBalancerClass: homelab-metallb
     # -- Annotations to be added to the external controller service. See `controller.service.internal.annotations` for annotations to be added to the internal controller service.
     annotations:
