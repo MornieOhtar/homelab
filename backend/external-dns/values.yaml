@@ -1,0 +1,37 @@
+provider:
+  name: rfc2136
+
+extraArgs:
+  - --rfc2136-tsig-axfr
+
+sources:
+  - service
+
+txtOwnerId: edns-hl
+domainFilters:
+  - homelab.local
+serviceMonitor:
+  enabled: true
+
+env:
+  - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: external-dns-technitium
+        key: tsig-key
+  - name: EXTERNAL_DNS_RFC2136_TSIG_KEYNAME
+    valueFrom:
+      secretKeyRef:
+        name: external-dns-technitium
+        key: tsig-keyname
+  - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET_ALG
+    valueFrom:
+      secretKeyRef:
+        name: external-dns-technitium
+        key: tsig-secret-alg
+  - name: EXTERNAL_DNS_RFC2136_ZONE
+    value: homelab.local
+  - name: EXTERNAL_DNS_RFC2136_HOST
+    value: "192.168.30.250"
+  - name: EXTERNAL_DNS_RFC2136_PORT
+    value: "53"

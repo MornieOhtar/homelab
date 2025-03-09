@@ -97,6 +97,12 @@ server:
       gethomepage.dev/group: Global
       gethomepage.dev/icon: argo-cd.png
       gethomepage.dev/name: ArgoCD
+  service:
+    type: LoadBalancer
+    loadBalancerClass: homelab-metallb
+    annotations:
+      external-dns.alpha.kubernetes.io/endpoints-type: NodeExternalIP
+      external-dns.alpha.kubernetes.io/hostname: argocd.homelab.local
 
 repoServer:
   automountServiceAccountToken: true

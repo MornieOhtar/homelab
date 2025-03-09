@@ -5,10 +5,11 @@ metadata:
     app.kubernetes.io/name: home-assistant
   annotations:
     metallb.universe.tf/loadBalancerIPs: 192.168.30.100
+    external-dns.alpha.kubernetes.io/hostname: ha.homelab.local
   name: home-assistant
 spec:
   ports:
-    - port: 8123
+    - port: 443
       targetPort: 8123
   selector:
     app.kubernetes.io/name: home-assistant
@@ -20,6 +21,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: home-assistant
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   replicas: 1
   selector:
@@ -30,7 +33,6 @@ spec:
       labels:
         app.kubernetes.io/name: home-assistant
     spec:
-      hostNetwork: true
       containers:
         - name: home-assistant
           image: homeassistant/home-assistant:2025.2.5
@@ -52,6 +54,8 @@ spec:
               mountPath: /config
             - mountPath: /dev/ttyUSB0
               name: must-invertor-usb
+            - mountPath: /cert
+              name: tls-cert
           env:
             - name: TZ
               value: Europe/Kyiv
@@ -62,3 +66,6 @@ spec:
         - name: must-invertor-usb
           hostPath:
             path: /dev/ttyUSB0
+        - name: tls-cert
+          secret:
+            secretName: ha.<homelab-domain>-cert
