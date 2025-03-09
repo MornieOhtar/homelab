@@ -119,5 +119,6 @@ spec:
             value: "1024 65000"
       volumes:
         - name: config
-          persistentVolumeClaim:
-            claimName: technitium-data
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/technitium
