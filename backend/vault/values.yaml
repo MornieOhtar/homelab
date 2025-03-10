@@ -7,13 +7,14 @@ injector:
 
 server:
   dataStorage:
-    storageClass: local-path
-    annotations:
-      'k8up.io/backup': 'true'
-  auditStorage:
-    storageClass: local-path
-    annotations:
-      'k8up.io/backup': 'true'
+    enabled: false
+  volumes:
+    - name: vault-data
+      persistentVolumeClaim:
+        claimName: hashicorp-vault-data-nfs
+  volumeMounts:
+    - mountPath: /vault/data
+      name: vault-data
 
 ui:
   enabled: true
