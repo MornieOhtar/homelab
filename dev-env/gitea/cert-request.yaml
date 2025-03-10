@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gitea-hl-ssl
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  secretName: gitea-server-tls
+  renewBefore: 240h
+  duration: 2160h
+  commonName: git.<homelab-domain>
+  dnsNames:
+    - git.<homelab-domain>
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer

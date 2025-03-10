@@ -4,11 +4,24 @@ metadata:
   labels:
     app.kubernetes.io/name: gitea
   name: gitea
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+    external-dns.alpha.kubernetes.io/hostname: git.homelab.local
+    # Get Homepage configuration
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Git repository
+    gethomepage.dev/group: Dev Env
+    gethomepage.dev/icon: gitea.png
+    gethomepage.dev/name: Gitea
+    gethomepage.dev/href: https://git.<homelab-domain>
 spec:
   ports:
-    - port: 3000
+    - port: 443
       targetPort: web
-      name: web
+      name: http
+  type: LoadBalancer
+  loadBalancerClass: homelab-metallb
+  externalTrafficPolicy: Local
   selector:
     app.kubernetes.io/name: gitea
 ---
@@ -60,6 +73,12 @@ spec:
                   key: password
             - name: GITEA__server__DISABLE_SSH
               value: "true"
+            - name: GITEA__server__CERT_FILE
+              value: "/cert/tls.crt"
+            - name: GITEA__server__KEY_FILE
+              value: "/cert/tls.key"
+            - name: GITEA__server__PROTOCOL
+              value: "https"
           resources:
             requests:
               cpu: 100m
@@ -75,7 +94,13 @@ spec:
           volumeMounts:
             - mountPath: /data
               name: gitea-data
+            - mountPath: /cert
+              name: tls-cert
       volumes:
         - name: gitea-data
-          persistentVolumeClaim:
-            claimName: gitea-data
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/gitea
+        - name: tls-cert
+          secret:
+            secretName: gitea-server-tls
