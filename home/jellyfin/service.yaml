@@ -3,12 +3,23 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: jellyfin
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: video.homelab.local
   name: jellyfin
 spec:
+  type: LoadBalancer
+  loadBalancerClass: homelab-metallb
   ports:
-  - port: 8096
-    targetPort: web
-    name: web
+  - port: 443
+    targetPort: https
+    name: https
+  - port: 1900
+    targetPort: dlna
+    name: dlna
+  - port: 7359
+    protocol: UDP
+    targetPort: clientdiscovery
+    name: clientdiscovery
   selector:
     app.kubernetes.io/name: jellyfin
 ---
@@ -32,7 +43,7 @@ spec:
     spec:
       containers:
         - name: jellyfin
-          image: 'jellyfin/jellyfin:10.10.5'
+          image: 'jellyfin/jellyfin:10.10.6'
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -40,10 +51,20 @@ spec:
               memory: 2Gi
           ports:
             - containerPort: 8096
-              name: web
+              name: http
+            - containerPort: 8920
+              name: https
+            - containerPort: 1900
+              name: dlna
+            - containerPort: 7359
+              protocol: UDP
+              name: clientdiscovery
           securityContext:
             privileged: true
           volumeMounts:
+            - mountPath: /cert
+              name: tls-cert
+            # LIBRARY
             - mountPath: /media
               name: jellyfin-video
             - mountPath: /config
@@ -65,6 +86,9 @@ spec:
             - mountPath: /dev/rga
               name: jellyfin-rga
       volumes:
+        - name: tls-cert
+          secret:
+            secretName: jellyfin-server-tls
         # LIBRARY
         - name: jellyfin-video
           nfs:
