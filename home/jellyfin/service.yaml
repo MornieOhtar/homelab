@@ -96,8 +96,9 @@ spec:
             path: <NFS_STOR_0_PATH>/multimedia/video/
         # CONFIG
         - name: jellyfin-config
-          persistentVolumeClaim:
-            claimName: jellyfin-config
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/jellyfin
         # TEMP
         - name: jellyfin-cache
           emptyDir: {}
