@@ -12,10 +12,6 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
-    - port: 8081
-      targetPort: metrics
-      protocol: TCP
-      name: metrics
   selector:
     app.kubernetes.io/name: immich
 ---
@@ -45,15 +41,13 @@ spec:
       enableServiceLinks: true
       containers:
         - name: immich-server
-          image: ghcr.io/immich-app/immich-server:v1.128.0
+          image: ghcr.io/immich-app/immich-server:v1.129.0
           imagePullPolicy: IfNotPresent
           env:
             - name: DB_VECTOR_EXTENSION
               value: pgvector
             - name: IMMICH_MACHINE_LEARNING_URL
               value: http://immich-machine-learning:3003
-            - name: IMMICH_TELEMETRY_INCLUDE
-              value: all
             - name: DB_DATABASE_NAME
               valueFrom:
                 secretKeyRef:
@@ -80,9 +74,6 @@ spec:
             - name: http
               containerPort: 2283
               protocol: TCP
-            - name: metrics
-              containerPort: 8081
-              protocol: TCP
           resources:
             requests:
               cpu: 100m
@@ -100,7 +91,7 @@ spec:
             httpGet:
               path: /api/server/ping
               port: http
-            initialDelaySeconds: 0
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 1
           readinessProbe:
@@ -108,7 +99,7 @@ spec:
             httpGet:
               path: /api/server/ping
               port: http
-            initialDelaySeconds: 0
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 1
       volumes:
