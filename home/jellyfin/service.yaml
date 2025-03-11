@@ -100,11 +100,9 @@ spec:
             claimName: jellyfin-config
         # TEMP
         - name: jellyfin-cache
-          persistentVolumeClaim:
-            claimName: jellyfin-cache-pvc
+          emptyDir: {}
         - name: jellyfin-transcodes
-          persistentVolumeClaim:
-            claimName: jellyfin-transcodes-pvc
+          emptyDir: {}
         # VIDEO
         - name: jellyfin-mali0
           hostPath:
