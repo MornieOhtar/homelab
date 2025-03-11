@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-hl-ssl
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  secretName: grafana-server-tls
+  renewBefore: 240h
+  duration: 2160h
+  commonName: grafana.<homelab-domain>
+  dnsNames:
+    - grafana.<homelab-domain>
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer

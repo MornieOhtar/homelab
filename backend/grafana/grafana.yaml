@@ -24,6 +24,32 @@ spec:
                   value: <grafana-cluster-main-keycloak_auth-url>
                 - name: GF_AUTH_GENERIC_OAUTH_TOKEN_URL
                   value: <grafana-cluster-main-keycloak_token-url>
+              readinessProbe:
+                failureThreshold: 1
+                httpGet: null
+                tcpSocket: # Use TCP probe, as pod IP is not in configured certificate and even if probe succeeds, it spams in logs
+                  port: 3000
+                initialDelaySeconds: 5
+                periodSeconds: 10
+                timeoutSeconds: 3
+              volumeMounts:
+                - mountPath: /cert
+                  name: tls-cert
+          volumes:
+          - name: tls-cert
+            secret:
+              secretName: grafana-server-tls
+  service:
+    metadata:
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: grafana.homelab.local
+    spec:
+      type: LoadBalancer
+      loadBalancerClass: homelab-metallb
+      ports:
+        - port: 443
+          targetPort: 3000
+          name: http
   config:
     log:
       mode: "console"
@@ -41,3 +67,8 @@ spec:
       role_attribute_path: "contains(groups[*], 'Developer') && 'Admin'"
     server:
       root_url: https://grafana.<homelab-domain>
+      cert_file: /cert/tls.crt
+      cert_key: /cert/tls.key
+      protocol: https
+  external:
+    url: https://grafana.<homelab-domain>
