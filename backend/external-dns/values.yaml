@@ -12,6 +12,7 @@ domainFilters:
   - homelab.local
 serviceMonitor:
   enabled: true
+policy: sync
 
 env:
   - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET
