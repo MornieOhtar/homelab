@@ -9,6 +9,7 @@ metadata:
 spec:
   type: LoadBalancer
   loadBalancerClass: homelab-metallb
+  externalTrafficPolicy: Local
   ports:
   - port: 443
     targetPort: https
@@ -41,6 +42,20 @@ spec:
       labels:
         app.kubernetes.io/name: jellyfin
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/nas
+                    operator: In
+                    values:
+                      - "nas"
+      tolerations:
+        - key: "nas"
+          operator: "Equal"
+          value: "true"
+          effect: NoSchedule
       containers:
         - name: jellyfin
           image: 'jellyfin/jellyfin:10.10.6'
@@ -75,49 +90,29 @@ spec:
             - mountPath: /transcodes
               name: jellyfin-transcodes
             # VIDEO
-            - mountPath: /dev/mali0
-              name: jellyfin-mali0
             - mountPath: /dev/dri
               name: jellyfin-dri
-            - mountPath: /dev/mpp_service
-              name: jellyfin-mpp-service
-            - mountPath: /dev/dma_heap
-              name: jellyfin-dma-heap
-            - mountPath: /dev/rga
-              name: jellyfin-rga
       volumes:
         - name: tls-cert
           secret:
             secretName: jellyfin-server-tls
         # LIBRARY
         - name: jellyfin-video
-          nfs:
-            server: <NFS_STOR_0_SERVER>
+          hostPath:
             path: <NFS_STOR_0_PATH>/multimedia/video/
+            type: Directory
         # CONFIG
         - name: jellyfin-config
-          nfs:
-            server: <NFS_STOR_0_SERVER>
+          hostPath:
             path: <NFS_STOR_0_PATH>/system/jellyfin
+            type: Directory
         # TEMP
         - name: jellyfin-cache
           emptyDir: {}
         - name: jellyfin-transcodes
           emptyDir: {}
         # VIDEO
-        - name: jellyfin-mali0
-          hostPath:
-            path: /dev/mali0
         - name: jellyfin-dri
           hostPath:
             path: /dev/dri
-        - name: jellyfin-mpp-service
-          hostPath:
-            path: /dev/mpp_service
-        - name: jellyfin-dma-heap
-          hostPath:
-            path: /dev/dma_heap
-        - name: jellyfin-rga
-          hostPath:
-            path: /dev/rga
 
