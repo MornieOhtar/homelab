@@ -5,7 +5,20 @@ metadata:
   labels:
     app.kubernetes.io/name: qbittorrent
   annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
     metallb.universe.tf/loadBalancerIPs: 192.168.30.230
+    external-dns.alpha.kubernetes.io/hostname: torrent.homelab.local
+    # Get Homepage configuration
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Torrent client
+    gethomepage.dev/group: Home
+    gethomepage.dev/icon: qbittorrent.png
+    gethomepage.dev/name: QBittorrent
+    gethomepage.dev/href: https://torrent.<homelab-domain>
+    gethomepage.dev/widget.type: "qbittorrent"
+    gethomepage.dev/widget.url: "http://qbittorrent"
+    gethomepage.dev/widget.username: "<path:kv/data/homepage#qbittorrent-login>"
+    gethomepage.dev/widget.password: "<path:kv/data/homepage#qbittorrent-pass>"
 spec:
   selector:
     app.kubernetes.io/name: qbittorrent
@@ -99,6 +112,8 @@ spec:
               protocol: UDP
               name: torrent-udp
           volumeMounts:
+            - mountPath: /cert
+              name: tls-cert
             - mountPath: /downloads
               name: qbittorrent-downloads
             - mountPath: /config
@@ -145,3 +160,6 @@ spec:
           hostPath: # Torrent generally recommends using locally-attached volumes
             path: <NFS_STOR_0_PATH>/multimedia/torrent/ # Specify a path to a local drive or volume on the Kubernetes worker node
             type: Directory # The path to the last directory must exist
+        - name: tls-cert
+          secret:
+            secretName: torrent-server-tls

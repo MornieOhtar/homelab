@@ -1,50 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: qbittorrent
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
-    kubernetes.io/ingress.class: "nginx"
-    kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-    nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
-    nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/16,10.0.0.0/8
-    cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Torrent client
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: qbittorrent.png
-    gethomepage.dev/name: QBittorrent
-    gethomepage.dev/widget.type: "qbittorrent"
-    gethomepage.dev/widget.url: "http://qbittorrent"
-    gethomepage.dev/widget.username: "<path:kv/data/homepage#qbittorrent-login>"
-    gethomepage.dev/widget.password: "<path:kv/data/homepage#qbittorrent-pass>"
-spec:
-  ingressClassName: nginx
-  rules:
-    - host: torrent.<homelab-domain>
-      http:
-        paths:
-          - path: /
-            backend:
-              service:
-                name: qbittorrent
-                port:
-                  name: webui
-            pathType: Prefix
-  tls:
-    - hosts:
-        - torrent.<homelab-domain>
-      secretName: "torrent.<homelab-domain>-cert"
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: jackett
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
