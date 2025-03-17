@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cnpg-remote-backup
+spec:
+  schedule: "0 4 * * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: minio-client
+              image: minio/mc:RELEASE.2025-03-12T17-29-24Z
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/bash
+                - -c
+              args:
+                - |
+                  mc alias set source http://minio.backend:9000 $ACCESS_KEY_ID $ACCESS_SECRET_KEY
+                  mc alias set dest $REMOTE_URL $REMOTE_KEY_ID $REMOTE_SECRET_KEY
+                  mc mirror source/cnpg dest/$REMOTE_BUCKET_NAME --disable-multipart --overwrite --retry
+              envFrom:
+                - secretRef:
+                    name: cnpg-s3-creds
