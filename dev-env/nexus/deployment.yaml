@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-service
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: nexus.homelab.local
+spec:
+  selector:
+    app: nexus
+  type: LoadBalancer
+  loadBalancerClass: homelab-metallb
+  externalTrafficPolicy: Local
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8081
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8443
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus
+  template:
+    metadata:
+      labels:
+        app: nexus
+    spec:
+      containers:
+        - name: nexus
+          image: sonatype/nexus3:3.78.1
+          env:
+            - name: NEXUS_DATASTORE_NEXUS_JDBCURL
+              valueFrom:
+                secretKeyRef:
+                  name: pg-nexus-app
+                  key: jdbc-uri
+            - name: NEXUS_DATASTORE_NEXUS_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: pg-nexus-app
+                  key: user
+            - name: NEXUS_DATASTORE_NEXUS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-nexus-app
+                  key: password
+            - name: NEXUS_SECURITY_RANDOMPASSWORD
+              value: "false"
+          resources:
+            requests:
+              memory: "4Gi"
+              cpu: "800m"
+            limits:
+              memory: "6Gi"
+              cpu: "1200m"
+          ports:
+            - containerPort:  8081
+            - containerPort:  8443
+          volumeMounts:
+            - mountPath: /cert
+              name: tls-cert
+            - name: nexus-data-volume
+              mountPath: /nexus-data
+      volumes:
+        - name: tls-cert
+          secret:
+            secretName: nexus-server-tls
+        - name: nexus-data-volume
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/nexus/
