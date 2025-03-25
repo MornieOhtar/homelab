@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: teamcity
+  labels:
+    app.kubernetes.io/name: teamcity
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: teamcity.homelab.local
+spec:
+  type: LoadBalancer
+  loadBalancerClass: homelab-metallb
+  externalTrafficPolicy: Local
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
+  selector:
+    app.kubernetes.io/name: teamcity
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teamcity
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: teamcity
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: teamcity
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: teamcity
+          image: jetbrains/teamcity-server:2025.03
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TEAMCITY_DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: pg-teamcity-app
+                  key: jdbc-uri
+            - name: TEAMCITY_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-teamcity-app
+                  key: username
+            - name: TEAMCITY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-teamcity-app
+                  key: password
+          ports:
+            - containerPort: 8111
+              name: http
+            - containerPort: 8443
+              name: https
+          volumeMounts:
+            - name: data
+              mountPath: /data/teamcity_server/datadir
+            - name: logs
+              mountPath: /opt/teamcity/logs
+            - name: etc
+              mountPath: /usr/etc
+            - mountPath: /cert
+              name: tls-cert
+      volumes:
+        - name: data
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/teamcity/data
+        - name: logs
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/teamcity/logs
+        - name: etc
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_STOR_0_PATH>/system/teamcity/etc
+        - name: tls-cert
+          secret:
+            secretName: teamcity-server-tls

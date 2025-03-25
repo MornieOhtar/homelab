@@ -1,0 +1,55 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: teamcity-agent-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: teamcity-agent
+  minReplicas: 1
+  maxReplicas: 10
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 75
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teamcity-agent
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: teamcity-agent
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: teamcity-agent
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: teamcity-agent
+          image: jetbrains/teamcity-agent:2025.03
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SERVER_URL
+              value: teamcity.<homelab-domain>
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 2000m
+              memory: 2Gi
