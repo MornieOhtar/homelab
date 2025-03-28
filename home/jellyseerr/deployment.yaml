@@ -137,6 +137,10 @@ spec:
           env:
             - name: TZ
               value: Europe/Kyiv
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
             - name: RADARR__APP__INSTANCENAME
               value: Mornery Radarr
             - name: RADARR__AUTH__APIKEY
@@ -209,6 +213,10 @@ spec:
           env:
             - name: TZ
               value: Europe/Kyiv
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
             - name: SONARR__APP__INSTANCENAME
               value: Mornery Sonarr
             - name: SONARR__AUTH__APIKEY

@@ -101,6 +101,11 @@ spec:
         - name: torrent
           image: lscr.io/linuxserver/qbittorrent:5.0.3-r0-ls376
           imagePullPolicy: IfNotPresent
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
           ports:
             - containerPort: 8080
               protocol: TCP
