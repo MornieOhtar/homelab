@@ -1,0 +1,167 @@
+resources:
+  - https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.69.1/release.yaml
+  - https://storage.googleapis.com/tekton-releases/triggers/previous/v0.31.0/release.yaml
+  - https://storage.googleapis.com/tekton-releases/triggers/previous/v0.31.0/interceptors.yaml
+  - https://github.com/tektoncd/dashboard/releases/download/v0.55.0/release-full.yaml
+  - https://storage.googleapis.com/tekton-releases/results/previous/v0.14.0/release.yaml
+  - db.yaml
+  - cert.yaml
+
+patches:
+  - target:
+      kind: StatefulSet
+      name: tekton-results-postgres
+      namespace: tekton-pipelines
+    patch: |-
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: postgres
+        namespace: tekton-pipelines
+      $patch: delete
+  - target:
+      kind: Service
+      name: tekton-results-postgres-service
+      namespace: tekton-pipelines
+    patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: postgres-service
+        namespace: tekton-pipelines
+      $patch: delete
+  - target:
+      kind: ConfigMap
+      name: tekton-results-postgres
+      namespace: tekton-pipelines
+    patch: |-
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: postgres
+        namespace: tekton-pipelines
+      $patch: delete
+  - target:
+      kind: Service
+      name: tekton-dashboard
+      namespace: tekton-pipelines
+    patch: |-
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: tekton-dashboard
+        namespace: tekton-pipelines
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: tekton.homelab.local
+      spec:
+        type: LoadBalancer
+        loadBalancerClass: homelab-metallb
+        externalTrafficPolicy: Local
+        ports:
+          - name: http
+            port: 9097
+            protocol: TCP
+            targetPort: 9097
+          - name: http-ui
+            port: 80
+            protocol: TCP
+            targetPort: 9097
+  - target:
+      kind: Deployment
+      name: api
+      namespace: tekton-pipelines
+    patch: |-
+      apiVersion: v1
+      kind: Deployment
+      metadata:
+        name: api
+        namespace: tekton-pipelines
+      spec:
+        template:
+          spec:
+            containers:
+              - name: api
+                env:
+                  - name: DB_HOST
+                    valueFrom:
+                      secretKeyRef:
+                        name: pg-tekton-results-app
+                        key: host
+                  - name: DB_NAME
+                    value: app
+                  - name: DB_USER
+                    valueFrom:
+                      secretKeyRef:
+                        name: pg-tekton-results-app
+                        key: user
+                  - name: DB_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: pg-tekton-results-app
+                        key: password
+  - target:
+      kind: Deployment
+      name: tekton-results-retention-policy-agent
+      namespace: tekton-pipelines
+    patch: |-
+      apiVersion: v1
+      kind: Deployment
+      metadata:
+        name: tekton-results-retention-policy-agent
+        namespace: tekton-pipelines
+      spec:
+        template:
+          spec:
+            containers:
+              - name: retention-policy-agent
+                env:
+                  - name: DB_HOST
+                    valueFrom:
+                      secretKeyRef:
+                        name: pg-tekton-results-app
+                        key: host
+                  - name: DB_NAME
+                    value: app
+                  - name: DB_USER
+                    valueFrom:
+                      secretKeyRef:
+                        name: pg-tekton-results-app
+                        key: user
+                  - name: DB_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: pg-tekton-results-app
+                        key: password
+  - target:
+      kind: Deployment
+      name: tekton-results-api
+      namespace: tekton-pipelines
+    patch: |-
+      apiVersion: v1
+      kind: Deployment
+      metadata:
+        name: tekton-results-api
+        namespace: tekton-pipelines
+      spec:
+        template:
+          spec:
+            containers:
+              - name: api
+                env:
+                  - name: DB_HOST
+                    valueFrom:
+                      secretKeyRef:
+                        name: pg-tekton-results-app
+                        key: host
+                  - name: DB_NAME
+                    value: app
+                  - name: DB_USER
+                    valueFrom:
+                      secretKeyRef:
+                        name: pg-tekton-results-app
+                        key: user
+                  - name: DB_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: pg-tekton-results-app
+                        key: password

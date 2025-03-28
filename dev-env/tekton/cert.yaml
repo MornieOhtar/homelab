@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tekton-results-hl-ssl
+spec:
+  secretName: tekton-results-tls
+  renewBefore: 240h
+  duration: 2160h
+  commonName: tekton-results-api-service.tekton-pipelines.svc.cluster.local
+  dnsNames:
+    - tekton-results-api-service.tekton-pipelines.svc.cluster.local
+  issuerRef:
+    name: selfsigned-dev
+    kind: ClusterIssuer
