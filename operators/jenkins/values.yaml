@@ -1,5 +1,0 @@
-jenkins:
-  enabled: false # Jenkins instance will be configured separately via CRD
-
-operator:
-  watchNamespace: "dev-env"
