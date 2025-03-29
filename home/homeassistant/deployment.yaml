@@ -59,6 +59,26 @@ spec:
           env:
             - name: TZ
               value: Europe/Kyiv
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: pg-homeassistant-app
+                  key: host
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: pg-homeassistant-app
+                  key: dbname
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pg-homeassistant-app
+                  key: user
+            - name: DB_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: pg-homeassistant-app
+                  key: password
       volumes:
         - name: home-assistant-config
           persistentVolumeClaim:
