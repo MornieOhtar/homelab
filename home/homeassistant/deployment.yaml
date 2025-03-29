@@ -33,9 +33,18 @@ spec:
       labels:
         app.kubernetes.io/name: home-assistant
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/invertor
+                    operator: In
+                    values:
+                      - "true"
       containers:
         - name: home-assistant
-          image: homeassistant/home-assistant:2025.3.1
+          image: homeassistant/home-assistant:2025.3.4
           resources:
             requests:
               cpu: 400m
@@ -59,10 +68,16 @@ spec:
           env:
             - name: TZ
               value: Europe/Kyiv
+            - name: DB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: pg-homeassistant-app
+                  key: uri
       volumes:
         - name: home-assistant-config
-          persistentVolumeClaim:
-            claimName: home-assistant-config
+          nfs:
+            server: <NFS_STOR_0_SERVER>
+            path: <NFS_N0_PATH>/system/homeassistant
         - name: must-invertor-usb
           hostPath:
             path: /dev/ttyUSB0
