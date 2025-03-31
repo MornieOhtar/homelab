@@ -5,6 +5,7 @@ metadata:
   labels:
     app: dns
   annotations:
+    external-dns.alpha.kubernetes.io/hostname: dns.homelab.local
     metallb.universe.tf/loadBalancerIPs: 192.168.30.250
 spec:
   selector:
@@ -26,13 +27,6 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 443
-    - name: web-http
-      protocol: TCP
-      port: 5380
-      targetPort: 5380
-    - name: web-https
-      protocol: TCP
-      port: 53443
   type: LoadBalancer
   externalTrafficPolicy: Local
 ---
@@ -42,24 +36,35 @@ metadata:
   name: technitium-admin
   labels:
     app: dns
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+    external-dns.alpha.kubernetes.io/hostname: dnsa.homelab.local
+    # Get Homepage configuration
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: DNS server
+    gethomepage.dev/group: Global
+    gethomepage.dev/icon: technitium.png
+    gethomepage.dev/name: Technitium
+    gethomepage.dev/href: http://dnsa.<homelab-domain>
+    gethomepage.dev/pod-selector: app=technitium-dns
 spec:
   selector:
     app: technitium-dns
   ports:
     - name: web-http
       protocol: TCP
-      port: 5380
+      port: 80
       targetPort: 5380
     - name: web-https
       protocol: TCP
-      port: 53443
+      port: 443
       targetPort: 53443
     - name: metrics
       protocol: TCP
       port: 4001
       targetPort: 4001
-  type: ClusterIP
-  clusterIP: None
+  type: LoadBalancer
+  externalTrafficPolicy: Local
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -112,6 +117,8 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /etc/dns
+            - name: tls-cert
+              mountPath: /cert
       securityContext:
         sysctls:
           - name: net.ipv4.ip_local_port_range
@@ -121,3 +128,6 @@ spec:
           nfs:
             server: <NFS_STOR_0_SERVER>
             path: <NFS_STOR_0_PATH>/system/technitium
+        - name: tls-cert
+          secret:
+            secretName: dns-server-tls

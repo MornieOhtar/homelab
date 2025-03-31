@@ -1,0 +1,32 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dns-hl-ssl
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+spec:
+  secretName: dns-server-tls
+  renewBefore: 240h
+  duration: 2160h
+  commonName: dns.<homelab-domain>
+  dnsNames:
+    - dns.<homelab-domain>
+    - dnsa.<homelab-domain>
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  keystores:
+    pkcs12:
+      create: true
+      passwordSecretRef:
+        key: password
+        name: dns-hl-ssl-pass
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dns-hl-ssl-pass
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+data:
+  password: <dns_p12_pass | base64encode>
