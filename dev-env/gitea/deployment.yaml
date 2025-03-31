@@ -20,8 +20,6 @@ spec:
       targetPort: web
       name: http
   type: LoadBalancer
-  loadBalancerClass: homelab-metallb
-  externalTrafficPolicy: Local
   selector:
     app.kubernetes.io/name: gitea
 ---

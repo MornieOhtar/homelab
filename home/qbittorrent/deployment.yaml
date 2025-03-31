@@ -23,7 +23,6 @@ spec:
   selector:
     app.kubernetes.io/name: qbittorrent
   type: LoadBalancer
-  loadBalancerClass: homelab-metallb
   ports:
     - port: 80
       targetPort: webui

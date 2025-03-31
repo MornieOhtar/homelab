@@ -1,5 +1,3 @@
-loadBalancerClass: homelab-metallb
-
 prometheus:
   # the service account used by prometheus
   # required when " .Values.prometheus.rbacPrometheus == true " and " .Values.prometheus.podMonitor.enabled=true or prometheus.serviceMonitor.enabled=true "

@@ -8,7 +8,6 @@ spec:
   selector:
     app: nexus
   type: LoadBalancer
-  loadBalancerClass: homelab-metallb
   externalTrafficPolicy: Local
   ports:
     - name: http

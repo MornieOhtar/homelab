@@ -29,14 +29,14 @@ spec:
             service:
               name: technitium-admin
               port:
-                number: 5380
+                name: web-http
         - path: /dns-query
           pathType: Prefix
           backend:
             service:
               name: technitium-dns
               port:
-                number: 80
+                name: dns-http
   tls:
     - hosts:
       - dns.<homelab-domain>

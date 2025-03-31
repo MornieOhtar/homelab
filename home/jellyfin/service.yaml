@@ -8,7 +8,6 @@ metadata:
   name: jellyfin
 spec:
   type: LoadBalancer
-  loadBalancerClass: homelab-metallb
   externalTrafficPolicy: Local
   ports:
   - port: 443

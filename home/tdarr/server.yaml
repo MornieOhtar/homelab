@@ -20,7 +20,6 @@ spec:
   selector:
     app.kubernetes.io/name: tdarr
   type: LoadBalancer
-  loadBalancerClass: homelab-metallb
   ports:
     - protocol: TCP
       name: http

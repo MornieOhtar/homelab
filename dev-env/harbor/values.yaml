@@ -1,0 +1,170 @@
+expose:
+  type: loadBalancer
+  tls:
+    enable: true
+    certSource: secret
+    secret:
+      secretName: harbor-server-tls
+  loadBalancer:
+    name: harbor
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: harbor.homelab.local
+
+externalURL: harbor.homelab.local
+
+persistence:
+  enabled: true
+  persistentVolumeClaim:
+    registry:
+      existingClaim: "harbor-registry-nfs"
+    jobservice:
+      jobLog:
+        existingClaim: "harbor-job-log-nfs"
+    trivy:
+      existingClaim: "harbor-trivy-nfs"
+  imageChartStorage:
+    type: filesystem
+
+database:
+  type: external
+  external:
+    host: pg-harbor-rw
+    port: 5432
+    username: app
+    coreDatabase: app
+    existingSecret: pg-harbor-app
+
+internalTLS:
+  enabled: true
+  strong_ssl_ciphers: true
+  certSource: auto
+
+existingSecretAdminPassword: harbor-secret
+existingSecretAdminPasswordKey: adminPassword
+
+existingSecretSecretKey: harbor-secret
+
+redis:
+  type: external
+  external:
+    addr: redis-cluster-main-master.backend
+
+ipFamily:
+  ipv6:
+    enabled: false
+  ipv4:
+    enabled: true
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    create: true
+    additionalLabels:
+      release: prometheus-operator
+
+# Tolerations to start on NAS node, as other nodes platform not supported
+portal:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/nas
+                operator: In
+                values:
+                  - "nas"
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule
+core:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/nas
+                operator: In
+                values:
+                  - "nas"
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule
+jobservice:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/nas
+                operator: In
+                values:
+                  - "nas"
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule
+registry:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/nas
+                operator: In
+                values:
+                  - "nas"
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule
+trivy:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/nas
+                operator: In
+                values:
+                  - "nas"
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule
+exporter:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/nas
+                operator: In
+                values:
+                  - "nas"
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule
+nginx:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-role.kubernetes.io/nas
+                operator: In
+                values:
+                  - "nas"
+  tolerations:
+    - key: "nas"
+      operator: "Equal"
+      value: "true"
+      effect: NoSchedule

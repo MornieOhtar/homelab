@@ -14,7 +14,6 @@ controller:
     ## The list of external IPs for the Ingress Controller service.
     type: LoadBalancer
     externalTrafficPolicy: Local
-    loadBalancerClass: homelab-metallb
     # -- Annotations to be added to the external controller service. See `controller.service.internal.annotations` for annotations to be added to the internal controller service.
     annotations:
       metallb.universe.tf/loadBalancerIPs: 192.168.30.240
