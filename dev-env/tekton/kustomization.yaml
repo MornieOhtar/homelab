@@ -16,3 +16,4 @@ patches:
   - path: patches/db/connect-tekton-results-retention-policy-agent.yaml
   - path: patches/db/connect-tekton-results-api.yaml
   - path: patches/service-switch-to-loadbalancer.yaml
+  - path: patches/disable-affinity-assistant.yaml
