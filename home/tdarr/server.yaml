@@ -63,7 +63,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: tdarr
-        image: haveagitgat/tdarr:2.36.01
+        image: haveagitgat/tdarr:2.37.01
         imagePullPolicy: Always
         env:
           - name: PUID

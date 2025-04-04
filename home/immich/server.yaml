@@ -41,7 +41,7 @@ spec:
       enableServiceLinks: true
       containers:
         - name: immich-server
-          image: ghcr.io/immich-app/immich-server:v1.129.0
+          image: ghcr.io/immich-app/immich-server:v1.131.3
           imagePullPolicy: IfNotPresent
           env:
             - name: DB_VECTOR_EXTENSION

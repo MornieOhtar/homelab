@@ -34,7 +34,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: barassistant
-          image: barassistant/server:4.4.1
+          image: barassistant/server:5.2.0
           imagePullPolicy: IfNotPresent
           env:
             - name: APP_URL

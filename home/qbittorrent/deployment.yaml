@@ -98,7 +98,7 @@ spec:
           effect: NoSchedule
       containers:
         - name: torrent
-          image: lscr.io/linuxserver/qbittorrent:5.0.3-r0-ls376
+          image: linuxserver/qbittorrent:5.0.4
           imagePullPolicy: IfNotPresent
           env:
             - name: PUID
@@ -123,7 +123,7 @@ spec:
             - mountPath: /config
               name: qbittorrent-config
         - name: jackett
-          image: lscr.io/linuxserver/jackett:v0.22.1316-ls659
+          image: linuxserver/jackett:0.22.1726
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9117
