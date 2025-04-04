@@ -4,11 +4,8 @@ metadata:
   name: barassistant
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
-    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
@@ -26,21 +23,21 @@ spec:
     - host: bar.<homelab-domain>
       http:
         paths:
-          - path: /(.*)
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: bar-salt-rim
                 port:
                   number: 8080
-          - path: /search/(.*)
+          - path: /search
             pathType: Prefix
             backend:
               service:
                 name: bar-meili
                 port:
                   number: 7700
-          - path: /bar/(.*)
+          - path: /bar
             pathType: Prefix
             backend:
               service:

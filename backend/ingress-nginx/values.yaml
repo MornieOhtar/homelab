@@ -1,13 +1,22 @@
 controller:
+  name: nginx-ext
   hostNetwork: false
+
   ingressClass: nginx
+  ingressClassByName: true
+  ingressClassResource:
+    name: nginx
+    enabled: true
+
   tolerations:
     - key: "nas"
       operator: "Equal"
       value: "true"
       effect: NoSchedule
+
   ## Enable cert manager for Virtual Server resources. Requires controller.enableCustomResources.
   enableCertManager: false
+
   service:
     ## The list of external IPs for the Ingress Controller service.
     type: LoadBalancer
@@ -17,10 +26,12 @@ controller:
       metallb.universe.tf/loadBalancerIPs: 192.168.30.240
     ipFamilies:
       - IPv4
+
   kind: DaemonSet
   resources:
     requests:
       cpu: 100m
       memory: 150m
+
 prometheus:
   create: false
