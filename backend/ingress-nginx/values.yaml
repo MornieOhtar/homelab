@@ -8,8 +8,6 @@ controller:
       effect: NoSchedule
   ## Enable cert manager for Virtual Server resources. Requires controller.enableCustomResources.
   enableCertManager: false
-  publishService:
-    enabled: true
   service:
     ## The list of external IPs for the Ingress Controller service.
     type: LoadBalancer
@@ -20,11 +18,6 @@ controller:
     ipFamilies:
       - IPv4
   kind: DaemonSet
-  hostPort:
-    enabled: true
-    ports:
-      http: 80
-      https: 443
   resources:
     requests:
       cpu: 100m
