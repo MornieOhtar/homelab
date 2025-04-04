@@ -20,7 +20,7 @@ metadata:
     gethomepage.dev/icon: home-assistant.png
     gethomepage.dev/name: HomeAssistant
     gethomepage.dev/widget.type: "homeassistant"
-    gethomepage.dev/widget.url: "http://home-assistant:8123"
+    gethomepage.dev/widget.url: "http://home-assistant:443"
     gethomepage.dev/widget.key: "<path:kv/data/homepage#homeassistant-key>"
     gethomepage.dev/widget.custom.0.state: "sensor.owlery_realfeel_temperature_max_day_1"
     gethomepage.dev/widget.custom.0.label: "Temperature"
