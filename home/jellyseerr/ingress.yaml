@@ -10,16 +10,6 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Video requests
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: jellyseerr.png
-    gethomepage.dev/name: Jellyseerr
-    gethomepage.dev/pod-selector: app.kubernetes.io/name=jellyseerr
-    gethomepage.dev/widget.type: "jellyseerr"
-    gethomepage.dev/widget.url: "http://jellyseerr:5055"
-    gethomepage.dev/widget.key: "<path:kv/data/homepage#jellyseer-key>"
 spec:
   ingressClassName: nginx
   rules:
@@ -50,17 +40,6 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Movies downloader
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: radarr.png
-    gethomepage.dev/name: Radarr
-    gethomepage.dev/pod-selector: app.kubernetes.io/name=jellyseerr
-    gethomepage.dev/widget.type: "radarr"
-    gethomepage.dev/widget.url: "http://radarr:7878"
-    gethomepage.dev/widget.key: "<path:kv/data/homepage#radarr-key>"
-    gethomepage.dev/widget.enableQueue: "true"
 spec:
   ingressClassName: nginx
   rules:
@@ -91,17 +70,6 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: TV Shows downloader
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: sonarr.png
-    gethomepage.dev/name: Sonarr
-    gethomepage.dev/pod-selector: app.kubernetes.io/name=jellyseerr
-    gethomepage.dev/widget.type: "sonarr"
-    gethomepage.dev/widget.url: "http://sonarr:8989"
-    gethomepage.dev/widget.key: "<path:kv/data/homepage#sonarr-key>"
-    gethomepage.dev/widget.enableQueue: "true"
 spec:
   ingressClassName: nginx
   rules:

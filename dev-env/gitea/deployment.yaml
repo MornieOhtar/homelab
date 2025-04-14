@@ -7,13 +7,6 @@ metadata:
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     external-dns.alpha.kubernetes.io/hostname: git.homelab.local
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Git repository
-    gethomepage.dev/group: Dev Env
-    gethomepage.dev/icon: gitea.png
-    gethomepage.dev/name: Gitea
-    gethomepage.dev/href: https://git.<homelab-domain>
 spec:
   ports:
     - port: 443

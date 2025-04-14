@@ -7,15 +7,6 @@ metadata:
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     external-dns.alpha.kubernetes.io/hostname: tdarr.homelab.local
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Video library transcoding
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: tdarr.png
-    gethomepage.dev/name: Tdarr
-    gethomepage.dev/href: http://tdarr.<homelab-domain>
-    gethomepage.dev/widget.type: "tdarr"
-    gethomepage.dev/widget.url: "http://tdarr"
 spec:
   selector:
     app.kubernetes.io/name: tdarr

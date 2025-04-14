@@ -11,16 +11,6 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
     nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/16,10.0.0.0/8
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Torrent proxy
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: jackett.png
-    gethomepage.dev/name: Jackett
-    gethomepage.dev/pod-selector: app.kubernetes.io/name=qbittorrent
-    gethomepage.dev/widget.type: "jackett"
-    gethomepage.dev/widget.url: "http://qbittorrent:9117"
-    gethomepage.dev/widget.password: "<path:kv/data/homepage#jackett-pass>"
 spec:
   ingressClassName: nginx
   rules:

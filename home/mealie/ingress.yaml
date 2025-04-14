@@ -9,16 +9,6 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Recipes
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: mealie.png
-    gethomepage.dev/name: Mealie
-    gethomepage.dev/widget.type: "mealie"
-    gethomepage.dev/widget.url: "http://mealie:9000"
-    gethomepage.dev/widget.key: "<path:kv/data/homepage#mealie-key>"
-    gethomepage.dev/widget.version: "2"
   name: mealie
 spec:
   ingressClassName: nginx

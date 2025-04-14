@@ -11,12 +11,6 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
     cert-manager.io/cluster-issuer: letsencrypt-production
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Bar & Coctails
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: bar-assistant.png
-    gethomepage.dev/name: Bar Assistant
 spec:
   ingressClassName: nginx
   rules:

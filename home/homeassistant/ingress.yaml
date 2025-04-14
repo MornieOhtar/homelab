@@ -10,19 +10,6 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/16,10.0.0.0/8
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Home automations
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: home-assistant.png
-    gethomepage.dev/name: HomeAssistant
-    gethomepage.dev/widget.type: "homeassistant"
-    gethomepage.dev/widget.url: "http://home-assistant:443"
-    gethomepage.dev/widget.key: "<path:kv/data/homepage#homeassistant-key>"
-    gethomepage.dev/widget.custom.0.state: "sensor.owlery_realfeel_temperature_max_day_1"
-    gethomepage.dev/widget.custom.0.label: "Temperature"
-    gethomepage.dev/widget.custom.1.state: "sensor.owlery_condition_day_1"
-    gethomepage.dev/widget.custom.1.label: "Conditions"
 spec:
   ingressClassName: nginx
   rules:

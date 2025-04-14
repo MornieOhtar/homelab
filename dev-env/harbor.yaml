@@ -37,43 +37,17 @@ spec:
   ignoreDifferences:
     - kind: Secret
       name: "harbor-jobservice"
-      jsonPointers:
-        - /data/JOBSERVICE_SECRET
     - kind: Secret
       name: "harbor-registry"
-      jsonPointers:
-        - /data/REGISTRY_HTTP_SECRET
     - kind: Secret
       name: "harbor-registry-htpasswd"
-      jsonPointers:
-        - /data/REGISTRY_HTPASSWD
     - kind: Secret
       name: "harbor-core-internal-tls"
-      jsonPointers:
-        - /data/ca.crt
-        - /data/tls.crt
-        - /data/tls.key
     - kind: Secret
       name: "harbor-jobservice-internal-tls"
-      jsonPointers:
-        - /data/ca.crt
-        - /data/tls.crt
-        - /data/tls.key
     - kind: Secret
       name: "harbor-portal-internal-tls"
-      jsonPointers:
-        - /data/ca.crt
-        - /data/tls.crt
-        - /data/tls.key
     - kind: Secret
       name: "harbor-registry-internal-tls"
-      jsonPointers:
-        - /data/ca.crt
-        - /data/tls.crt
-        - /data/tls.key
     - kind: Secret
       name: "harbor-trivy-internal-tls"
-      jsonPointers:
-        - /data/ca.crt
-        - /data/tls.crt
-        - /data/tls.key

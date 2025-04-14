@@ -5,44 +5,7 @@ image:
 enableRbac: true
 
 config:
-  widgets:
-    - resources:
-        backend: kubernetes
-        expanded: true
-        cpu: true
-        memory: true
-    - kubernetes:
-        cluster:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
-          label: "cluster"
-        nodes:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
-  settings:
-    title: Mornery Homelab
-    layout:
-      Dev Env:
-        style: row
-        columns: 4
-        initiallyCollapsed: true
-        useEqualHeights: true
-      Global:
-        style: row
-        columns: 4
-        initiallyCollapsed: true
-        useEqualHeights: true
-      Home:
-        style: row
-        columns: 4
-        useEqualHeights: true
-  kubernetes:
-    mode: cluster
-  services: {}
+  useExistingConfigMap: homepage-config
 
 env:
   TZ: Europe/Kyiv

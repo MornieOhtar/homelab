@@ -39,14 +39,6 @@ metadata:
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     external-dns.alpha.kubernetes.io/hostname: dnsa.homelab.local
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: DNS server
-    gethomepage.dev/group: Global
-    gethomepage.dev/icon: technitium.png
-    gethomepage.dev/name: Technitium
-    gethomepage.dev/href: http://dnsa.<homelab-domain>
-    gethomepage.dev/pod-selector: app=technitium-dns
 spec:
   selector:
     app: technitium-dns

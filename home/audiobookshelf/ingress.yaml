@@ -10,15 +10,6 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Audio Books
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: audiobookshelf.png
-    gethomepage.dev/name: Audio Bookshelf
-    gethomepage.dev/widget.type: "audiobookshelf"
-    gethomepage.dev/widget.url: "http://audiobookshelf"
-    gethomepage.dev/widget.key: "<path:kv/data/homepage#audiobookshelf-key>"
 spec:
   ingressClassName: nginx
   rules:

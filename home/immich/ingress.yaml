@@ -11,16 +11,6 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Photo gallery
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: immich.png
-    gethomepage.dev/name: Immich
-    gethomepage.dev/widget.type: "immich"
-    gethomepage.dev/widget.url: "http://immich-server:2283"
-    gethomepage.dev/widget.key: "<path:kv/data/homepage#immich-key>"
-    gethomepage.dev/widget.version: "2"
 spec:
   ingressClassName: nginx
   rules:

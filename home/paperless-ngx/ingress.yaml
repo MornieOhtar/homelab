@@ -10,15 +10,6 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
     cert-manager.io/cluster-issuer: letsencrypt-production
-    # Get Homepage configuration
-    gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Different manuals and instructions
-    gethomepage.dev/group: Home
-    gethomepage.dev/icon: paperless-ngx.png
-    gethomepage.dev/name: Paperless ngx
-    gethomepage.dev/widget.type: "paperlessngx"
-    gethomepage.dev/widget.url: "http://paperless-ngx:8000"
-    gethomepage.dev/widget.key: "<path:kv/data/homepage#paperless-token>"
 spec:
   ingressClassName: nginx
   rules:
