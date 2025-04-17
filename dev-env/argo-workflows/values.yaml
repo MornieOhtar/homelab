@@ -1,0 +1,41 @@
+crds:
+  install: true
+  keep: true
+
+workflows:
+  serviceAccount:
+    create: true
+
+controller:
+  metricsConfig:
+    enabled: true
+  persistence:
+    nodeStatusOffLoad: true
+    archive: true
+    postgresql:
+      host: pg-argo-workflows-rw
+      database: app
+      tableName: argo_workflows
+      userNameSecret:
+        name: pg-argo-workflows-app
+        key: user
+      passwordSecret:
+        name: pg-argo-workflows-app
+        key: password
+      ssl: false
+  telemetryConfig:
+    enabled: true
+  serviceMonitor:
+    enabled: true
+    namespace: operators
+  workflowNamespaces:
+    - default
+    - argocd
+    - backend
+    - dev-env
+    - home
+    - operators
+
+server:
+  authModes:
+    - server
