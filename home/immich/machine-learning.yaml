@@ -41,7 +41,7 @@ spec:
       enableServiceLinks: true
       containers:
         - name: immich-machine-learning
-          image: ghcr.io/immich-app/immich-machine-learning:v1.131.3
+          image: ghcr.io/immich-app/immich-machine-learning:v1.131.3-openvino
           imagePullPolicy: IfNotPresent
           env:
             - name: DB_VECTOR_EXTENSION
@@ -70,11 +70,8 @@ spec:
           securityContext:
             privileged: true
           volumeMounts:
-            - name: cache
-              mountPath: /cache
-            # VIDEO
-            - mountPath: /dev/mali0
-              name: immich-mali0
+            - mountPath: /dev/dri
+              name: dri
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -92,10 +89,6 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 1
       volumes:
-        - name: cache
-          persistentVolumeClaim:
-            claimName: immich-machine-learning-cache
-        # VIDEO
-        - name: immich-mali0
+        - name: dri
           hostPath:
-            path: /dev/mali0
+            path: /dev/dri
