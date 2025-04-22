@@ -50,7 +50,7 @@ spec:
           - name: PGID
             value: "1000"
           - name: serverURL
-            value: tdarr.home:8266
+            value: http://tdarr.home:8266
           - name: webUIPort
             value: "8265"
           - name: internalNode
@@ -59,8 +59,6 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
-        securityContext:
-          privileged: true
         ports:
           - containerPort: 8265
             name: ui
@@ -133,6 +131,11 @@ spec:
         - name: tdarr
           image: haveagitgat/tdarr_node:2.40.01
           imagePullPolicy: Always
+          resources:
+            requests:
+              gpu.intel.com/i915: "1"
+            limits:
+              gpu.intel.com/i915: "1"
           env:
             - name: TZ
               value: Europe/Kyiv
@@ -148,8 +151,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          securityContext:
-            privileged: true
           ports:
             - containerPort: 8265
               name: ui
@@ -166,9 +167,6 @@ spec:
               name: transcode-cache
             - mountPath: /video
               name: video
-            # VIDEO
-            - mountPath: /dev/dri
-              name: dri
       volumes:
         - name: logs
           emptyDir: {}
@@ -184,7 +182,3 @@ spec:
           nfs:
             server: nfs.homelab
             path: /share/h0/multimedia/video
-        # VIDEO
-        - name: dri
-          hostPath:
-            path: /dev/dri

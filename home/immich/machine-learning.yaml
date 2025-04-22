@@ -63,15 +63,12 @@ spec:
               cpu: 200m
               memory: 256Mi
               ephemeral-storage: 128Mi
+              gpu.intel.com/i915: "1"
             limits:
               cpu: 4000m
               memory: 2048Mi
               ephemeral-storage: 256Mi
-          securityContext:
-            privileged: true
-          volumeMounts:
-            - mountPath: /dev/dri
-              name: dri
+              gpu.intel.com/i915: "1"
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -88,7 +85,3 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 1
-      volumes:
-        - name: dri
-          hostPath:
-            path: /dev/dri

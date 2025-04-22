@@ -51,6 +51,9 @@ spec:
             requests:
               cpu: 500m
               memory: 2Gi
+              gpu.intel.com/i915: "1"
+            limits:
+              gpu.intel.com/i915: "1"
           ports:
             - containerPort: 8096
               name: http
@@ -61,8 +64,6 @@ spec:
             - containerPort: 7359
               protocol: UDP
               name: clientdiscovery
-          securityContext:
-            privileged: true
           volumeMounts:
             - mountPath: /cert
               name: tls-cert
@@ -76,9 +77,6 @@ spec:
               name: jellyfin-cache
             - mountPath: /transcodes
               name: jellyfin-transcodes
-            # VIDEO
-            - mountPath: /dev/dri
-              name: jellyfin-dri
       volumes:
         - name: tls-cert
           secret:
@@ -98,8 +96,3 @@ spec:
           emptyDir: {}
         - name: jellyfin-transcodes
           emptyDir: {}
-        # VIDEO
-        - name: jellyfin-dri
-          hostPath:
-            path: /dev/dri
-
