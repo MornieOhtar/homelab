@@ -15,6 +15,10 @@ data:
         {
           "node":"nas001.<NODES_DOMAIN>",
           "paths":["<NFS_N0_PATH>/local-path-provisioner"]
+        },
+        {
+          "node":"n001.homelab",
+          "paths":["/data/local"]
         }
       ]
     }
