@@ -5,7 +5,6 @@ metadata:
   labels:
     app.kubernetes.io/name: tdarr
   annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
     external-dns.alpha.kubernetes.io/hostname: tdarr.homelab.local
 spec:
   selector:
@@ -26,7 +25,6 @@ metadata:
   name: tdarr
   annotations:
     app.kubernetes.io/name: tdarr
-    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   replicas: 1
   selector:
@@ -37,15 +35,8 @@ spec:
       labels:
         app.kubernetes.io/name: tdarr
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node-role.kubernetes.io/nas
-                    operator: In
-                    values:
-                      - "nas"
+      nodeSelector:
+        kubernetes.io/arch: amd64
       tolerations:
         - key: "nas"
           operator: "Equal"
@@ -54,21 +45,21 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: tdarr
-        image: haveagitgat/tdarr:2.37.01
+        image: haveagitgat/tdarr:2.40.01
         imagePullPolicy: Always
         env:
+          - name: TZ
+            value: Europe/Kyiv
           - name: PUID
             value: "1000"
           - name: PGID
             value: "1000"
-          - name: serverIP
-            value: "0.0.0.0"
-          - name: serverPort
-            value: "8266"
+          - name: serverURL
+            value: tdarr.home:8266
           - name: webUIPort
             value: "8265"
           - name: internalNode
-            value: "true"
+            value: "false"
           - name: nodeID
             valueFrom:
               fieldRef:
@@ -91,30 +82,118 @@ spec:
             name: transcode-cache
           - mountPath: /video
             name: video
-          # VIDEO
-          - mountPath: /dev/dri
-            name: dri
       volumes:
         - name: logs
-          hostPath:
-            type: Directory
-            path: <NFS_STOR_0_PATH>/system/tdarr/logs
+          nfs:
+            server: nfs.homelab
+            path: /share/n0/system/tdarr/logs
         - name: config
-          hostPath:
-            type: Directory
-            path: <NFS_STOR_0_PATH>/system/tdarr/config
+          nfs:
+            server: nfs.homelab
+            path: /share/n0/system/tdarr/config
         - name: server
-          hostPath:
-            type: Directory
-            path: <NFS_STOR_0_PATH>/system/tdarr/server
+          nfs:
+            server: nfs.homelab
+            path: /share/n0/system/tdarr/server
         - name: transcode-cache
-          hostPath:
-            type: Directory
-            path: <NFS_STOR_0_PATH>/system/tdarr/cache
+          nfs:
+            server: nfs.homelab
+            path: /share/n0/system/tdarr/cache
         - name: video
-          hostPath:
-            type: Directory
-            path: <NFS_STOR_0_PATH>/multimedia/video
+          nfs:
+            server: nfs.homelab
+            path: /share/h0/multimedia/video
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tdarr-node
+  annotations:
+    app.kubernetes.io/name: tdarr-node
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tdarr-node
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tdarr-node
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      tolerations:
+        - key: "nas"
+          operator: "Equal"
+          value: "true"
+          effect: NoSchedule
+      # Ensure each node is running on separate Kubernetes node
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - tdarr-node
+              topologyKey: "kubernetes.io/hostname"
+      automountServiceAccountToken: false
+      containers:
+        - name: tdarr
+          image: haveagitgat/tdarr_node:2.40.01
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: Europe/Kyiv
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: serverIP
+              value: "0.0.0.0"
+            - name: serverURL
+              value: http://tdarr.home:8266
+            - name: nodeID
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 8265
+              name: ui
+            - containerPort: 8266
+              name: server
+          volumeMounts:
+            - mountPath: /app/configs
+              name: config
+            - mountPath: /app/server
+              name: server
+            - mountPath: /app/logs
+              name: logs
+            - mountPath: /temp
+              name: transcode-cache
+            - mountPath: /video
+              name: video
+            # VIDEO
+            - mountPath: /dev/dri
+              name: dri
+      volumes:
+        - name: logs
+          emptyDir: {}
+        - name: config
+          emptyDir: {}
+        - name: server
+          emptyDir: {}
+        - name: transcode-cache
+          nfs:
+            server: nfs.homelab
+            path: /share/n0/system/tdarr/cache
+        - name: video
+          nfs:
+            server: nfs.homelab
+            path: /share/h0/multimedia/video
         # VIDEO
         - name: dri
           hostPath:
