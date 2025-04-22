@@ -37,11 +37,6 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/arch: amd64
-      tolerations:
-        - key: "nas"
-          operator: "Equal"
-          value: "true"
-          effect: NoSchedule
       automountServiceAccountToken: false
       containers:
       - name: tdarr
@@ -112,6 +107,9 @@ metadata:
     app.kubernetes.io/name: tdarr-node
 spec:
   replicas: 2
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: tdarr-node
@@ -122,22 +120,14 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/arch: amd64
-      tolerations:
-        - key: "nas"
-          operator: "Equal"
-          value: "true"
-          effect: NoSchedule
       # Ensure each node is running on separate Kubernetes node
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values:
-                      - tdarr-node
-              topologyKey: "kubernetes.io/hostname"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: tdarr-node
       automountServiceAccountToken: false
       containers:
         - name: tdarr

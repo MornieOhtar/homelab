@@ -71,20 +71,8 @@ spec:
     spec:
       automountServiceAccountToken: false
       restartPolicy: Always
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node-role.kubernetes.io/nas
-                    operator: In
-                    values:
-                      - "nas"
-      tolerations:
-        - key: "nas"
-          operator: "Equal"
-          value: "true"
-          effect: NoSchedule
+      nodeSelector:
+        node-role.kubernetes.io/nas: "nas"
       containers:
         - name: torrent
           image: linuxserver/qbittorrent:5.0.4

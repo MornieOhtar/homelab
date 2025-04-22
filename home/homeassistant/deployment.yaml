@@ -31,15 +31,8 @@ spec:
       labels:
         app.kubernetes.io/name: home-assistant
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node-role.kubernetes.io/invertor
-                    operator: In
-                    values:
-                      - "true"
+      nodeSelector:
+        node-role.kubernetes.io/invertor: "true"
       containers:
         - name: home-assistant
           image: homeassistant/home-assistant:2025.4.2

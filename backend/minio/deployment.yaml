@@ -37,20 +37,8 @@ spec:
       labels:
         app: minio
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node-role.kubernetes.io/nas
-                    operator: In
-                    values:
-                      - "nas"
-      tolerations:
-        - key: "nas"
-          operator: "Equal"
-          value: "true"
-          effect: NoSchedule
+      nodeSelector:
+        node-role.kubernetes.io/nas: "nas"
       containers:
         - name: minio
           image: minio/minio:latest

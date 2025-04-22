@@ -81,10 +81,6 @@ spec:
     podAntiAffinityType: required
     nodeSelector:
       node-role.kubernetes.io/nas: "nas"
-    tolerations:
-      - key: nas
-        operator: Equal
-        value: "true"
 #
 # Backup schedules
 #
