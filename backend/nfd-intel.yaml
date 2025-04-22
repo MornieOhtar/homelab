@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfd-intel
+spec:
+  project: homelab
+
+  sources:
+    - repoURL: https://github.com/intel/intel-device-plugins-for-kubernetes.git
+      targetRevision: v0.32.0
+      path: deployments/nfd/overlays/node-feature-rules
+    - repoURL: https://github.com/intel/intel-device-plugins-for-kubernetes.git
+      targetRevision: v0.32.0
+      path: deployments/operator/default
+    - repoURL: https://github.com/MornieOhtar/homelab.git
+      targetRevision: HEAD
+      path: backend/nfd-intel
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: backend
+
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
