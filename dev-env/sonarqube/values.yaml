@@ -18,6 +18,15 @@ jdbcOverwrite:
   ## and the secretValueKey of the password found within that secret
   jdbcSecretPasswordKey: "password"
 
+readinessProbe:
+  initialDelaySeconds: 120
+
+livelinessProbe:
+  initialDelaySeconds: 120
+
+startupProbe:
+  initialDelaySeconds: 90
+
 postgresql:
   enabled: false
 

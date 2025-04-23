@@ -10,7 +10,7 @@ spec:
       targetRevision: HEAD
       ref: homelab
     - repoURL: https://SonarSource.github.io/helm-chart-sonarqube
-      targetRevision: 2025.1.0
+      targetRevision: 2025.2.0
       chart: sonarqube
       helm:
         valueFiles:
