@@ -79,19 +79,19 @@ spec:
         - name: logs
           nfs:
             server: nfs.homelab
-            path: /share/n0/system/tdarr/logs
+            path: /share/h0/system/tdarr/logs
         - name: config
           nfs:
             server: nfs.homelab
-            path: /share/n0/system/tdarr/config
+            path: /share/h0/system/tdarr/config
         - name: server
           nfs:
             server: nfs.homelab
-            path: /share/n0/system/tdarr/server
+            path: /share/h0/system/tdarr/server
         - name: transcode-cache
           nfs:
             server: nfs.homelab
-            path: /share/n0/system/tdarr/cache
+            path: /share/h0/system/tdarr/cache
         - name: video
           nfs:
             server: nfs.homelab
@@ -177,7 +177,7 @@ spec:
         - name: transcode-cache
           nfs:
             server: nfs.homelab
-            path: /share/n0/system/tdarr/cache
+            path: /share/h0/system/tdarr/cache
         - name: video
           nfs:
             server: nfs.homelab
