@@ -31,11 +31,9 @@ spec:
       labels:
         app.kubernetes.io/name: home-assistant
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/invertor: "true"
       containers:
         - name: home-assistant
-          image: homeassistant/home-assistant:2025.4.2
+          image: homeassistant/home-assistant:2025.4.4
           resources:
             requests:
               cpu: 400m
@@ -45,15 +43,11 @@ spec:
               cpu: 2000m
               memory: 3Gi
               ephemeral-storage: 1Gi
-          ports:
-            - containerPort: 8123
           securityContext:
             privileged: true
           volumeMounts:
             - name: home-assistant-config
               mountPath: /config
-            - mountPath: /dev/ttyUSB0
-              name: must-invertor-usb
             - mountPath: /cert
               name: tls-cert
           env:
@@ -67,11 +61,8 @@ spec:
       volumes:
         - name: home-assistant-config
           nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_N0_PATH>/system/homeassistant
-        - name: must-invertor-usb
-          hostPath:
-            path: /dev/ttyUSB0
+            server: nfs.homelab
+            path: /share/n0/system/homeassistant
         - name: tls-cert
           secret:
             secretName: ha.<homelab-domain>-cert
