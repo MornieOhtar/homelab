@@ -1,21 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager
+  name: cert-manager-extra
 spec:
   project: homelab
 
-  sources:
-    - repoURL: https://github.com/MornieOhtar/homelab.git
-      targetRevision: HEAD
-      ref: homelab
-    - repoURL: https://charts.jetstack.io
-      targetRevision: 1.16.3
-      chart: cert-manager
-      helm:
-        releaseName: cert-manager
-        valueFiles:
-          - $homelab/backend/cert-manager/values.yaml
+  source:
+    repoURL: https://github.com/MornieOhtar/homelab.git
+    targetRevision: HEAD
+    path: backend/cert-manager-extra
 
   destination:
     server: https://kubernetes.default.svc
