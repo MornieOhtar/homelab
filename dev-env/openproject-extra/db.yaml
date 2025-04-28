@@ -12,10 +12,8 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: pg-openproject
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
-  instances: 1
+  instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:16.6-bookworm
   monitoring:
     enablePodMonitor: true
@@ -74,13 +72,12 @@ spec:
             name: cnpg-minio-creds
             key: ACCESS_SECRET_KEY
 
-  # Force Postgres to be running on NAS node
+  # Force Postgres to be running each instance on separate node
   affinity:
     enablePodAntiAffinity: true
     topologyKey: kubernetes.io/hostname
     podAntiAffinityType: required
-    nodeSelector:
-      node-role.kubernetes.io/nas: "nas"
+
 #
 # Backup schedules
 #
