@@ -34,7 +34,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: audiobookshelf
-          image: advplyr/audiobookshelf:2.20.0
+          image: advplyr/audiobookshelf:2.21.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80
