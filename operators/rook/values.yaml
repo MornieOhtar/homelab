@@ -1,0 +1,7 @@
+csi:
+  enableCSIHostNetwork: false
+  serviceMonitor:
+    enabled: true
+
+monitoring:
+  enabled: true

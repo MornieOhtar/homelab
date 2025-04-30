@@ -35,6 +35,10 @@ data:
             href: http://dnsa.<homelab-domain>
             description: DNS Server
             icon: technitium.png
+        - Rook main:
+            href: https://rook-main.<homelab-domain>
+            description: Rook storage server
+            icon: rook.png
     - Dev Env:
         - Gitea:
             href: https://git.<homelab-domain>

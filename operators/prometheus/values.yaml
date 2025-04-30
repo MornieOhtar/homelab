@@ -2,8 +2,6 @@
 ##
 crds:
   enabled: true
-  upgradeJob:
-    enabled: true
 
 ## Use standalone grafana installation
 ##
