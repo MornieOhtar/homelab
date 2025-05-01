@@ -60,9 +60,8 @@ spec:
                   key: uri
       volumes:
         - name: home-assistant-config
-          nfs:
-            server: nfs.homelab
-            path: /share/n0/system/homeassistant
+          persistentVolumeClaim:
+            claimName: homeassistant-data
         - name: tls-cert
           secret:
             secretName: ha.<homelab-domain>-cert

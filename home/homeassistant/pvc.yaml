@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: hashicorp-vault-data
+  name: homeassistant-data
   labels:
-    app: hashicorp-vault
+    app: homeassistant
     use: data
   annotations:
     k8up.io/backup: "true"

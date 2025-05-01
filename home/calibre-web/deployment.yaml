@@ -17,8 +17,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: calibre
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
   labels:
     app.kubernetes.io/name: calibre
 spec:
@@ -56,14 +54,12 @@ spec:
               ephemeral-storage: 256Mi
       volumes:
         - name: calibre-config
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/system/calibre/config
+          persistentVolumeClaim:
+            claimName: calibre-config
         - name: calibre-db
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/system/calibre/db
+          persistentVolumeClaim:
+            claimName: calibre-db
         - name: calibre-library
           nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/multimedia/books
+            server: nfs.homelab
+            path: /share/h0/multimedia/books

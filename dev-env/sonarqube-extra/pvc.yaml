@@ -1,35 +1,16 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sonarqube-data-nfs
-  labels:
-    app: sonarqube
-    use: data
-spec:
-  storageClassName: nfs
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
-  volumeName: sonarqube-data
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
   name: sonarqube-data
   labels:
     app: sonarqube
     use: data
   annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
+    k8up.io/backup: "true"
 spec:
-  storageClassName: nfs
-  capacity:
-    storage: 10Gi
+  storageClassName: rook-system-r3
   accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  nfs:
-    path: <NFS_STOR_0_PATH>/system/sonarqube
-    server: <NFS_STOR_0_SERVER>
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi

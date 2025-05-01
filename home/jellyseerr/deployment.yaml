@@ -274,17 +274,14 @@ spec:
               ephemeral-storage: 256Mi
       volumes:
         - name: jellyseerr-config
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/system/jellyseerr/
+          persistentVolumeClaim:
+            claimName: jellyseerr-data
         - name: radarr-config
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/system/radarr/
+          persistentVolumeClaim:
+            claimName: radarr-data
         - name: sonarr-config
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/system/sonarr/
+          persistentVolumeClaim:
+            claimName: sonarr-data
         - name: jellyfin-video
           nfs:
             server: <NFS_STOR_0_SERVER>

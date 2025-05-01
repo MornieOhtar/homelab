@@ -89,9 +89,8 @@ spec:
               name: tls-cert
       volumes:
         - name: gitea-data
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/system/gitea
+          persistentVolumeClaim:
+            claimName: gitea-data
         - name: tls-cert
           secret:
             secretName: gitea-server-tls

@@ -17,22 +17,22 @@ spec:
     - host: bar.<homelab-domain>
       http:
         paths:
-          - path: /
-            pathType: Prefix
+          - path: /(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: bar-salt-rim
                 port:
                   number: 8080
-          - path: /search
-            pathType: Prefix
+          - path: /search/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: bar-meili
                 port:
                   number: 7700
-          - path: /bar
-            pathType: Prefix
+          - path: /bar/(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: barassistant

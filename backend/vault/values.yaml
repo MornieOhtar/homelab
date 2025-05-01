@@ -11,7 +11,7 @@ server:
   volumes:
     - name: vault-data
       persistentVolumeClaim:
-        claimName: hashicorp-vault-data-nfs
+        claimName: hashicorp-vault-data
   volumeMounts:
     - mountPath: /vault/data
       name: vault-data

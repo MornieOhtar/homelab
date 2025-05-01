@@ -130,13 +130,11 @@ spec:
               value: <qbittorrent-password>
       volumes:
         - name: qbittorrent-config
-          hostPath: # Torrent generally recommends using locally-attached volumes
-            path: <NFS_STOR_0_PATH>/system/qbittorrent/ # Specify a path to a local drive or volume on the Kubernetes worker node
-            type: Directory # The path to the last directory must exist
+          persistentVolumeClaim:
+            claimName: qbittorrent-config
         - name: jackett-config
-          hostPath: # Torrent generally recommends using locally-attached volumes
-            path: <NFS_STOR_0_PATH>/system/jackett/ # Specify a path to a local drive or volume on the Kubernetes worker node
-            type: Directory # The path to the last directory must exist
+          persistentVolumeClaim:
+            claimName: jackett-config
         - name: qbittorrent-downloads
           hostPath: # Torrent generally recommends using locally-attached volumes
             path: <NFS_STOR_0_PATH>/multimedia/torrent/ # Specify a path to a local drive or volume on the Kubernetes worker node

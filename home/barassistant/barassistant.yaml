@@ -69,6 +69,5 @@ spec:
               name: bar-data
       volumes:
         - name: bar-data
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/system/barassistant/data
+          persistentVolumeClaim:
+            claimName: barassistant-data

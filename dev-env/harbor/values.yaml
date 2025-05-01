@@ -16,12 +16,12 @@ persistence:
   enabled: true
   persistentVolumeClaim:
     registry:
-      existingClaim: "harbor-registry-nfs"
+      existingClaim: "harbor-registry"
     jobservice:
       jobLog:
-        existingClaim: "harbor-job-log-nfs"
+        existingClaim: "harbor-job-log"
     trivy:
-      existingClaim: "harbor-trivy-nfs"
+      existingClaim: "harbor-trivy"
   imageChartStorage:
     type: filesystem
 
