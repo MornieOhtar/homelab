@@ -3,21 +3,24 @@ kind: Schedule
 metadata:
   name: k8up-schedule-home-local
 spec:
+  podSecurityContext:
+    runAsGroup: 0
+    runAsUser: 0
   backend:
     s3:
       endpoint: http://minio.backend:9000
-      bucket: k8up-home
+      bucket: k8up
       accessKeyIDSecretRef:
-        name: k8up-home-local-minio
-        key: accessKey
+        name: k8up-local-minio
+        key: ACCESS_KEY_ID
       secretAccessKeySecretRef:
-        name: k8up-home-local-minio
-        key: secretKey
+        name: k8up-local-minio
+        key: ACCESS_SECRET_KEY
     repoPasswordSecretRef:
       name: k8up-local-restic
       key: restic-password
   backup:
-    schedule: '13 */2 * * *'
+    schedule: '15 */1 * * *'
     failedJobsHistoryLimit: 2
     successfulJobsHistoryLimit: 0
     promURL: http://prometheus-pushgateway.operators:9091

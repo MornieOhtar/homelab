@@ -56,8 +56,6 @@ metadata:
   labels:
     app: tdarr
     use: transcode
-  annotations:
-    k8up.io/backup: "true"
 spec:
   storageClassName: rook-ephemeral-r1
   accessModes:
