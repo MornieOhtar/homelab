@@ -1,0 +1,21 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: filebrowser-config
+data:
+  .filebrowser.json: |-
+    {
+      "port": 443,
+      "baseURL": "",
+      "address": "",
+      "log": "stdout",
+      "database": "/database/filebrowser.db",
+      "root": "/srv",
+      "branding": {
+        "name": "Mornery FM",
+        "disableExternal": "true"
+      },
+      "signup": "false",
+      "cert": "/cert/tls.crt",
+      "key": "/cert/tls.key"
+    }
