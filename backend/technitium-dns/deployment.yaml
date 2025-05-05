@@ -78,7 +78,7 @@ spec:
     spec:
       containers:
         - name: technitium-dns
-          image: technitium/dns-server:13.4.3
+          image: technitium/dns-server:13.6.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 53 # DNS port
@@ -117,9 +117,8 @@ spec:
             value: "1024 65000"
       volumes:
         - name: config
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/system/technitium
+          persistentVolumeClaim:
+            claimName: technitium-data
         - name: tls-cert
           secret:
             secretName: dns-server-tls
