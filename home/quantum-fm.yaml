@@ -1,14 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: paperless-ngx
+  name: quantum
 spec:
   project: homelab
 
   source:
     repoURL: https://github.com/MornieOhtar/homelab.git
     targetRevision: HEAD
-    path: home/paperless-ngx
+    path: home/quantum
+
   destination:
     server: https://kubernetes.default.svc
     namespace: home
@@ -17,7 +18,6 @@ spec:
     automated:
       prune: true
     syncOptions:
-      - Validate=false
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true

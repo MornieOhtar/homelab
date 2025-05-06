@@ -1,29 +1,29 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: paperless-ngx
+  name: quantum-fm
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     kubernetes.io/tls-acme: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   ingressClassName: nginx
   rules:
-    - host: paperless.<homelab-domain>
+    - host: qfm.<homelab-domain>
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
               service:
-                name: paperless-ngx
+                name: quantum-fm
                 port:
-                  name: web
-            pathType: Prefix
+                  number: 80
   tls:
     - hosts:
-        - paperless.<homelab-domain>
-      secretName: "paperless.<homelab-domain>-cert"
+        - qfm.<homelab-domain>
+      secretName: "qfm.homelab-cert"
