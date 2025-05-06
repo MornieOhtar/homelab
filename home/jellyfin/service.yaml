@@ -67,11 +67,11 @@ spec:
           volumeMounts:
             - mountPath: /cert
               name: tls-cert
+            - mountPath: /config
+              name: jellyfin-config
             # LIBRARY
             - mountPath: /media
               name: jellyfin-video
-            - mountPath: /config
-              name: jellyfin-config
             # TEMP
             - mountPath: /cache
               name: jellyfin-cache
@@ -88,9 +88,8 @@ spec:
             type: Directory
         # CONFIG
         - name: jellyfin-config
-          hostPath:
-            path: <NFS_STOR_0_PATH>/system/jellyfin
-            type: Directory
+          persistentVolumeClaim:
+            claimName: jellyfin-config
         # TEMP
         - name: jellyfin-cache
           emptyDir: {}
