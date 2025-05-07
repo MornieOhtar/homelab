@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jackett
+  name: radarr
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     kubernetes.io/tls-acme: "true"
@@ -9,22 +9,21 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
-    nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/16,10.0.0.0/8
     cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   ingressClassName: nginx
   rules:
-    - host: jackett.<homelab-domain>
+    - host: radarr.<homelab-domain>
       http:
         paths:
           - path: /
             backend:
               service:
-                name: qbittorrent
+                name: radarr
                 port:
-                  name: jackett
+                  name: radarr
             pathType: Prefix
   tls:
     - hosts:
-        - jackett.<homelab-domain>
-      secretName: "jackett.<homelab-domain>-cert"
+        - radarr.<homelab-domain>
+      secretName: "radarr.homelab-cert"

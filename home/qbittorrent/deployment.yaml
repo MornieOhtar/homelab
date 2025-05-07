@@ -34,21 +34,6 @@ spec:
       name: jackett
       protocol: TCP
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: jackett
-  labels:
-    app.kubernetes.io/name: jackett
-spec:
-  selector:
-    app.kubernetes.io/name: qbittorrent
-  ports:
-    - port: 9117
-      targetPort: jackett
-      name: jackett
-      protocol: TCP
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -99,19 +84,6 @@ spec:
               name: qbittorrent-downloads
             - mountPath: /config
               name: qbittorrent-config
-        - name: jackett
-          image: linuxserver/jackett:0.22.1726
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 9117
-              protocol: TCP
-              name: jackett
-          volumeMounts:
-            - mountPath: /config
-              name: jackett-config
-          env:
-            - name: TZ
-              value: Europe/Kyiv
         - name: exporter
           image: caseyscarborough/qbittorrent-exporter:v1.3.5
           imagePullPolicy: IfNotPresent
@@ -132,9 +104,6 @@ spec:
         - name: qbittorrent-config
           persistentVolumeClaim:
             claimName: qbittorrent-config
-        - name: jackett-config
-          persistentVolumeClaim:
-            claimName: jackett-config
         - name: qbittorrent-downloads
           hostPath: # Torrent generally recommends using locally-attached volumes
             path: <NFS_STOR_0_PATH>/multimedia/torrent/ # Specify a path to a local drive or volume on the Kubernetes worker node

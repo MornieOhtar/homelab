@@ -82,10 +82,10 @@ data:
               url: http://immich-server:2283
               key: <path:kv/data/homepage#immich-key>
               version: 2
-        - Barassistant:
-            href: https://bar.<homelab-domain>
-            description: Bar & Coctails
-            icon: bar-assistant.png
+        - File Manager:
+            href: https://qfm.<homelab-domain>
+            description: File manager & File Sharing
+            icon: filebrowser.png
         - Homeassistant:
             href: https://ha.<homelab-domain>
             description: Home automations
@@ -117,14 +117,10 @@ data:
               url: http://mealie:9000
               key: <path:kv/data/homepage#mealie-key>
               version: 2
-        - Paperless:
-            href: https://paperless.<homelab-domain>
-            description: Manuals & Documents
-            icon: paperless-ngx.png
-            widget:
-              type: paperlessngx
-              url: http://paperless-ngx:8000
-              key: <path:kv/data/homepage#paperless-token>
+        - Barassistant:
+            href: https://bar.<homelab-domain>
+            description: Bar & Coctails
+            icon: bar-assistant.png
     - Video:
         - Jellyfin:
             href: https://video.<homelab-domain>

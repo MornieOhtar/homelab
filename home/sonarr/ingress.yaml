@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jellyseerr
+  name: sonarr
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     kubernetes.io/tls-acme: "true"
@@ -13,17 +13,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: jellyseerr.<homelab-domain>
+    - host: sonarr.<homelab-domain>
       http:
         paths:
           - path: /
             backend:
               service:
-                name: jellyseerr
+                name: sonarr
                 port:
-                  name: jellyseerr
+                  name: sonarr
             pathType: Prefix
   tls:
     - hosts:
-        - jellyseerr.<homelab-domain>
-      secretName: "jellyseerr.homelab-cert"
+        - sonarr.<homelab-domain>
+      secretName: "sonarr.homelab-cert"

@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jellyseerr
+  name: jackett
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     kubernetes.io/tls-acme: "true"
@@ -9,21 +9,22 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+    nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/16,10.0.0.0/8
     cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   ingressClassName: nginx
   rules:
-    - host: jellyseerr.<homelab-domain>
+    - host: jackett.<homelab-domain>
       http:
         paths:
           - path: /
             backend:
               service:
-                name: jellyseerr
+                name: jackett
                 port:
-                  name: jellyseerr
+                  name: jackett
             pathType: Prefix
   tls:
     - hosts:
-        - jellyseerr.<homelab-domain>
-      secretName: "jellyseerr.homelab-cert"
+        - jackett.<homelab-domain>
+      secretName: "jackett.homelab-cert"

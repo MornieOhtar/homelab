@@ -43,7 +43,7 @@ data:
           authorizationUrl: "https://keycloak.<homelab-domain>/realms/homelab/protocol/openid-connect/auth"
           tokenUrl: "https://keycloak.<homelab-domain>/realms/homelab/protocol/openid-connect/token"
           userInfoUrl: "https://keycloak.<homelab-domain>/realms/homelab/protocol/openid-connect/userinfo"
-          scopes: "groups email roles profile"
+          scopes: "openid groups email roles profile"
           userIdentifier: "username"
           jwksUrl: "https://keycloak.<homelab-domain>/realms/homelab/protocol/openid-connect/certs"
     frontend:

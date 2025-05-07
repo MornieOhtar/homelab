@@ -13,44 +13,12 @@ spec:
       name: jellyseerr
       protocol: TCP
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: radarr
-  labels:
-    app.kubernetes.io/name: radarr
-spec:
-  selector:
-    app.kubernetes.io/name: jellyseerr
-  ports:
-    - port: 7878
-      targetPort: radarr
-      name: radarr
-      protocol: TCP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: sonarr
-  labels:
-    app.kubernetes.io/name: sonarr
-spec:
-  selector:
-    app.kubernetes.io/name: jellyseerr
-  ports:
-    - port: 8989
-      targetPort: sonarr
-      name: sonarr
-      protocol: TCP
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jellyseerr
   labels:
     app.kubernetes.io/name: jellyseerr
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   replicas: 1
   strategy:
@@ -120,173 +88,15 @@ spec:
               cpu: 750m
               memory: 1Gi
               ephemeral-storage: 256Mi
-        - name: radarr
-          image: linuxserver/radarr:5.22.4
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 7878
-              protocol: TCP
-              name: radarr
-          volumeMounts:
-            - mountPath: /movies
-              name: jellyfin-video
-            - mountPath: /downloads
-              name: qbittorrent-downloads
-            - mountPath: /config
-              name: radarr-config
-          env:
-            - name: TZ
-              value: Europe/Kyiv
-            - name: PUID
-              value: "1000"
-            - name: PGID
-              value: "1000"
-            - name: RADARR__APP__INSTANCENAME
-              value: Mornery Radarr
-            - name: RADARR__AUTH__APIKEY
-              value: <radarr-api-key>
-            - name: RADARR__AUTH__ENABLED
-              value: "true"
-            - name: RADARR__AUTH__METHOD
-              value: "2"
-            - name: RADARR__AUTH__REQUIRED
-              value: "true"
-            - name: RADARR__LOG__DBENABLED
-              value: "false"
-            - name: RADARR__POSTGRES__HOST
-              valueFrom:
-                secretKeyRef:
-                  name: pg-radarr-data-app
-                  key: host
-            - name: RADARR__POSTGRES__PORT
-              value: "5432"
-            - name: RADARR__POSTGRES__USER
-              valueFrom:
-                secretKeyRef:
-                  name: pg-radarr-data-app
-                  key: user
-            - name: RADARR__POSTGRES__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pg-radarr-data-app
-                  key: password
-            - name: RADARR__POSTGRES__MAINDB
-              valueFrom:
-                secretKeyRef:
-                  name: pg-radarr-data-app
-                  key: dbname
-            - name: RADARR__SERVER__URLBASE
-              value: "/"
-            - name: RADARR__SERVER__BINDADDRESS
-              value: "*"
-            - name: RADARR__SERVER__PORT
-              value: "7878"
-            - name: RADARR__SERVER__ENABLESSL
-              value: "False"
-            - name: RADARR__SERVER__SSLPORT
-              value: "9898"
-            - name: RADARR__LOG__LEVEL
-              value: "warning"
-          resources:
-            requests:
-              cpu: 50m
-              memory: 128Mi
-              ephemeral-storage: 128Mi
-            limits:
-              cpu: 750m
-              memory: 1Gi
-              ephemeral-storage: 256Mi
-        - name: sonarr
-          image: linuxserver/sonarr:4.0.14
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8989
-              protocol: TCP
-              name: sonarr
-          volumeMounts:
-            - mountPath: /tv
-              name: jellyfin-video
-            - mountPath: /downloads
-              name: qbittorrent-downloads
-            - mountPath: /config
-              name: sonarr-config
-          env:
-            - name: TZ
-              value: Europe/Kyiv
-            - name: PUID
-              value: "1000"
-            - name: PGID
-              value: "1000"
-            - name: SONARR__APP__INSTANCENAME
-              value: Mornery Sonarr
-            - name: SONARR__AUTH__APIKEY
-              value: <sonarr-api-key>
-            - name: SONARR__AUTH__ENABLED
-              value: "true"
-            - name: SONARR__AUTH__METHOD
-              value: "2"
-            - name: SONARR__AUTH__REQUIRED
-              value: "true"
-            - name: SONARR__LOG__DBENABLED
-              value: "false"
-            - name: SONARR__POSTGRES__HOST
-              valueFrom:
-                secretKeyRef:
-                  name: pg-sonarr-data-app
-                  key: host
-            - name: SONARR__POSTGRES__PORT
-              value: "5432"
-            - name: SONARR__POSTGRES__USER
-              valueFrom:
-                secretKeyRef:
-                  name: pg-sonarr-data-app
-                  key: user
-            - name: SONARR__POSTGRES__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pg-sonarr-data-app
-                  key: password
-            - name: SONARR__POSTGRES__MAINDB
-              valueFrom:
-                secretKeyRef:
-                  name: pg-sonarr-data-app
-                  key: dbname
-            - name: SONARR__SERVER__URLBASE
-              value: "/"
-            - name: SONARR__SERVER__BINDADDRESS
-              value: "*"
-            - name: SONARR__SERVER__PORT
-              value: "8989"
-            - name: SONARR__SERVER__ENABLESSL
-              value: "False"
-            - name: SONARR__SERVER__SSLPORT
-              value: "9898"
-            - name: SONARR__LOG__LEVEL
-              value: "warning"
-          resources:
-            requests:
-              cpu: 50m
-              memory: 128Mi
-              ephemeral-storage: 128Mi
-            limits:
-              cpu: 750m
-              memory: 1Gi
-              ephemeral-storage: 256Mi
       volumes:
         - name: jellyseerr-config
           persistentVolumeClaim:
             claimName: jellyseerr-data
-        - name: radarr-config
-          persistentVolumeClaim:
-            claimName: radarr-data
-        - name: sonarr-config
-          persistentVolumeClaim:
-            claimName: sonarr-data
         - name: jellyfin-video
           nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/multimedia/video/
+            server: nfs.homelab
+            path: /share/h0/multimedia/video/
         - name: qbittorrent-downloads
           nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/multimedia/torrent/
+            server: nfs.homelab
+            path: /share/h0/multimedia/torrent/

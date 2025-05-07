@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: qbittorrent-config
+  name: jackett-config
   labels:
-    app: qbittorrent
+    app: jackett
     use: config
   annotations:
     k8up.io/backup: "true"

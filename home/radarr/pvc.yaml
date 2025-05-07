@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: qbittorrent-config
+  name: radarr-data
   labels:
-    app: qbittorrent
-    use: config
+    app: radarr
+    use: data
   annotations:
     k8up.io/backup: "true"
 spec:
@@ -13,4 +13,4 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: 10Gi

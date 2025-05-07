@@ -1,17 +1,7 @@
-###################################################################################################
-#
-# Postgresql Database cluster, using CNPG
-#
-###################################################################################################
-
-#
-# Cluster definition
-#
----
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: pg-radarr-data
+  name: pg-radarr
 spec:
   instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:16.6-bookworm
@@ -31,7 +21,7 @@ spec:
 
   # Import existing database
   bootstrap:
-    initdb: null
+#    initdb: null
     recovery:
       source: pg-radarr-data
 
@@ -85,9 +75,9 @@ spec:
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
-  name: pg-radarr-data-local-schedule
+  name: pg-radarr-local-schedule
 spec:
   schedule: "0 20 */12 * * *" # For local store - backup every hour
   backupOwnerReference: self
   cluster:
-    name: pg-radarr-data
+    name: pg-radarr
