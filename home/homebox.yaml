@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: quantum
+  name: homebox
 spec:
   project: homelab
 
   source:
     repoURL: https://github.com/MornieOhtar/homelab.git
     targetRevision: HEAD
-    path: home/quantum
+    path: home/homebox
 
   destination:
     server: https://kubernetes.default.svc

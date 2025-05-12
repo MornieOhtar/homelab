@@ -1,0 +1,83 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: pg-homebox
+spec:
+  instances: 2
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.6-bookworm
+  monitoring:
+    enablePodMonitor: true
+
+  # Create PVC templates on local storage for each Postgres pod
+  storage:
+    pvcTemplate:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
+      storageClassName: local-path
+      volumeMode: Filesystem
+
+  # Import existing database
+  bootstrap:
+    initdb: null
+#    recovery:
+#      source: pg-homebox
+
+  # Backup strategy
+  backup:
+    barmanObjectStore:
+      data:
+        compression: bzip2
+      wal:
+        compression: bzip2
+        maxParallel: 16
+      destinationPath: "s3://cnpg"
+      endpointURL: "http://minio.backend:9000"
+      s3Credentials:
+        accessKeyId:
+          name: cnpg-minio-creds
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: cnpg-minio-creds
+          key: ACCESS_SECRET_KEY
+    retentionPolicy: "30d"
+
+  # WAL backup clusters
+  externalClusters:
+    - name: pg-homebox
+      barmanObjectStore:
+        data:
+          compression: bzip2
+        wal:
+          compression: bzip2
+        destinationPath: "s3://cnpg"
+        endpointURL: "http://minio.backend:9000"
+        s3Credentials:
+          accessKeyId:
+            name: cnpg-minio-creds
+            key: ACCESS_KEY_ID
+          secretAccessKey:
+            name: cnpg-minio-creds
+            key: ACCESS_SECRET_KEY
+
+  # Force Postgres to be running each instance on separate node
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: required
+
+#
+# Backup schedules
+#
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: pg-homebox-local-schedule
+spec:
+  schedule: "0 43 */12 * * *" # For local store - backup every hour
+  backupOwnerReference: self
+  cluster:
+    name: pg-homebox

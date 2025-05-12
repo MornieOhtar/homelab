@@ -1,7 +1,6 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: quantum-fm
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     kubernetes.io/tls-acme: "true"
@@ -10,20 +9,21 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     cert-manager.io/cluster-issuer: letsencrypt-production
+  name: nextcloud
 spec:
   ingressClassName: nginx
   rules:
-    - host: qfm.<homelab-domain>
+    - host: nextcloud.<homelab-domain>
       http:
         paths:
           - path: /
-            pathType: Prefix
             backend:
               service:
-                name: quantum-fm
+                name: nextcloud
                 port:
-                  number: 80
+                  name: web
+            pathType: Prefix
   tls:
     - hosts:
-        - qfm.<homelab-domain>
-      secretName: "qfm.homelab-cert"
+        - nextcloud.<homelab-domain>
+      secretName: "nextcloud.homelab-cert"

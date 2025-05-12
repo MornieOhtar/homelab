@@ -82,10 +82,14 @@ data:
               url: http://immich-server:2283
               key: <path:kv/data/homepage#immich-key>
               version: 2
-        - File Manager:
-            href: https://qfm.<homelab-domain>
+        - Nextcloud:
+            href: https://nextcloud.<homelab-domain>
             description: File manager & File Sharing
-            icon: filebrowser.png
+            icon: nextcloud.png
+        - Homebox:
+            href: https://homebox.<homelab-domain>
+            description: Inventory management
+            icon: homebox.png
         - Homeassistant:
             href: https://ha.<homelab-domain>
             description: Home automations

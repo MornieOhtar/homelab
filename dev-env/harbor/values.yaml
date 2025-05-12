@@ -61,26 +61,3 @@ metrics:
     create: true
     additionalLabels:
       release: prometheus-operator
-
-# Tolerations to start on amd64 node, as other nodes platform not supported
-portal:
-  nodeSelector:
-    kubernetes.io/arch: amd64
-core:
-  nodeSelector:
-    kubernetes.io/arch: amd64
-jobservice:
-  nodeSelector:
-    kubernetes.io/arch: amd64
-registry:
-  nodeSelector:
-    kubernetes.io/arch: amd64
-trivy:
-  nodeSelector:
-    kubernetes.io/arch: amd64
-exporter:
-  nodeSelector:
-    kubernetes.io/arch: amd64
-nginx:
-  nodeSelector:
-    kubernetes.io/arch: amd64
