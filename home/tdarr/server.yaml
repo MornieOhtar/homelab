@@ -4,8 +4,6 @@ metadata:
   name: tdarr
   labels:
     app.kubernetes.io/name: tdarr
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: tdarr.homelab.local
 spec:
   selector:
     app.kubernetes.io/name: tdarr

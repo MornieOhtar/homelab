@@ -1,28 +1,30 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: pgadmin
+  name: tdarr
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
     cert-manager.io/cluster-issuer: letsencrypt-production
-    external-dns.alpha.kubernetes.io/hostname: pgadmin.homelab.local
+    external-dns.alpha.kubernetes.io/hostname: tdarr.homelab.local
 spec:
   ingressClassName: nginx-internal
   rules:
-    - host: pgadmin.<homelab-domain>
+    - host: tdarr.<homelab-domain>
       http:
         paths:
           - path: /
-            pathType: Prefix
             backend:
               service:
-                name: pgadmin-service
+                name: tdarr
                 port:
-                  name: pgadmin-port
+                  name: http
+            pathType: Prefix
   tls:
     - hosts:
-        - pgadmin.<homelab-domain>
-      secretName: "pgadmin.<homelab-domain>-cert"
+        - tdarr.<homelab-domain>
+      secretName: "tdarr.homelab-cert"

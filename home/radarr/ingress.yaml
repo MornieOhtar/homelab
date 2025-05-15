@@ -10,8 +10,9 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
     cert-manager.io/cluster-issuer: letsencrypt-production
+    external-dns.alpha.kubernetes.io/hostname: radarr.homelab.local
 spec:
-  ingressClassName: nginx
+  ingressClassName: nginx-internal
   rules:
     - host: radarr.<homelab-domain>
       http:

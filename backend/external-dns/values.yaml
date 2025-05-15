@@ -6,6 +6,7 @@ extraArgs:
 
 sources:
   - service
+  - ingress
 
 txtOwnerId: edns-hl
 domainFilters:

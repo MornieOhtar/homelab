@@ -1,13 +1,15 @@
 controller:
-  name: nginx-ext
+  name: nginx-int
   hostNetwork: false
 
-  ingressClass: nginx
+  ingressClass: nginx-internal
   ingressClassByName: true
   ingressClassResource:
-    name: nginx
+    controllerValue: k8s.io/ingress-nginx-internal
+    name: nginx-internal
     enabled: true
     default: false
+
 
   enableCertManager: false
 
@@ -15,7 +17,7 @@ controller:
     type: LoadBalancer
     externalTrafficPolicy: Local
     annotations:
-      metallb.universe.tf/loadBalancerIPs: 192.168.30.240
+      metallb.universe.tf/loadBalancerIPs: 192.168.30.241
     ipFamilies:
       - IPv4
 
