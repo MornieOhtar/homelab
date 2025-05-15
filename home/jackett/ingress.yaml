@@ -9,10 +9,10 @@ metadata:
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-passthrough: "false"
-    nginx.ingress.kubernetes.io/whitelist-source-range: 192.168.0.0/16,10.0.0.0/8
     cert-manager.io/cluster-issuer: letsencrypt-production
+    external-dns.alpha.kubernetes.io/hostname: jackett.homelab.local
 spec:
-  ingressClassName: nginx
+  ingressClassName: nginx-internal
   rules:
     - host: jackett.<homelab-domain>
       http:

@@ -82,7 +82,7 @@ server:
         prometheus: prometheus-operator
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: nginx-internal
     hostname: argocd.homelab.local
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
