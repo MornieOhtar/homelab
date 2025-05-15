@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: technitium-admin
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    external-dns.alpha.kubernetes.io/hostname: dnsa.homelab.local
+spec:
+  ingressClassName: nginx-internal
+  rules:
+    - host: dnsa.<homelab-domain>
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: technitium-admin
+                port:
+                  name: web-http
+  tls:
+    - hosts:
+        - dnsa.<homelab-domain>
+      secretName: "dnsa.homelab-cert"
+

@@ -27,6 +27,10 @@ spec:
       protocol: TCP
       port: 443
       targetPort: 443
+    - name: dns-tls
+      protocol: TCP
+      port: 853
+      targetPort: 853
   type: LoadBalancer
   externalTrafficPolicy: Local
 ---
@@ -36,9 +40,6 @@ metadata:
   name: technitium-admin
   labels:
     app: dns
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
-    external-dns.alpha.kubernetes.io/hostname: dnsa.homelab.local
 spec:
   selector:
     app: technitium-dns
@@ -84,6 +85,7 @@ spec:
             - containerPort: 53 # DNS port
             - containerPort: 80 # DNS-over-HTTP
             - containerPort: 443 # DNS-over-HTTPS
+            - containerPort: 853 # DNS-over-TLS
             - containerPort: 5380 # Web console (HTTP)
             - containerPort: 53443 #Web console (HTTPS)
           env:
