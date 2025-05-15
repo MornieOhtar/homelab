@@ -40,8 +40,7 @@ spec:
                   mountPath: /data
           volumes:
             - name: data
-              nfs:
-                server: <NFS_STOR_0_SERVER>
-                path: <NFS_STOR_0_PATH>/multimedia/gallery
+              persistentVolumeClaim:
+                claimName: immich
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1

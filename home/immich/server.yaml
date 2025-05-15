@@ -104,6 +104,5 @@ spec:
             timeoutSeconds: 1
       volumes:
         - name: library
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/multimedia/gallery
+          persistentVolumeClaim:
+            claimName: immich
