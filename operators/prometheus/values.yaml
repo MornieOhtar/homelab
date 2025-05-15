@@ -61,7 +61,7 @@ prometheus:
     retention: 7d
     retentionSize: 10GiB
     remoteRead:
-      - url: http://grafana-mimir-gateway.backend/api/v1/push
+      - url: http://grafana-mimir-gateway.backend/api/v1/read
     remoteWrite:
       - url: http://grafana-mimir-gateway.backend/api/v1/push
   additionalServiceMonitors: []
