@@ -125,7 +125,7 @@ data:
             href: https://bar.<homelab-domain>
             description: Bar & Coctails
             icon: bar-assistant.png
-    - Video:
+    - Multimedia:
         - Jellyfin:
             href: https://video.<homelab-domain>
             description: Video streaming
@@ -139,6 +139,10 @@ data:
               enableUser: "true"
               showEpisodeNumber: "true"
               expandOneStreamToTwoRows: "false"
+        - Navidrome:
+            href: https://music.<homelab-domain>
+            description: Music streaming
+            icon: navidrome.png
         - Jellyseerr:
             href: https://jellyseerr.<homelab-domain>
             description: Media requests
@@ -164,6 +168,14 @@ data:
               url: http://sonarr:8989
               key: <path:kv/data/homepage#sonarr-key>
               enableQueue: "true"
+        - Lidarr:
+            href: https://lidarr.<homelab-domain>
+            description: Music downloader
+            icon: lidarr.png
+            widget:
+              type: lidarr
+              url: http://lidarr
+              key: <path:kv/data/homepage#lidarr-key>
         - Tdarr:
             href: https://tdarr.<homelab-domain>
             description: Video library transcoding
@@ -194,7 +206,7 @@ data:
         columns: 4
         style: row
         useEqualHeights: true
-      Video:
+      Multimedia:
         columns: 4
         style: row
         useEqualHeights: true
