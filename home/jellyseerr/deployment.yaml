@@ -92,11 +92,3 @@ spec:
         - name: jellyseerr-config
           persistentVolumeClaim:
             claimName: jellyseerr-data
-        - name: jellyfin-video
-          nfs:
-            server: nfs.homelab
-            path: /share/h0/multimedia/video/
-        - name: qbittorrent-downloads
-          nfs:
-            server: nfs.homelab
-            path: /share/h0/multimedia/torrent/

@@ -14,3 +14,41 @@ spec:
   resources:
     requests:
       storage: 50Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-media
+  labels:
+    app: jellyfin
+    use: media
+spec:
+  storageClassName: nfs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 19Ti
+  volumeName: jelyfin-media
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jelyfin-media
+spec:
+  storageClassName: nfs
+  capacity:
+    storage: 19Ti
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /share/h0/multimedia/video/
+    server: nfs.homelab
+    readOnly: false
+  mountOptions:
+    - nfsvers=4.2
+    - noatime
+    - rsize=1048576
+    - wsize=1048576
+    - intr

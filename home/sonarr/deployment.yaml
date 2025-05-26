@@ -117,9 +117,8 @@ spec:
           persistentVolumeClaim:
             claimName: sonarr-data
         - name: jellyfin-video
-          nfs:
-            server: nfs.homelab
-            path: /share/h0/multimedia/video/
+          persistentVolumeClaim:
+            claimName: jellyfin-media
         - name: qbittorrent-downloads
           nfs:
             server: nfs.homelab

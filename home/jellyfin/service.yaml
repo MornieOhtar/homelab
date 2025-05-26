@@ -83,9 +83,8 @@ spec:
             secretName: jellyfin-server-tls
         # LIBRARY
         - name: jellyfin-video
-          hostPath:
-            path: <NFS_STOR_0_PATH>/multimedia/video/
-            type: Directory
+          persistentVolumeClaim:
+            claimName: jellyfin-media
         # CONFIG
         - name: jellyfin-config
           persistentVolumeClaim:

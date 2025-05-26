@@ -176,13 +176,6 @@ data:
               type: lidarr
               url: http://lidarr
               key: <path:kv/data/homepage#lidarr-key>
-        - Tdarr:
-            href: https://tdarr.<homelab-domain>
-            description: Video library transcoding
-            icon: tdarr.png
-            widget:
-              type: tdarr
-              url: http://tdarr
         - Torrent:
             href: https://torrent.<homelab-domain>
             description: Torrent client
