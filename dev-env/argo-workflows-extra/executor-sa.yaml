@@ -1,42 +1,17 @@
 apiVersion: v1
-kind: ServiceAccount
+kind: Secret
+type: kubernetes.io/service-account-token
 metadata:
-  name: argo-workflows-executor
+  name: argo-workflow.service-account-token
   namespace: dev-env
-automountServiceAccountToken: true
+  annotations:
+    kubernetes.io/service-account.name: argo-workflow
 ---
 apiVersion: v1
-kind: ServiceAccount
+kind: Secret
+type: kubernetes.io/service-account-token
 metadata:
-  name: argo-workflows-executor
+  name: argo-workflow.service-account-token
   namespace: home
-automountServiceAccountToken: true
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: argo-workflows-executor
-rules:
-  - apiGroups:
-      - argoproj.io
-    resources:
-      - workflowtaskresults
-    verbs:
-      - create
-      - patch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: argo-workflows-executor
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: argo-workflows-executor
-subjects:
-  - kind: ServiceAccount
-    name: argo-workflows-executor
-    namespace: dev-env
-  - kind: ServiceAccount
-    name: argo-workflows-executor
-    namespace: home
+  annotations:
+    kubernetes.io/service-account.name: argo-workflow

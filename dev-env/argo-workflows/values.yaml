@@ -2,15 +2,17 @@ crds:
   install: true
   keep: true
 
-workflows:
+workflow:
   serviceAccount:
     create: true
+  rbac:
+    agentPermissions: true
 
 controller:
   metricsConfig:
     enabled: true
   persistence:
-    nodeStatusOffLoad: true
+    nodeStatusOffLoad: false
     archive: true
     postgresql:
       host: pg-argo-workflows-rw
@@ -28,13 +30,11 @@ controller:
   serviceMonitor:
     enabled: true
     namespace: operators
+  workflowWorkers: 64
+  workflowTTLWorkers: 8
   workflowNamespaces:
-    - default
-    - argocd
-    - backend
     - dev-env
     - home
-    - operators
 
 server:
   authModes:

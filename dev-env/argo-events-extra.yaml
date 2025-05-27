@@ -1,20 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-workflows
+  name: argo-events-extra
 spec:
   project: homelab
 
-  sources:
-    - repoURL: https://github.com/MornieOhtar/homelab.git
-      targetRevision: HEAD
-      ref: homelab
-    - repoURL: https://argoproj.github.io/argo-helm
-      targetRevision: 0.45.15
-      chart: argo-workflows
-      helm:
-        valueFiles:
-          - $homelab/dev-env/argo-workflows/values.yaml
+  source:
+    repoURL: https://github.com/MornieOhtar/homelab.git
+    targetRevision: HEAD
+    path: dev-env/argo-events-extra
+
   destination:
     server: https://kubernetes.default.svc
     namespace: dev-env
