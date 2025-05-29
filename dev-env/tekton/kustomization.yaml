@@ -1,0 +1,18 @@
+resources:
+  - https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.69.1/release.yaml
+  - https://storage.googleapis.com/tekton-releases/triggers/previous/v0.31.0/release.yaml
+  - https://storage.googleapis.com/tekton-releases/triggers/previous/v0.31.0/interceptors.yaml
+  - https://github.com/tektoncd/dashboard/releases/download/v0.55.0/release-full.yaml
+  - https://storage.googleapis.com/tekton-releases/results/previous/v0.14.0/release.yaml
+  - db.yaml
+  - cert.yaml
+  - service-monitor.yaml
+  - dashboard.yaml
+
+patches:
+  - path: patches/db/delete-database-statefulset.yaml
+  - path: patches/db/delete-database-service.yaml
+  - path: patches/db/delete-datbase-configmap.yaml
+  - path: patches/db/connect-tekton-results-retention-policy-agent.yaml
+  - path: patches/db/connect-tekton-results-api.yaml
+  - path: patches/disable-affinity-assistant.yaml

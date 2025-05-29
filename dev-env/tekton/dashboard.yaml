@@ -1,0 +1,16 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: tekton-overview
+spec:
+  allowCrossNamespaceImport: true
+  resyncPeriod: 30s
+  folder: 'Dev-env'
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana-cluster-main"
+  grafanaCom:
+    id: 18321
+  datasources:
+    - inputName: "DS_PROMETHEUS"
+      datasourceName: "mimir"

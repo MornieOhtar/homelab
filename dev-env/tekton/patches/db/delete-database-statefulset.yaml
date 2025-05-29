@@ -1,0 +1,6 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tekton-results-postgres
+  namespace: tekton-pipelines
+$patch: delete
