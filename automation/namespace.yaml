@@ -1,18 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tekton-extra
+  name: namespace-automation
 spec:
   project: homelab
 
   source:
     repoURL: https://github.com/MornieOhtar/homelab.git
     targetRevision: HEAD
-    path: dev-env/tekton-extra
-
+    path: automation/namespace
   destination:
     server: https://kubernetes.default.svc
-    namespace: dev-env
+    namespace: automation
 
   syncPolicy:
     automated:

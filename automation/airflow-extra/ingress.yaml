@@ -1,29 +1,28 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: tekton-dashboards
-  namespace: tekton-pipelines
+  name: airflow
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     cert-manager.io/cluster-issuer: letsencrypt-production
-    external-dns.alpha.kubernetes.io/hostname: tekton.homelab.local
+    external-dns.alpha.kubernetes.io/hostname: af.homelab.local
 spec:
   ingressClassName: nginx-internal
   rules:
-    - host: tekton.<homelab-domain>
+    - host: af.<homelab-domain>
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: tekton-dashboard
+                name: airflow-web
                 port:
-                  number: 9097
+                  number: 8080
   tls:
     - hosts:
-        - tekton.<homelab-domain>
-      secretName: "tekton.homelab-cert"
+        - af.<homelab-domain>
+      secretName: "af.homelab-cert"

@@ -1,0 +1,47 @@
+auth:
+  username: user
+  existingSecret: airflow-auth
+
+Executor: KubernetesExecutor
+
+dags:
+  enabled: true
+  repositories:
+    - repository: https://github.com/MornieOhtar/airflow-dags
+      branch: main
+      name: MornieOhtar-dags
+
+plugins:
+  enabled: false
+
+triggerer:
+  persistence:
+    storageClass: rook-system-r3
+
+rbac:
+  create: true
+
+metrics:
+  enabled: false
+  serviceMonitor:
+    enabled: true
+
+postgresql:
+  enabled: false
+
+externalDatabase:
+  host: pg-airflow-rw.automation
+  port: 5432
+  user: app
+  database: app
+  existingSecret: pg-airflow-app
+  existingSecretPasswordKey: password
+
+setupDBJob:
+  enabled: false
+
+redis:
+  enabled: false
+
+externalRedis:
+  host: redis-cluster-main-master.backend

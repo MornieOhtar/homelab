@@ -1,17 +1,25 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: tekton
+  name: airflow
 spec:
   project: homelab
 
-  source:
-    repoURL: https://github.com/MornieOhtar/homelab.git
-    targetRevision: HEAD
-    path: dev-env/tekton
+  sources:
+    - repoURL: https://github.com/MornieOhtar/homelab.git
+      targetRevision: HEAD
+      ref: homelab
+    - repoURL: registry-1.docker.io/bitnamicharts
+      path: airflow
+      targetRevision: 24.1.1
+      chart: airflow
+      helm:
+        valueFiles:
+          - $homelab/automation/airflow/values.yaml
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: tekton-pipelines
+    namespace: automation
 
   syncPolicy:
     automated:
