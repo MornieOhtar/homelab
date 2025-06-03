@@ -1,0 +1,43 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tools
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: tools.homelab.local
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      # Rule on the Host
+      match: HostRegexp(`^tools\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
+      # Enable Router observability
+      observability:
+        accessLogs: true
+        metrics: true
+        tracing: true
+      middlewares:
+        - name: local-whitelist
+      # Set a pirority
+      priority: 10
+      services:
+        # Target a Kubernetes Support
+        - kind: Service
+          serversTransport: default
+          name: it-tools
+          nativeLB: true
+          # Customize the connection between Traefik and the backend
+          passHostHeader: true
+          port: 80
+          responseForwarding:
+            flushInterval: 1ms
+          scheme: http
+          sticky:
+            cookie:
+              httpOnly: true
+              name: cookie
+              secure: true
+          strategy: wrr
+          weight: 10
+  tls:
+    certResolver: letsencrypt

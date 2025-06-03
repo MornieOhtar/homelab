@@ -3,10 +3,12 @@ provider:
 
 extraArgs:
   - --rfc2136-tsig-axfr
+  - --traefik-disable-legacy
 
 sources:
   - service
   - ingress
+  - traefik-proxy
 
 txtOwnerId: edns-hl
 domainFilters:

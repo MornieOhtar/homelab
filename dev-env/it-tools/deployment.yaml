@@ -6,7 +6,6 @@ metadata:
     app.kubernetes.io/name: it-tools
 spec:
   type: ClusterIP
-  clusterIP: None
   selector:
     app.kubernetes.io/name: it-tools
   ports:

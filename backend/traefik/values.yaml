@@ -1,0 +1,42 @@
+deployment:
+  replicas: 2
+
+ingressClass:  # @schema additionalProperties: false
+  enabled: true
+  isDefaultClass: true
+  name: "tf-int"
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    matchRule: HostRegexp(`^tf-int-db\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
+
+providers:
+  kubernetesCRD:
+    enabled: true
+  kubernetesIngress:
+    enabled: false
+  kubernetesGateway:
+    enabled: false
+  file:
+    enabled: false
+
+service:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: 192.168.30.245
+
+persistence:
+  enabled: true
+  size: 256Mi
+  accessMode: ReadWriteMany
+  storageClass: rook-system-r3
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory # Staging server
+      httpChallenge:
+        entryPoint: web
+      storage: /data/acme.json
