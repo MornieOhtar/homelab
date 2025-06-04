@@ -42,13 +42,13 @@ spec:
               protocol: TCP
           volumeMounts:
             - mountPath: /config
-              name: abs-config
+              name: config
             - mountPath: /metadata
-              name: abs-metadata
+              name: metadata
             - mountPath: /audiobooks
-              name: abs-audiobooks
+              name: audiobooks
             - mountPath: /podcasts
-              name: abs-podcasts
+              name: podcasts
           resources:
             requests:
               cpu: 100m
@@ -75,17 +75,15 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 1
       volumes:
-        - name: abs-config
+        - name: config
           persistentVolumeClaim:
             claimName: abs-config
-        - name: abs-metadata
+        - name: metadata
           persistentVolumeClaim:
             claimName: abs-metadata
-        - name: abs-audiobooks
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/multimedia/audiobooks
-        - name: abs-podcasts
-          nfs:
-            server: <NFS_STOR_0_SERVER>
-            path: <NFS_STOR_0_PATH>/multimedia/podcasts
+        - name: audiobooks
+          persistentVolumeClaim:
+            claimName: audiobooks
+        - name: podcasts
+          persistentVolumeClaim:
+            claimName: podcasts

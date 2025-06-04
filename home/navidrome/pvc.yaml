@@ -14,3 +14,18 @@ spec:
   resources:
     requests:
       storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: music
+  labels:
+    app: navidrome
+    use: media
+spec:
+  storageClassName: rook-media-r1
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Ti

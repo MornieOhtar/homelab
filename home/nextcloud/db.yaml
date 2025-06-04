@@ -13,7 +13,7 @@ kind: Cluster
 metadata:
   name: pg-nextcloud
 spec:
-  instances: 2
+  instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:16.6-bookworm
   monitoring:
     enablePodMonitor: true

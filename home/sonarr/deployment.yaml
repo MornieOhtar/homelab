@@ -120,6 +120,5 @@ spec:
           persistentVolumeClaim:
             claimName: jellyfin-media
         - name: qbittorrent-downloads
-          nfs:
-            server: nfs.homelab
-            path: /share/h0/multimedia/torrent/
+          persistentVolumeClaim:
+            claimName: qbittorrent-data

@@ -14,6 +14,7 @@ ingressRoute:
 providers:
   kubernetesCRD:
     enabled: true
+    nativeLBByDefault: true
   kubernetesIngress:
     enabled: false
   kubernetesGateway:

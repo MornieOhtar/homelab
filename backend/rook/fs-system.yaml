@@ -7,7 +7,7 @@ spec:
   metadataPool:
     deviceClass: ssd
     enableCrushUpdates: true
-    failureDomain: host
+    failureDomain: osd
     replicated:
       size: 2
     #  requireSafeReplicaSize: false
@@ -25,7 +25,7 @@ spec:
       application: ''
       deviceClass: ssd
       enableCrushUpdates: true
-      failureDomain: host
+      failureDomain: osd
       mirroring: {}
       quotas: {}
       statusCheck:
@@ -43,14 +43,11 @@ spec:
         # Further reference: https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#inline-compression
         compression_mode:
           none
-        # gives a hint (%) to Ceph in terms of expected consumption of the total cluster capacity of a given pool
-        # for more info: https://docs.ceph.com/docs/master/rados/operations/placement-groups/#specifying-expected-pool-size
-        #target_size_ratio: ".5"
-    - name: ephemeral-r1
+    - name: media-r1
       application: ''
-      deviceClass: ssd
+      deviceClass: hdd
       enableCrushUpdates: true
-      failureDomain: host
+      failureDomain: osd
       mirroring: {}
       quotas: {}
       statusCheck:
@@ -184,26 +181,6 @@ spec:
     # export:                 # export=<0-256> (disabled=-1)
     # random:                 # random=[0.0, 1.0](disabled=0.0)
 ---
-# create default csi subvolume group
-apiVersion: ceph.rook.io/v1
-kind: CephFilesystemSubVolumeGroup
-metadata:
-  name: rook-fs-ephemeral-r1-csi # lets keep the svg crd name same as `filesystem name + csi` for the default csi svg
-spec:
-  # The name of the subvolume group. If not set, the default is the name of the subvolumeGroup CR.
-  name: ephemeral-r1-csi
-  # filesystemName is the metadata name of the CephFilesystem CR where the subvolume group will be created
-  filesystemName: rook-fs
-  dataPoolName: rook-fs-ephemeral-r1
-  # reference https://docs.ceph.com/en/latest/cephfs/fs-volumes/#pinning-subvolumes-and-subvolume-groups
-  # only one out of (export, distributed, random) can be set at a time
-  # by default pinning is set with value: distributed=1
-  # for disabling default values set (distributed=0)
-  pinning:
-    distributed: 1 # distributed=<0, 1> (disabled=0)
-    # export:                 # export=<0-256> (disabled=-1)
-    # random:                 # random=[0.0, 1.0](disabled=0.0)
----
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -237,7 +214,7 @@ reclaimPolicy: Delete
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: rook-ephemeral-r1
+  name: rook-media-r1
 provisioner: rook-ceph.cephfs.csi.ceph.com
 allowVolumeExpansion: true
 parameters:
@@ -250,7 +227,7 @@ parameters:
 
   # Ceph pool into which the volume shall be created
   # Required for provisionVolume: "true"
-  pool: rook-fs-ephemeral-r1
+  pool: rook-fs-media-r1
   provisionVolume: "true"
 
   # The secrets contain Ceph admin credentials. These are generated automatically by the operator

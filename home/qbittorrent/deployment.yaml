@@ -81,7 +81,7 @@ spec:
             - mountPath: /cert
               name: tls-cert
             - mountPath: /downloads
-              name: qbittorrent-downloads
+              name: qbittorrent-data
             - mountPath: /config
               name: qbittorrent-config
         - name: exporter
@@ -104,10 +104,9 @@ spec:
         - name: qbittorrent-config
           persistentVolumeClaim:
             claimName: qbittorrent-config
-        - name: qbittorrent-downloads
-          hostPath: # Torrent generally recommends using locally-attached volumes
-            path: <NFS_STOR_0_PATH>/multimedia/torrent/ # Specify a path to a local drive or volume on the Kubernetes worker node
-            type: Directory # The path to the last directory must exist
+        - name: qbittorrent-data
+          persistentVolumeClaim:
+            claimName: qbittorrent-data
         - name: tls-cert
           secret:
             secretName: torrent-server-tls

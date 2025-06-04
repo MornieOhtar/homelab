@@ -31,3 +31,33 @@ spec:
   resources:
     requests:
       storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: audiobooks
+  labels:
+    app: audiobookshelf
+    use: media
+spec:
+  storageClassName: rook-media-r1
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Ti
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: podcasts
+  labels:
+    app: audiobookshelf
+    use: media
+spec:
+  storageClassName: rook-media-r1
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Ti

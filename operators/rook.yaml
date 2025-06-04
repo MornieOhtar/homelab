@@ -15,7 +15,7 @@ spec:
         include: "*.yaml"
         exclude: 'values.yaml'
     - repoURL: https://charts.rook.io/release
-      targetRevision: v1.17.1
+      targetRevision: v1.17.3
       chart: rook-ceph
       helm:
         valueFiles:
@@ -25,8 +25,6 @@ spec:
     namespace: rook-ceph
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground

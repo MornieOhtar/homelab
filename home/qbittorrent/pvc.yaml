@@ -14,3 +14,18 @@ spec:
   resources:
     requests:
       storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qbittorrent-data
+  labels:
+    app: qbittorrent
+    use: data
+spec:
+  storageClassName: rook-media-r1
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Ti

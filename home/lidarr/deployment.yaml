@@ -113,10 +113,8 @@ spec:
           persistentVolumeClaim:
             claimName: lidarr-data
         - name: music
-          nfs:
-            path: /share/h0/multimedia/music
-            server: nfs.homelab
+          persistentVolumeClaim:
+            claimName: music
         - name: qbittorrent-downloads
-          nfs:
-            server: nfs.homelab
-            path: /share/h0/multimedia/torrent/
+          persistentVolumeClaim:
+            claimName: qbittorrent-data

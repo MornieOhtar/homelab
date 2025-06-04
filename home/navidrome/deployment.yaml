@@ -45,12 +45,11 @@ spec:
             - mountPath: /data/
               name: data
             - mountPath: /music
-              name: media
+              name: music
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: navidrome-data
-        - name: media
-          nfs:
-            path: /share/h0/multimedia/music
-            server: nfs.homelab
+        - name: music
+          persistentVolumeClaim:
+            claimName: music

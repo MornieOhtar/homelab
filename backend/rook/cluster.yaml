@@ -242,7 +242,13 @@ spec:
   #   mon:
   #   osd:
   # For OSD it also is a possible to specify requests/limits based on device class
-  #   osd-hdd:
+     osd-hdd:
+       limits:
+         cpu: 2000m
+         memory: 4Gi
+       requests:
+         cpu: 500m
+         memory: 2Gi
      osd-ssd:
        limits:
          cpu: 2000m
@@ -260,7 +266,7 @@ spec:
   #   cmd-reporter:
   # The option to automatically remove OSDs that are out and are safe to destroy.
   # Default is false
-  #removeOSDsIfOutAndSafeToRemove: false
+  removeOSDsIfOutAndSafeToRemove: true
   priorityClassNames:
     #all: rook-ceph-default-priority-class
     mon: system-node-critical
@@ -275,26 +281,35 @@ spec:
     # crushRoot: "custom-root" # specify a non-default root label for the CRUSH map
     # metadataDevice: "md0" # specify a non-rotational storage so ceph-volume will use it as block db device of bluestore.
     # databaseSizeMB: "1024" # uncomment if the disks are smaller than 100 GB
-     osdsPerDevice: "1" # this value can be overridden at the node or device level
+      osdsPerDevice: "1" # this value can be overridden at the node or device level
     # encryptedDevice: "true" # the default value for this option is "false"
     # deviceClass: "myclass" # specify a device class for OSDs in the cluster
     allowDeviceClassUpdate: true # whether to allow changing the device class of an OSD after it is created
     allowOsdCrushWeightUpdate: true # whether to allow resizing the OSD crush weight after osd pvc is increased
-    # Individual nodes and their config can be specified as well, but 'useAllNodes' above must be set to false. Then, only the named
-    # nodes below will be used as storage resources.  Each node's 'name' field should match their 'kubernetes.io/hostname' label.
+
     nodes:
       - name: "n001.homelab"
-        devices: # specific devices to use for storage can be specified for each node
-          - name: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH1T9HMLT-00005_S455NC0R219080"
+        config:
+          metadataDevice: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH1T9HMLT-00005_S455NC0R219080"
+        devices:
+          # System/fast drives - REQUIRES metadataDevice override
+          - name: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH3T8HMLT-00005_S456NC0T417101"
             config:
               osdsPerDevice: "1"
               deviceClass: "ssd"
+              metadataDevice: ""
+          # Slow drives - NO metadataDevice override
+          - name: "/dev/disk/by-id/ata-ST24000NM002H-3KS133_ZYD1RNYS"
+            config:
+              osdsPerDevice: "1"
+              deviceClass: "hdd"
       - name: "nas001.<NODES_DOMAIN>"
         devices:
           - name: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH1T9HMLT-00005_S455NC0R219093"
             config:
               osdsPerDevice: "1"
               deviceClass: "ssd"
+
     # Whether to always schedule OSD pods on nodes declared explicitly in the "nodes" section, even if they are
     # temporarily not schedulable. If set to true, consider adding placement tolerations for unschedulable nodes.
     # Default is false
