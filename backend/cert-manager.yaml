@@ -10,7 +10,7 @@ spec:
       targetRevision: HEAD
       ref: homelab
     - repoURL: https://charts.jetstack.io
-      targetRevision: 1.16.3
+      targetRevision: 1.17.2
       chart: cert-manager
       helm:
         releaseName: cert-manager

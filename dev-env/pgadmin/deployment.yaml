@@ -1,16 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: pgadmin-service
+  name: pgadmin
   labels:
     app.kubernetes.io/name: pgadmin
 spec:
   type: ClusterIP
-  clusterIP: None
   selector:
     app.kubernetes.io/name: pgadmin
   ports:
-    - name: pgadmin-port
+    - name: webui
       port: 80
       targetPort: 80
 ---

@@ -4,15 +4,12 @@ metadata:
   labels:
     app.kubernetes.io/name: gitea
   name: gitea
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
-    external-dns.alpha.kubernetes.io/hostname: git.homelab.local
 spec:
   ports:
     - port: 443
       targetPort: web
-      name: http
-  type: LoadBalancer
+      name: web
+  type: ClusterIP
   selector:
     app.kubernetes.io/name: gitea
 ---
@@ -22,8 +19,6 @@ metadata:
   name: gitea
   labels:
     app.kubernetes.io/name: gitea
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   replicas: 1
   selector:
@@ -37,7 +32,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: gitea
-          image: 'gitea/gitea:1.23.3'
+          image: gitea/gitea:1.24.0
           imagePullPolicy: IfNotPresent
           env:
             - name: GITEA__database__DB_TYPE
@@ -93,4 +88,4 @@ spec:
             claimName: gitea-data
         - name: tls-cert
           secret:
-            secretName: gitea-server-tls
+            secretName: homelab-cert

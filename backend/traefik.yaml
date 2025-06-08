@@ -15,7 +15,7 @@ spec:
         include: '*.yaml'
         exclude: 'values.yaml'
     - repoURL: https://traefik.github.io/charts
-      targetRevision: 35.4.0
+      targetRevision: 36.0.0
       chart: traefik
       helm:
         valueFiles:

@@ -21,8 +21,6 @@ metadata:
   name: immich-server
   labels:
     app.kubernetes.io/name: immich
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   revisionHistoryLimit: 3
   replicas: 1
@@ -69,7 +67,7 @@ spec:
                   name: pg-immich-app
                   key: user
             - name: REDIS_HOSTNAME
-              value: <immich-redis-hostname>
+              value: redis-cluster-main-master.backend
           ports:
             - name: http
               containerPort: 2283

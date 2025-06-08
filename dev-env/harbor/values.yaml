@@ -7,8 +7,6 @@ expose:
       secretName: harbor-server-tls
   loadBalancer:
     name: harbor
-    annotations:
-      external-dns.alpha.kubernetes.io/hostname: harbor.homelab.local
 
 externalURL: harbor.homelab.local
 

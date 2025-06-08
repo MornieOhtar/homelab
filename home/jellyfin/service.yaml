@@ -3,13 +3,14 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: jellyfin
-  annotations:
-    external-dns.alpha.kubernetes.io/hostname: video.homelab.local
   name: jellyfin
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   ports:
+  - port: 80
+    targetPort: http
+    name: http
   - port: 443
     targetPort: https
     name: https
@@ -65,8 +66,6 @@ spec:
               protocol: UDP
               name: clientdiscovery
           volumeMounts:
-            - mountPath: /cert
-              name: tls-cert
             - mountPath: /config
               name: jellyfin-config
             # LIBRARY
@@ -78,9 +77,6 @@ spec:
             - mountPath: /transcodes
               name: jellyfin-transcodes
       volumes:
-        - name: tls-cert
-          secret:
-            secretName: jellyfin-server-tls
         # LIBRARY
         - name: jellyfin-video
           persistentVolumeClaim:

@@ -1,15 +1,17 @@
 deployment:
   replicas: 2
 
-ingressClass:  # @schema additionalProperties: false
+ingressClass:
   enabled: true
   isDefaultClass: true
-  name: "tf-int"
+  name: "traefik"
 
 ingressRoute:
   dashboard:
     enabled: true
-    matchRule: HostRegexp(`^tf-int-db\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
+    matchRule: HostRegexp(`^dash-traefik\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
+    entryPoints:
+      - websecure
 
 providers:
   kubernetesCRD:
@@ -33,6 +35,14 @@ persistence:
   size: 256Mi
   accessMode: ReadWriteMany
   storageClass: rook-system-r3
+
+ports:
+  external:
+    port: 18443
+    expose:
+      default: true
+    exposedPort: 8443
+    protocol: TCP
 
 certificatesResolvers:
   letsencrypt:

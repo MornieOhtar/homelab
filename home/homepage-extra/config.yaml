@@ -19,6 +19,13 @@ data:
             href: https://argocd.<homelab-domain>
             description: Kubernetes CI/CD
             icon: argo-cd.png
+        - Traefik:
+            href: https://dash-traefik.<homelab-domain>
+            description: Traefik proxy
+            icon: traefik.png
+            widget:
+              type: traefik
+              url: https://dash-traefik.<homelab-domain>
         - Keycloak:
             href: https://keycloak.<homelab-domain>
             description: OIDC provider

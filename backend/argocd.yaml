@@ -9,6 +9,11 @@ spec:
     - repoURL: https://github.com/MornieOhtar/homelab.git
       targetRevision: HEAD
       ref: homelab
+      path: "backend/argocd"
+      directory:
+        recurse: true
+        include: "*.yaml"
+        exclude: 'values.yaml'
     - repoURL: https://argoproj.github.io/argo-helm
       targetRevision: 7.7.16
       chart: argo-cd

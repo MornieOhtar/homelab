@@ -1,0 +1,112 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: barassistant
+spec:
+  entryPoints:
+    - websecure
+    - external
+  routes:
+    - kind: Rule
+      # Rule on the Host
+      match: HostRegexp(`^bar\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`) && PathPrefix(`/bar`)
+      # Enable Router observability
+      observability:
+        accessLogs: true
+        metrics: true
+        tracing: true
+      middlewares:
+        - name: barassistant-strip-prefix
+      # Set a pirority
+      priority: 20
+      services:
+        # Target a Kubernetes Support
+        - kind: Service
+          serversTransport: default
+          name: barassistant
+          nativeLB: true
+          # Customize the connection between Traefik and the backend
+          passHostHeader: true
+          port: 8080
+          responseForwarding:
+            flushInterval: 1ms
+          scheme: http
+          sticky:
+            cookie:
+              httpOnly: true
+              name: cookie
+              secure: true
+          strategy: wrr
+          weight: 10
+    - kind: Rule
+      # Rule on the Host
+      match: HostRegexp(`^bar\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`) && PathPrefix(`/search`)
+      # Enable Router observability
+      observability:
+        accessLogs: true
+        metrics: true
+        tracing: true
+      middlewares:
+        - name: barassistant-strip-prefix
+      # Set a pirority
+      priority: 20
+      services:
+        # Target a Kubernetes Support
+        - kind: Service
+          serversTransport: default
+          name: bar-meili
+          nativeLB: true
+          # Customize the connection between Traefik and the backend
+          passHostHeader: true
+          port: 7700
+          responseForwarding:
+            flushInterval: 1ms
+          scheme: http
+          sticky:
+            cookie:
+              httpOnly: true
+              name: cookie
+              secure: true
+          strategy: wrr
+          weight: 10
+    - kind: Rule
+      # Rule on the Host
+      match: HostRegexp(`^bar\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
+      # Enable Router observability
+      observability:
+        accessLogs: true
+        metrics: true
+        tracing: true
+      # Set a pirority
+      priority: 10
+      services:
+        # Target a Kubernetes Support
+        - kind: Service
+          serversTransport: default
+          name: bar-salt-rim
+          nativeLB: true
+          # Customize the connection between Traefik and the backend
+          passHostHeader: true
+          port: 8080
+          responseForwarding:
+            flushInterval: 1ms
+          scheme: http
+          sticky:
+            cookie:
+              httpOnly: true
+              name: cookie
+              secure: true
+          strategy: wrr
+          weight: 10
+  tls:
+    secretName: homelab-cert
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: barassistant-strip-prefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /bar/
+      - /search/

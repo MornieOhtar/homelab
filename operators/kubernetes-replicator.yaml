@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-replicator
+spec:
+  project: homelab
+
+  sources:
+    - repoURL: https://github.com/MornieOhtar/homelab.git
+      targetRevision: HEAD
+      ref: homelab
+    - repoURL: https://helm.mittwald.de
+      targetRevision: 2.11.1
+      chart: kubernetes-replicator
+      helm:
+        valueFiles:
+          - $homelab/operators/kubernetes-replicator/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: operators
+
+  syncPolicy:
+    automated:
+      prune: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

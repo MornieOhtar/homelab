@@ -1,0 +1,7 @@
+replicationEnabled:
+  secrets: true
+  configMaps: true
+  roles: true
+  roleBindings: true
+  serviceAccounts: true
+

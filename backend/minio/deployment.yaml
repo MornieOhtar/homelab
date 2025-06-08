@@ -17,7 +17,6 @@ spec:
       port: 9000
       targetPort: 9000
   type: ClusterIP
-  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment

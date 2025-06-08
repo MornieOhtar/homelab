@@ -81,17 +81,7 @@ server:
       selector:
         prometheus: prometheus-operator
   ingress:
-    enabled: true
-    ingressClassName: nginx-internal
-    hostname: argocd.homelab.local
-    annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
-      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-  service:
-    type: LoadBalancer
-    annotations:
-      external-dns.alpha.kubernetes.io/endpoints-type: NodeExternalIP
-      external-dns.alpha.kubernetes.io/hostname: argocd.homelab.local
+    enabled: false
 
 repoServer:
   automountServiceAccountToken: true

@@ -7,7 +7,6 @@ metadata:
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
     metallb.universe.tf/loadBalancerIPs: 192.168.30.230
-    external-dns.alpha.kubernetes.io/hostname: torrent.homelab.local
 spec:
   selector:
     app.kubernetes.io/name: qbittorrent
@@ -78,8 +77,6 @@ spec:
               protocol: UDP
               name: torrent-udp
           volumeMounts:
-            - mountPath: /cert
-              name: tls-cert
             - mountPath: /downloads
               name: qbittorrent-data
             - mountPath: /config
@@ -95,7 +92,7 @@ spec:
             - name: TZ
               value: Europe/Kyiv
             - name: QBITTORRENT_BASE_URL
-              value: <qbittorrent-base-url>
+              value: "http://localhost:8080"
             - name: QBITTORRENT_USERNAME
               value: <qbittorrent-username>
             - name: QBITTORRENT_PASSWORD
@@ -107,6 +104,3 @@ spec:
         - name: qbittorrent-data
           persistentVolumeClaim:
             claimName: qbittorrent-data
-        - name: tls-cert
-          secret:
-            secretName: torrent-server-tls

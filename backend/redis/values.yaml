@@ -1,7 +1,5 @@
 auth:
   enabled: false
-  existingSecret: redis-password
-  existingSecretPasswordKey: password
 
 master:
   count: 1
