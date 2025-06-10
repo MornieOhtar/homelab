@@ -15,7 +15,7 @@ spec:
         include: "*.yaml"
         exclude: 'values.yaml'
     - repoURL: https://cloudnative-pg.github.io/charts
-      targetRevision: 0.23.2
+      targetRevision: 0.24.0
       chart: cloudnative-pg
       helm:
         valueFiles:

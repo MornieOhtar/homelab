@@ -8,7 +8,7 @@ spec:
   routes:
     - kind: Rule
       # Rule on the Host
-      match: HostRegexp(`^ag\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
+      match: HostRegexp(`^af\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
       # Enable Router observability
       observability:
         accessLogs: true

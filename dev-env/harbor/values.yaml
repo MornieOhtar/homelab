@@ -4,7 +4,7 @@ expose:
     enable: true
     certSource: secret
     secret:
-      secretName: harbor-server-tls
+      secretName: homelab-cert
   loadBalancer:
     name: harbor
 

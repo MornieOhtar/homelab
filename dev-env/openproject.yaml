@@ -9,8 +9,13 @@ spec:
     - repoURL: https://github.com/MornieOhtar/homelab.git
       targetRevision: HEAD
       ref: homelab
+      path: "dev-env/openproject"
+      directory:
+        recurse: true
+        include: "*.yaml"
+        exclude: 'values.yaml'
     - repoURL: https://charts.openproject.org/
-      targetRevision: 9.5.0
+      targetRevision: 10.0.3
       chart: openproject
       helm:
         valueFiles:

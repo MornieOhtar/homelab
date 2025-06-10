@@ -4,12 +4,38 @@ auth:
 
 Executor: KubernetesExecutor
 
+defaultInitContainers:
+  loadDAGsPlugins:
+    extraEnvVars:
+      - name: GIT_SSL_NO_VERIFY
+        value: "true"
+      - name: GIT_SYNC_PULL
+        value: "always"
+      - name: GIT_SYNC_REBASE
+        value: "false"
+defaultSidecars:
+  syncDAGsPlugins:
+    extraEnvVars:
+      - name: GIT_SSL_NO_VERIFY
+        value: "true"
+
+#extraVolumes:
+#  - name: airflow-requirements
+#    configMap:
+#      name: airflow-requirements
+#
+#extraVolumeMounts:
+#  - mountPath: /bitnami/python/requirements.txt
+#    subPath: requirements.txt
+#    name: airflow-requirements
+
 dags:
   enabled: true
   repositories:
-    - repository: https://github.com/MornieOhtar/airflow-dags
-      branch: main
+    - repository: https://gitea.dev-env/MornieOhtar/airflow-dags.git
+      branch: master
       name: MornieOhtar-dags
+      path: /
 
 plugins:
   enabled: false

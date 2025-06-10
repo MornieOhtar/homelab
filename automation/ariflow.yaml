@@ -11,7 +11,7 @@ spec:
       ref: homelab
     - repoURL: registry-1.docker.io/bitnamicharts
       path: airflow
-      targetRevision: 24.1.1
+      targetRevision: 24.1.2
       chart: airflow
       helm:
         valueFiles:

@@ -65,6 +65,10 @@ spec:
               value: "/cert/tls.key"
             - name: GITEA__server__PROTOCOL
               value: "https"
+            - name: GITEA__service__ENABLE_PASSWORD_SIGNIN_FORM
+              value: "false"
+            - name: GITEA__service__REQUIRE_SIGNIN_VIEW
+              value: "false"
           resources:
             requests:
               cpu: 100m

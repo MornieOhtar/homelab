@@ -7,25 +7,11 @@ initdb:
     limits:
       memory: "1Gi"
 
-extraVolumes:
-  - name: openproject-temp
-    emptyDir:
-      sizeLimit: 1Gi
-  - name: openproject-sys-temp
-    emptyDir:
-      sizeLimit: 1Gi
-
-extraVolumeMounts:
-  - mountPath: /app/tmp
-    name: openproject-temp
-  - mountPath: /tmp
-    name: openproject-sys-temp
-
 ingress:
   enabled: false
 
 openproject:
-  useTmpVolumes: false
+  useTmpVolumes: true
 
 persistence:
   enabled: false # Store data in S3 bucket
@@ -39,6 +25,11 @@ s3:
     secretAccessKey: "secretKey"
   bucketName: openproject
   endpoint: "s3:http://minio.backend:9000/openproject"
+
+containerSecurityContext:
+  readOnlyRootFilesystem: false
+  allowPrivilegeEscalation: true
+  runAsNonRoot: false
 
 postgresql:
   bundled: false

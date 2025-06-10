@@ -10,7 +10,7 @@ spec:
       targetRevision: HEAD
       ref: homelab
     - repoURL: https://helm.goharbor.io
-      targetRevision: 1.16.2
+      targetRevision: 1.17.1
       chart: harbor
       helm:
         valueFiles:
@@ -34,20 +34,26 @@ spec:
         factor: 2
         maxDuration: 3m
 
+# Required due to used Helm chart
   ignoreDifferences:
     - kind: Secret
-      name: "harbor-jobservice"
-    - kind: Secret
-      name: "harbor-registry"
-    - kind: Secret
-      name: "harbor-registry-htpasswd"
-    - kind: Secret
-      name: "harbor-core-internal-tls"
-    - kind: Secret
-      name: "harbor-jobservice-internal-tls"
-    - kind: Secret
-      name: "harbor-portal-internal-tls"
-    - kind: Secret
-      name: "harbor-registry-internal-tls"
-    - kind: Secret
-      name: "harbor-trivy-internal-tls"
+      jsonPointers:
+        - /data/ca.crt
+        - /data/tls.crt
+        - /data/tls.key
+        - /data/REGISTRY_HTPASSWD
+        - /data/JOBSERVICE_SECRET
+        - /data/REGISTRY_HTTP_SECRET
+        - /data/CSRF_KEY
+        - /data/secret
+    - kind: Deployment
+      group: apps
+      jsonPointers:
+        - /spec/template/metadata/annotations/checksum~1tls
+        - /spec/template/metadata/annotations/checksum~1secret
+        - /spec/template/metadata/annotations/checksum~1secret-core
+        - /spec/template/metadata/annotations/checksum~1secret-jobservice
+    - kind: StatefulSet
+      group: apps
+      jsonPointers:
+        - /spec/template/metadata/annotations/checksum~1tls
