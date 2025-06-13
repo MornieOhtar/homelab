@@ -52,3 +52,18 @@ spec:
     - rsize=1048576
     - wsize=1048576
     - intr
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-anime
+  labels:
+    app: jellyfin
+    use: media
+spec:
+  storageClassName: rook-media-r1
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Ti

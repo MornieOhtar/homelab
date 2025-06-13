@@ -24,7 +24,7 @@ spec:
           nativeLB: true
           # Customize the connection between Traefik and the backend
           passHostHeader: true
-          port: radarr
+          port: 7878
           responseForwarding:
             flushInterval: 1ms
           scheme: http

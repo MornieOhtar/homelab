@@ -71,6 +71,8 @@ spec:
             # LIBRARY
             - mountPath: /media
               name: jellyfin-video
+            - mountPath: /library/anime
+              name: media-anime
             # TEMP
             - mountPath: /cache
               name: jellyfin-cache
@@ -81,6 +83,9 @@ spec:
         - name: jellyfin-video
           persistentVolumeClaim:
             claimName: jellyfin-media
+        - name: media-anime
+          persistentVolumeClaim:
+            claimName: media-anime
         # CONFIG
         - name: jellyfin-config
           persistentVolumeClaim:
