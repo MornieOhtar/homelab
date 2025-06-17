@@ -2,7 +2,10 @@ auth:
   username: user
   existingSecret: airflow-auth
 
-Executor: KubernetesExecutor
+executor: KubernetesExecutor
+
+image:
+  tag: 3.0.2-debian-12-r2
 
 defaultInitContainers:
   loadDAGsPlugins:
@@ -34,13 +37,27 @@ dags:
   repositories:
     - repository: https://gitea.dev-env/MornieOhtar/airflow-dags.git
       branch: master
-      name: MornieOhtar-dags
+      name: mornieohtar
       path: /
 
 plugins:
   enabled: false
 
+extraEnvVars:
+  - name: PYTHONPATH
+    value: "/opt/bitnami/airflow/dags/git_mornieohtar"
+
+web:
+  automountServiceAccountToken: true
+
+worker:
+  automountServiceAccountToken: true
+
+scheduler:
+  automountServiceAccountToken: true
+
 triggerer:
+  automountServiceAccountToken: true
   persistence:
     storageClass: rook-system-r3
 
