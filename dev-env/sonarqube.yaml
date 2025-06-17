@@ -31,3 +31,8 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+  ignoreDifferences:
+    - kind: StatefulSet
+      group: apps
+      jsonPointers:
+        - /spec/replicas

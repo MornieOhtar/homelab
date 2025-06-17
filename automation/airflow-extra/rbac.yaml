@@ -7,34 +7,38 @@ metadata:
     replicator.v1.mittwald.de/replicate-to: "automation,dev-env,home,backend"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   name: airflow-kube-manager
-  namespace: automation
-  annotations:
-    replicator.v1.mittwald.de/replicate-to: "automation,dev-env,home,backend"
 rules:
   # Allow scaling of StatefulSets
-  - apiGroups: [""]
-    resources: ["statefulsets"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets", "statefulsets/scale"]
     verbs: ["get", "list", "patch", "update", "create"]
 
   # Allow annotating 'cluster.postgresql.cnpg.io'
-  - apiGroups: ["cluster.postgresql.cnpg.io"]
+  - apiGroups: ["postgresql.cnpg.io"]
     resources: ["clusters"]
     verbs: ["get", "list", "patch", "create", "update"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
   name: airflow-kube-manager-binding
-  namespace: automation
-  annotations:
-    replicator.v1.mittwald.de/replicate-to: "automation,dev-env,home,backend"
 subjects:
   - kind: ServiceAccount
     name: airflow-kube-manager
+    namespace: automation
+  - kind: ServiceAccount
+    name: airflow-kube-manager
+    namespace: dev-env
+  - kind: ServiceAccount
+    name: airflow-kube-manager
+    namespace: home
+  - kind: ServiceAccount
+    name: airflow-kube-manager
+    namespace: backend
 roleRef:
-  kind: Role
+  kind: ClusterRole
   name: airflow-kube-manager
   apiGroup: rbac.authorization.k8s.io
