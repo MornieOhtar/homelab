@@ -33,7 +33,7 @@ spec:
       automountServiceAccountToken: false
       containers:
         - name: salt-rim
-          image: barassistant/salt-rim:4.1.3
+          image: barassistant/salt-rim:4.4.0
           imagePullPolicy: IfNotPresent
           env:
             - name: API_URL

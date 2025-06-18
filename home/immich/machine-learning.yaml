@@ -41,7 +41,7 @@ spec:
       enableServiceLinks: true
       containers:
         - name: immich-machine-learning
-          image: ghcr.io/immich-app/immich-machine-learning:v1.131.3-openvino
+          image: ghcr.io/immich-app/immich-machine-learning:v1.135.0-openvino
           imagePullPolicy: IfNotPresent
           env:
             - name: DB_VECTOR_EXTENSION

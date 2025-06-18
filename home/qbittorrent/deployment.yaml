@@ -59,7 +59,7 @@ spec:
         node-role.kubernetes.io/nas: "nas"
       containers:
         - name: torrent
-          image: linuxserver/qbittorrent:5.0.4
+          image: linuxserver/qbittorrent:5.1.0
           imagePullPolicy: IfNotPresent
           env:
             - name: PUID

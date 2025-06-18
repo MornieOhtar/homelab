@@ -46,6 +46,9 @@ spec:
           volumeMounts:
             - mountPath: /tv
               name: jellyfin-video
+            - mountPath: /library/anime
+              name: media-anime
+              subPath: shows
             - mountPath: /downloads
               name: qbittorrent-downloads
             - mountPath: /config
@@ -119,6 +122,9 @@ spec:
         - name: jellyfin-video
           persistentVolumeClaim:
             claimName: jellyfin-media
+        - name: media-anime
+          persistentVolumeClaim:
+            claimName: media-anime
         - name: qbittorrent-downloads
           persistentVolumeClaim:
             claimName: qbittorrent-data

@@ -46,7 +46,7 @@ spec:
         node-role.kubernetes.io/nas: "nas"
       containers:
         - name: jellyfin
-          image: 'jellyfin/jellyfin:10.10.6'
+          image: jellyfin/jellyfin:10.10.7
           imagePullPolicy: IfNotPresent
           resources:
             requests:
