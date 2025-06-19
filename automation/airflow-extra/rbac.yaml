@@ -13,7 +13,7 @@ metadata:
 rules:
   # Allow scaling of StatefulSets
   - apiGroups: ["apps"]
-    resources: ["statefulsets", "statefulsets/scale"]
+    resources: ["statefulsets", "statefulsets/scale", "deployments", "deployments/scale"]
     verbs: ["get", "list", "patch", "update", "create"]
 
   # Allow annotating 'cluster.postgresql.cnpg.io'

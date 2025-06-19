@@ -42,8 +42,6 @@ spec:
       labels:
         app.kubernetes.io/name: jellyfin
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/nas: "nas"
       containers:
         - name: jellyfin
           image: jellyfin/jellyfin:10.10.7
@@ -69,10 +67,8 @@ spec:
             - mountPath: /config
               name: jellyfin-config
             # LIBRARY
-            - mountPath: /media
-              name: jellyfin-video
-            - mountPath: /library/anime
-              name: media-anime
+            - mountPath: /library
+              name: media-library
             # TEMP
             - mountPath: /cache
               name: jellyfin-cache
@@ -80,12 +76,9 @@ spec:
               name: jellyfin-transcodes
       volumes:
         # LIBRARY
-        - name: jellyfin-video
+        - name: media-library
           persistentVolumeClaim:
-            claimName: jellyfin-media
-        - name: media-anime
-          persistentVolumeClaim:
-            claimName: media-anime
+            claimName: media-library
         # CONFIG
         - name: jellyfin-config
           persistentVolumeClaim:
