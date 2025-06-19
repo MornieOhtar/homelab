@@ -56,7 +56,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: media-anime
+  name: media-library
   labels:
     app: jellyfin
     use: media
@@ -66,4 +66,4 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 10Ti
+      storage: 20Ti
