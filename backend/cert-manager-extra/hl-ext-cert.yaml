@@ -12,6 +12,21 @@ spec:
   issuerRef:
     name: cf-issuer
     kind: ClusterIssuer
+  keystores:
+    pkcs12:
+      create: true
+      passwordSecretRef:
+        key: password
+        name: homelab-ssl-pass
   commonName: '*.<homelab-domain>'
   dnsNames:
     - "*.<homelab-domain>"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: homelab-ssl-pass
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+data:
+  password: <dns_p12_pass | base64encode>
