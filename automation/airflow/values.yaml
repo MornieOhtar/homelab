@@ -5,29 +5,33 @@ auth:
 executor: KubernetesExecutor
 
 image:
-  tag: 3.0.2-debian-12-r2
+  tag: 3.0.2-debian-12-r3
 
 defaultInitContainers:
   loadDAGsPlugins:
     extraEnvVars:
       - name: GIT_SSL_NO_VERIFY
         value: "true"
-      - name: GIT_SYNC_PULL
-        value: "always"
-      - name: GIT_SYNC_REBASE
-        value: "false"
+  prepareVenv:
+    resourcesPreset: "small"
 defaultSidecars:
   syncDAGsPlugins:
     extraEnvVars:
       - name: GIT_SSL_NO_VERIFY
         value: "true"
 
-#extraVolumes:
+extraVolumes:
+  - name: airflow-logs
+    persistentVolumeClaim:
+      claimName: airflow-logs
 #  - name: airflow-requirements
 #    configMap:
 #      name: airflow-requirements
-#
-#extraVolumeMounts:
+
+extraVolumeMounts:
+  - name: airflow-logs
+    mountPath: /opt/bitnami/airflow/shared-logs
+    readOnly: false
 #  - mountPath: /bitnami/python/requirements.txt
 #    subPath: requirements.txt
 #    name: airflow-requirements
@@ -49,6 +53,8 @@ extraEnvVars:
   # IMPORTANT: With this, all dates (i.e. schedules) are treated in local time instead of UTC
   - name: AIRFLOW__CORE__DEFAULT_TIMEZONE
     value: "Europe/Kyiv"
+  - name: "AIRFLOW__LOGGING__BASE_LOG_FOLDER"
+    value: "/opt/bitnami/airflow/shared-logs"
 
 web:
   automountServiceAccountToken: true
@@ -64,6 +70,8 @@ triggerer:
   automountServiceAccountToken: true
   persistence:
     storageClass: rook-system-r3
+    accessModes:
+      - ReadWriteMany
 
 rbac:
   create: true

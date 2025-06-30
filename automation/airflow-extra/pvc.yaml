@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: airflow-logs
+  labels:
+    app: airflow
+    use: logs
+  annotations:
+    k8up.io/backup: "true"
+spec:
+  storageClassName: rook-system-r3
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
