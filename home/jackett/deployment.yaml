@@ -19,8 +19,6 @@ metadata:
   name: jackett
   labels:
     app.kubernetes.io/name: jackett
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   replicas: 1
   strategy:

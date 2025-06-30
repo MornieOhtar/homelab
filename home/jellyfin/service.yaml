@@ -28,8 +28,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jellyfin
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
   labels:
     app.kubernetes.io/name: jellyfin
 spec:

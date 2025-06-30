@@ -52,6 +52,7 @@ extraEnvVars:
 
 web:
   automountServiceAccountToken: true
+  resourcesPreset: "large"
 
 worker:
   automountServiceAccountToken: true

@@ -13,8 +13,12 @@ kind: Cluster
 metadata:
   name: pg-immich
 spec:
-  instances: 2
-  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:16.8-0.3.0
+  instances: 1
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    name: postgresql-vectorchord
+    major: 17
   monitoring:
     enablePodMonitor: true
 

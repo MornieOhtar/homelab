@@ -16,8 +16,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: audiobookshelf
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
   labels:
     app.kubernetes.io/name: audiobookshelf
 spec:

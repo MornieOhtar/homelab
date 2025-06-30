@@ -21,8 +21,6 @@ metadata:
   name: immich-machine-learning
   labels:
     app.kubernetes.io/name: immich-machine-learning
-  annotations:
-    avp.kubernetes.io/path: "kv/data/argocd"
 spec:
   revisionHistoryLimit: 3
   replicas: 1
@@ -41,11 +39,9 @@ spec:
       enableServiceLinks: true
       containers:
         - name: immich-machine-learning
-          image: ghcr.io/immich-app/immich-machine-learning:v1.135.0-openvino
+          image: ghcr.io/immich-app/immich-machine-learning:v1.135.3-openvino
           imagePullPolicy: IfNotPresent
           env:
-            - name: DB_VECTOR_EXTENSION
-              value: pgvector
             - name: TRANSFORMERS_CACHE
               value: /cache
             - name: IMMICH_MACHINE_LEARNING_URL
