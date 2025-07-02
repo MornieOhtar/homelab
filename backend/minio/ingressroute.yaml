@@ -20,7 +20,7 @@ spec:
       services:
         # Target a Kubernetes Support
         - kind: Service
-          serversTransport: default
+          serversTransport: minio
           name: minio
           nativeLB: true
           # Customize the connection between Traefik and the backend
@@ -38,3 +38,17 @@ spec:
           weight: 10
   tls:
     secretName: homelab-cert
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: minio
+spec:
+  insecureSkipVerify: true
+  disableHTTP2: false
+  forwardingTimeouts:
+    dialTimeout: 20m
+    responseHeaderTimeout: 20m
+    idleConnTimeout: 20m
+    readIdleTimeout: 20m
+    pingTimeout: 20m

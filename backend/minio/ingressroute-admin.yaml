@@ -1,7 +1,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: minio
+  name: minio-admin
 spec:
   entryPoints:
     - websecure

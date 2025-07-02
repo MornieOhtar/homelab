@@ -43,6 +43,11 @@ ports:
       default: true
     exposedPort: 8443
     protocol: TCP
+    transport:
+      respondingTimeouts:
+        readTimeout: 20m
+        writeTimeout: 20m
+        idleTimeout: 20m
 
 certificatesResolvers:
   letsencrypt:
@@ -51,3 +56,7 @@ certificatesResolvers:
       httpChallenge:
         entryPoint: web
       storage: /data/acme.json
+
+logs:
+  access:
+    enabled: false
