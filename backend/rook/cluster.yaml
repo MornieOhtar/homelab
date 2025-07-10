@@ -17,6 +17,10 @@ spec:
     # Future versions such as Tentacle (v20) would require this to be set to `true`.
     # Do not set to true in production.
     #allowUnsupported: false
+  cephConfig:
+    global:
+      osd_deep_scrub_interval: "1209600"
+      osd_deep_scrub_stride: "1048576" # 1MiB
   # The path on the host where configuration files will be persisted. Must be specified. If there are multiple clusters, the directory must be unique for each cluster.
   # Important: if you reinstall the cluster, make sure you delete this directory from each host or else the mons will fail to start on the new cluster.
   # In Minikube, the '/data' directory is configured to persist across reboots. Use "/data/rook" in Minikube environment.
@@ -29,7 +33,7 @@ spec:
   #skipUpgradeChecks: false
   # Whether or not continue if PGs are not clean during an upgrade
   # Default is false
-  #continueUpgradeAfterChecksEvenIfNotHealthy: false
+  continueUpgradeAfterChecksEvenIfNotHealthy: true
   # WaitTimeoutForHealthyOSDInMinutes defines the time (in minutes) the operator would wait before an OSD can be stopped for upgrade or restart.
   # If the timeout exceeds and OSD is not ok to stop, then the operator would skip upgrade for the current OSD and proceed with the next one
   # if `continueUpgradeAfterChecksEvenIfNotHealthy` is `false`. If `continueUpgradeAfterChecksEvenIfNotHealthy` is `true`, then operator would
@@ -303,6 +307,16 @@ spec:
             config:
               osdsPerDevice: "1"
               deviceClass: "hdd"
+      - name: "n002.homelab"
+        config:
+          metadataDevice: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH1T9HMLT-00005_S455NW0R131934"
+        devices:
+          # System/fast drives - REQUIRES metadataDevice override
+          - name: "/dev/disk/by-id/ata-SAMSUNG_MZ7L33T8HBLT-00A07_S6ERNG0W400181"
+            config:
+              osdsPerDevice: "1"
+              deviceClass: "ssd"
+              metadataDevice: ""
       - name: "nas001.<NODES_DOMAIN>"
         devices:
           - name: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH1T9HMLT-00005_S455NC0R219093"

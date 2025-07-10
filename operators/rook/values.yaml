@@ -1,4 +1,6 @@
 csi:
+  enableRbdDriver: false
+  enableRBDSnapshotter: false
   enableCSIHostNetwork: false
   serviceMonitor:
     enabled: true
