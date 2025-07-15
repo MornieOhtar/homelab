@@ -19,7 +19,7 @@ spec:
     #allowUnsupported: false
   cephConfig:
     global:
-      osd_deep_scrub_interval: "1209600"
+      osd_deep_scrub_interval: "2419200" # 1 month
       osd_deep_scrub_stride: "1048576" # 1MiB
   # The path on the host where configuration files will be persisted. Must be specified. If there are multiple clusters, the directory must be unique for each cluster.
   # Important: if you reinstall the cluster, make sure you delete this directory from each host or else the mons will fail to start on the new cluster.
@@ -174,7 +174,7 @@ spec:
   # To control where various services will be scheduled by kubernetes, use the placement configuration sections below.
   # The example under 'all' would have all services scheduled on kubernetes nodes labeled with 'role=storage-node' and
   # tolerate taints with a key of 'storage-node'.
-  placement:
+  #placement:
   #   all:
   #     nodeAffinity:
   #       requiredDuringSchedulingIgnoredDuringExecution:
@@ -191,11 +191,6 @@ spec:
   #     - key: storage-node
   #       operator: Exists
   # The above placement information can also be specified for mon, osd, and mgr components
-    mon:
-      tolerations:
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
   # Monitor deployments may contain an anti-affinity rule for avoiding monitor
   # collocation on the same node. This is a required rule when host network is used
   # or when AllowMultiplePerNode is false. Otherwise this anti-affinity rule is a

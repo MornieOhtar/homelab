@@ -10,15 +10,11 @@ data:
       "nodePathMap":[
         {
           "node":"DEFAULT_PATH_FOR_NON_LISTED_NODES",
-          "paths":["/opt/local-path-provisioner"]
+          "paths":["/data/local"]
         },
         {
           "node":"nas001.<NODES_DOMAIN>",
           "paths":["<NFS_N0_PATH>/local-path-provisioner"]
-        },
-        {
-          "node":"n001.homelab",
-          "paths":["/data/local"]
         }
       ]
     }
