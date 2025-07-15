@@ -8,7 +8,7 @@ spec:
   secretName: homelab-cert
   secretTemplate:
     annotations:
-      replicator.v1.mittwald.de/replicate-to: "automation,argo-cd,dev-env,home,operators,rook-ceph"
+      replicator.v1.mittwald.de/replicate-to: "automation,argo-cd,dev-env,home,operators,rook-ceph,kserve"
   issuerRef:
     name: cf-issuer
     kind: ClusterIssuer
