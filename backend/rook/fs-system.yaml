@@ -7,7 +7,7 @@ spec:
   metadataPool:
     deviceClass: ssd
     enableCrushUpdates: true
-    failureDomain: osd
+    failureDomain: host
     replicated:
       size: 2
     #  requireSafeReplicaSize: false
@@ -25,7 +25,7 @@ spec:
       application: ''
       deviceClass: ssd
       enableCrushUpdates: true
-      failureDomain: osd
+      failureDomain: host
       mirroring: {}
       quotas: {}
       statusCheck:

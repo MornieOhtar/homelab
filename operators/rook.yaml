@@ -15,7 +15,7 @@ spec:
         include: "*.yaml"
         exclude: 'values.yaml'
     - repoURL: https://charts.rook.io/release
-      targetRevision: v1.17.3
+      targetRevision: v1.17.6
       chart: rook-ceph
       helm:
         valueFiles:

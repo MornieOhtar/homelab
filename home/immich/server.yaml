@@ -39,7 +39,7 @@ spec:
       enableServiceLinks: true
       containers:
         - name: immich-server
-          image: ghcr.io/immich-app/immich-server:v1.135.3
+          image: ghcr.io/immich-app/immich-server:v1.136.0
           imagePullPolicy: IfNotPresent
           env:
             - name: IMMICH_MACHINE_LEARNING_URL
@@ -66,6 +66,8 @@ spec:
                   key: user
             - name: REDIS_HOSTNAME
               value: redis-cluster-main-master.backend
+            - name: TZ
+              value: Europe/Kyiv
           ports:
             - name: http
               containerPort: 2283

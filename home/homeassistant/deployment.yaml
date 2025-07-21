@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: home-assistant
-          image: homeassistant/home-assistant:2025.6.1
+          image: homeassistant/home-assistant:2025.7.0
           resources:
             requests:
               cpu: 400m
