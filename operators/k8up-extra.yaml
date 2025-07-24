@@ -1,7 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: k8up-operator
+  name: k8up-extra
+  annotations:
+    # Ignore extra secrets, created by replicator
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
 spec:
   project: homelab
 
@@ -9,24 +12,14 @@ spec:
     - repoURL: https://github.com/MornieOhtar/homelab.git
       targetRevision: HEAD
       ref: homelab
-      path: "operators/k8up"
-      directory:
-        recurse: true
-        include: "*.yaml"
-        exclude: 'values.yaml'
-    - repoURL: https://k8up-io.github.io/k8up
-      targetRevision: 4.8.4
-      chart: k8up
-      helm:
-        valueFiles:
-          - $homelab/operators/k8up/values.yaml
+      path: "operators/k8up-extra"
+
   destination:
     server: https://kubernetes.default.svc
     namespace: operators
 
   syncPolicy:
-    automated:
-      prune: true
+    automated: {}
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground

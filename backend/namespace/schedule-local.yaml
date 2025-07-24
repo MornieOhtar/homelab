@@ -8,13 +8,13 @@ spec:
     runAsUser: 0
   backend:
     s3:
-      endpoint: http://minio.backend:9000
+      endpoint: http://rook-ceph-rgw-backup-ssd.rook-ceph.svc:80
       bucket: k8up
       accessKeyIDSecretRef:
-        name: k8up-local-minio
+        name: k8up-local-s3
         key: ACCESS_KEY_ID
       secretAccessKeySecretRef:
-        name: k8up-local-minio
+        name: k8up-local-s3
         key: ACCESS_SECRET_KEY
     repoPasswordSecretRef:
       name: k8up-local-restic

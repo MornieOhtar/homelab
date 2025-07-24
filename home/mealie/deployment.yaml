@@ -37,13 +37,13 @@ spec:
       restartPolicy: Always
       containers:
         - name: mealie
-          image: hkotel/mealie:v2.8.0
+          image: hkotel/mealie:v3.0.2
           imagePullPolicy: IfNotPresent
           env:
             - name: BASE_URL
               value: https://mealie.<homelab-domain>
-            - name: DB_ENGINE
-              value: postgres
+            - name: ALLOW_PASSWORD_LOGIN
+              value: "false"
             - name: OIDC_ADMIN_GROUP
               value: <mealie-oidc-admin-group>
             - name: OIDC_AUTH_ENABLED
@@ -66,6 +66,8 @@ spec:
               value: preferred_username
             - name: OIDC_USER_GROUP
               value: <mealie-oidc-user-group>
+            - name: DB_ENGINE
+              value: postgres
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:

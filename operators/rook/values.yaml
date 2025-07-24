@@ -1,9 +1,9 @@
 csi:
-  enableRbdDriver: false
-  enableRBDSnapshotter: false
   enableCSIHostNetwork: false
   serviceMonitor:
     enabled: true
+
+obcAllowAdditionalConfigFields: "maxObjects,maxSize,bucketPolicy,bucketOwner"
 
 monitoring:
   enabled: true

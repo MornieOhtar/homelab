@@ -1,0 +1,122 @@
+apiVersion: ceph.rook.io/v1
+kind: CephObjectStoreUser
+metadata:
+  name: cnpg
+  namespace: rook-ceph
+spec:
+  store: backup-ssd
+  displayName: "CNPG s3 user"
+  keys:
+    - accessKeyRef:
+        key: ACCESS_KEY_ID
+        name: cnpg-local-s3
+      secretKeyRef:
+        key: ACCESS_SECRET_KEY
+        name: cnpg-local-s3
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: cnpg
+  namespace: rook-ceph
+spec:
+  bucketName: cnpg
+  storageClassName: rook-ceph-backup-ssd-bucket
+  additionalConfig:
+    bucketOwner: "cnpg"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cnpg-local-s3
+  namespace: rook-ceph
+  annotations:
+    replicator.v1.mittwald.de/replicate-to: "automation,backend,dev-env,home,operators"
+    avp.kubernetes.io/path: "kv/data/argocd"
+type: Opaque
+data:
+  ACCESS_KEY_ID: <CNPG_MINIO_KEY_ID | base64encode>
+  ACCESS_SECRET_KEY: <CNPG_MINIO_SECRET | base64encode>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cnpg-remote-s3
+  annotations:
+    avp.kubernetes.io/path: "kv/data/argocd"
+type: Opaque
+data:
+  REMOTE_ACCESS_KEY_ID: <CNPG_REMOTE_KEY_ID | base64encode>
+  REMOTE_ACCESS_SECRET_KEY: <CNPG_REMOTE_SECRET | base64encode>
+  REMOTE_HOST: <CNPG_REMOTE_HOST | base64encode>
+  REMOTE_BUCKET: <CNPG_REMOTE_BUCKET | base64encode>
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cnpg-remote-sync
+spec:
+  schedule: "0 5 * * *"  # Run daily at 03:00
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: rclone-sync
+              image: rclone/rclone:latest
+              args:
+                - sync
+                - "local-s3:cnpg"
+                - "remote-s3:backups-cnpg"
+                - "--progress"
+                - "--transfers=8"
+                - "--checkers=16"
+                - "--s3-chunk-size=64M"
+                - "--s3-upload-concurrency=4"
+                - "--s3-no-check-bucket"
+                - "--stats=30s"
+              envFrom:
+                - secretRef:
+                    name: cnpg-local-s3
+                - secretRef:
+                    name: cnpg-remote-s3
+              volumeMounts:
+                - name: rclone-config
+                  mountPath: /config
+          volumes:
+            - name: rclone-config
+              emptyDir: {}
+          initContainers:
+            - name: rclone-config-init
+              image: busybox:1.36
+              command:
+                - sh
+                - -c
+                - |
+                  mkdir -p /config/rclone
+                  cat <<EOF > /config/rclone/rclone.conf
+                  [local-s3]
+                  type = s3
+                  provider = Ceph
+                  access_key_id = ${ACCESS_KEY_ID}
+                  secret_access_key = ${ACCESS_SECRET_KEY}
+                  endpoint = http://rook-ceph-rgw-backup-ssd.rook-ceph.svc:80
+
+                  [remote-s3]
+                  type = s3
+                  provider = B2
+                  access_key_id = ${REMOTE_ACCESS_KEY_ID}
+                  secret_access_key = ${REMOTE_ACCESS_SECRET_KEY}
+                  endpoint = ${REMOTE_HOST}
+                  EOF
+              envFrom:
+                - secretRef:
+                    name: cnpg-local-s3
+                - secretRef:
+                    name: cnpg-remote-s3
+              volumeMounts:
+                - name: rclone-config
+                  mountPath: /config
