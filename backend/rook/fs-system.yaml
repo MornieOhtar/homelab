@@ -9,16 +9,11 @@ spec:
     enableCrushUpdates: true
     failureDomain: host
     replicated:
-      size: 2
-    #  requireSafeReplicaSize: false
+      size: 3
+      requireSafeReplicaSize: true
     parameters:
-      # Inline compression mode for the data pool
-      # Further reference: https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#inline-compression
       compression_mode:
         none
-      # gives a hint (%) to Ceph in terms of expected consumption of the total cluster capacity of a given pool
-      # for more info: https://docs.ceph.com/docs/master/rados/operations/placement-groups/#specifying-expected-pool-size
-      #target_size_ratio: ".5"
   # The list of data pool specs. Can use replication or erasure coding.
   dataPools:
     - name: system-r3
@@ -31,16 +26,12 @@ spec:
       statusCheck:
         mirror: {}
       replicated:
-        size: 2
-        # Disallow setting pool with replica 1, this could lead to data loss without recovery.
-        # Make sure you're *ABSOLUTELY CERTAIN* that is what you want
-      #  requireSafeReplicaSize: false
+        size: 3
+        requireSafeReplicaSize: true
       erasureCoded:
         codingChunks: 0
         dataChunks: 0
       parameters:
-        # Inline compression mode for the data pool
-        # Further reference: https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#inline-compression
         compression_mode:
           none
     - name: media-r1
@@ -54,15 +45,11 @@ spec:
         mirror: {}
       replicated:
         size: 1
-        # Disallow setting pool with replica 1, this could lead to data loss without recovery.
-        # Make sure you're *ABSOLUTELY CERTAIN* that is what you want
         requireSafeReplicaSize: false
       erasureCoded:
         codingChunks: 0
         dataChunks: 0
       parameters:
-        # Inline compression mode for the data pool
-        # Further reference: https://docs.ceph.com/docs/master/rados/configuration/bluestore-config-ref/#inline-compression
         compression_mode:
           none
         # gives a hint (%) to Ceph in terms of expected consumption of the total cluster capacity of a given pool

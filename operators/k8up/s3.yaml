@@ -1,0 +1,18 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: k8up
+spec:
+  bucketName: k8up
+  storageClassName: rook-ceph-backup-ssd-bucket
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rook-ceph-backup-ssd-bucket-k8up
+provisioner: rook-ceph.ceph.rook.io/bucket
+reclaimPolicy: Retain
+parameters:
+  objectStoreName: backup-ssd
+  objectStoreNamespace: rook-ceph
+  bucketName: k8up
