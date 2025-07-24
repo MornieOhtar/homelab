@@ -1,24 +1,14 @@
-###################################################################################################
-#
-# Postgresql Database cluster, using CNPG
-#
-###################################################################################################
-
-#
-# Cluster definition
-#
----
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: pg-nextcloud
 spec:
-  instances: 1
+  instances: 2
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
     kind: ClusterImageCatalog
     name: postgresql-main
-    major: 16
+    major: 17
   monitoring:
     enablePodMonitor: true
 
@@ -35,63 +25,40 @@ spec:
 
   # Import existing database
   bootstrap:
-    initdb: null
-#    recovery:
-#      source: pg-nextcloud
+    recovery:
+      source: pg-nextcloud
 
   # Backup strategy
-  backup:
-    barmanObjectStore:
-      data:
-        compression: bzip2
-      wal:
-        compression: bzip2
-        maxParallel: 16
-      destinationPath: "s3://cnpg"
-      endpointURL: "http://minio.backend:9000"
-      s3Credentials:
-        accessKeyId:
-          name: cnpg-minio-creds
-          key: ACCESS_KEY_ID
-        secretAccessKey:
-          name: cnpg-minio-creds
-          key: ACCESS_SECRET_KEY
-    retentionPolicy: "30d"
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: ceph-local
 
   # WAL backup clusters
   externalClusters:
     - name: pg-nextcloud
-      barmanObjectStore:
-        data:
-          compression: bzip2
-        wal:
-          compression: bzip2
-        destinationPath: "s3://cnpg"
-        endpointURL: "http://minio.backend:9000"
-        s3Credentials:
-          accessKeyId:
-            name: cnpg-minio-creds
-            key: ACCESS_KEY_ID
-          secretAccessKey:
-            name: cnpg-minio-creds
-            key: ACCESS_SECRET_KEY
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: ceph-local
+          serverName: pg-nextcloud
 
   # Force Postgres to be running each instance on separate node
   affinity:
     enablePodAntiAffinity: true
     topologyKey: kubernetes.io/hostname
     podAntiAffinityType: required
-
-#
-# Backup schedules
-#
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
   name: pg-nextcloud-local-schedule
 spec:
-  schedule: "0 10 */12 * * *" # For local store - backup every hour
+  schedule: "0 10 0 * * *" # For local store - backup every hour
   backupOwnerReference: self
   cluster:
     name: pg-nextcloud
+  method: plugin
+  pluginConfiguration:
+    name: barman-cloud.cloudnative-pg.io

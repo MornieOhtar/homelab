@@ -11,6 +11,7 @@ spec:
       dashboards: "grafana-cluster-main"
   grafanaCom:
     id: 20417
+    revision: 4
   datasources:
     - inputName: "DS_PROMETHEUS"
       datasourceName: "mimir"

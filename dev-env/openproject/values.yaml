@@ -19,12 +19,12 @@ persistence:
 s3:
   enabled: true
   auth:
-    existingSecret: "openproject-minio"
+    existingSecret: openproject
   secretKeys:
-    accessKeyId: "accessKey"
-    secretAccessKey: "secretKey"
-  bucketName: openproject
-  endpoint: "s3:http://minio.backend:9000/openproject"
+    accessKeyId: AWS_ACCESS_KEY_ID
+    secretAccessKey: AWS_SECRET_ACCESS_KEY
+  bucketName: openproject-data
+  endpoint: "s3:http://rook-ceph-rgw-system-ssd.rook-ceph.svc:80/openproject"
 
 containerSecurityContext:
   readOnlyRootFilesystem: false

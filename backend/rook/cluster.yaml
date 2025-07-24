@@ -21,6 +21,7 @@ spec:
     global:
       osd_deep_scrub_interval: "2419200" # 1 month
       osd_deep_scrub_stride: "1048576" # 1MiB
+      mon_max_pg_per_osd: "300"
   # The path on the host where configuration files will be persisted. Must be specified. If there are multiple clusters, the directory must be unique for each cluster.
   # Important: if you reinstall the cluster, make sure you delete this directory from each host or else the mons will fail to start on the new cluster.
   # In Minikube, the '/data' directory is configured to persist across reboots. Use "/data/rook" in Minikube environment.

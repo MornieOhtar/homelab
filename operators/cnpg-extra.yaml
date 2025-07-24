@@ -16,8 +16,7 @@ spec:
     namespace: operators
 
   syncPolicy:
-    automated:
-      prune: true
+    automated: {}
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground

@@ -1,0 +1,215 @@
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: rgw-root
+spec:
+  name: .rgw.root
+  deviceClass: ssd
+  enableCrushUpdates: true
+  failureDomain: host
+  replicated:
+    size: 3
+    requireSafeReplicaSize: true
+  parameters:
+    pg_num: "8"
+  application: rgw
+---
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: rgw-meta-pool
+spec:
+  deviceClass: ssd
+  enableCrushUpdates: true
+  failureDomain: host
+  replicated:
+    size: 3
+    requireSafeReplicaSize: true
+  parameters:
+    pg_num: "8"
+  application: rgw
+---
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: rgw-data-pool-ssd-ec-2-1
+spec:
+  deviceClass: ssd
+  enableCrushUpdates: true
+  failureDomain: osd
+  erasureCoded:
+    dataChunks: 2
+    codingChunks: 1
+  parameters:
+    bulk: "true"
+  application: rgw
+---
+apiVersion: ceph.rook.io/v1
+kind: CephObjectStore
+metadata:
+  name: backup-ssd
+spec:
+  allowUsersInNamespaces:
+    - "*"
+  sharedPools:
+    metadataPoolName: rgw-meta-pool
+    dataPoolName: rgw-data-pool-ssd-ec-2-1
+    preserveRadosNamespaceDataOnDelete: true
+  gateway:
+    port: 80
+    instances: 1
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rook-ceph-backup-ssd-bucket
+provisioner: rook-ceph.ceph.rook.io/bucket
+reclaimPolicy: Retain
+parameters:
+  objectStoreName: backup-ssd
+  objectStoreNamespace: rook-ceph
+---
+apiVersion: ceph.rook.io/v1
+kind: CephObjectStore
+metadata:
+  name: system-ssd
+spec:
+  allowUsersInNamespaces:
+    - "*"
+  sharedPools:
+    metadataPoolName: rgw-meta-pool
+    dataPoolName: rgw-data-pool-ssd-ec-2-1
+    preserveRadosNamespaceDataOnDelete: true
+  gateway:
+    port: 80
+    instances: 1
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rook-ceph-system-ssd-bucket
+provisioner: rook-ceph.ceph.rook.io/bucket
+reclaimPolicy: Retain
+parameters:
+  objectStoreName: system-ssd
+  objectStoreNamespace: rook-ceph
+---
+apiVersion: ceph.rook.io/v1
+kind: CephObjectStore
+metadata:
+  name: personal-ssd
+spec:
+  allowUsersInNamespaces:
+    - "*"
+  sharedPools:
+    metadataPoolName: rgw-meta-pool
+    dataPoolName: rgw-data-pool-ssd-ec-2-1
+    preserveRadosNamespaceDataOnDelete: true
+  gateway:
+    port: 80
+    instances: 1
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rook-ceph-personal-ssd-bucket
+provisioner: rook-ceph.ceph.rook.io/bucket
+reclaimPolicy: Retain
+parameters:
+  objectStoreName: personal-ssd
+  objectStoreNamespace: rook-ceph
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rook-rgw
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: HostRegexp(`^s3-backup\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
+      observability:
+        accessLogs: true
+        metrics: true
+        tracing: true
+      priority: 10
+      services:
+        - kind: Service
+          serversTransport: default
+          name: rook-ceph-rgw-backup-ssd
+          nativeLB: true
+          passHostHeader: true
+          port: 80
+          responseForwarding:
+            flushInterval: 1ms
+          scheme: http
+          sticky:
+            cookie:
+              httpOnly: true
+              name: cookie
+              secure: true
+          strategy: wrr
+          weight: 10
+    - kind: Rule
+      match: HostRegexp(`^s3-system\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
+      observability:
+        accessLogs: true
+        metrics: true
+        tracing: true
+      priority: 10
+      services:
+        - kind: Service
+          serversTransport: default
+          name: rook-ceph-rgw-system-ssd
+          nativeLB: true
+          passHostHeader: true
+          port: 80
+          responseForwarding:
+            flushInterval: 1ms
+          scheme: http
+          sticky:
+            cookie:
+              httpOnly: true
+              name: cookie
+              secure: true
+          strategy: wrr
+          weight: 10
+  tls:
+    secretName: homelab-cert
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rook-rgw-external
+spec:
+  entryPoints:
+    - websecure
+    - external
+  routes:
+    - kind: Rule
+      match: HostRegexp(`^s3-personal\.[a-zA-Z]+\.[a-zA-Z]+\.[a-zA-Z]+$`)
+      observability:
+        accessLogs: true
+        metrics: true
+        tracing: true
+      priority: 10
+      services:
+        - kind: Service
+          serversTransport: default
+          name: rook-ceph-rgw-personal-ssd
+          nativeLB: true
+          passHostHeader: true
+          port: 80
+          responseForwarding:
+            flushInterval: 1ms
+          scheme: http
+          sticky:
+            cookie:
+              httpOnly: true
+              name: cookie
+              secure: true
+          strategy: wrr
+          weight: 10
+  tls:
+    secretName: homelab-cert

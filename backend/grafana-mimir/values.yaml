@@ -1,21 +1,17 @@
 global:
   extraArgs:
     - -config.expand-env=true
-  extraEnvFrom:
-    - secretRef:
-        name: mimir-minio
-    - secretRef:
-        name: minio-host
+
 mimir:
   structuredConfig:
     common:
       storage:
         backend: s3
         s3:
-          endpoint: ${minio-host-https} # This is a secret injected via an environment variable
-          secret_access_key: ${secretKey} # This is a secret injected via an environment variable
-          access_key_id: ${accessKey} # This is a secret injected via an environment variable
-
+          insecure: true
+          endpoint: rook-ceph-rgw-system-ssd.rook-ceph.svc:80
+          secret_access_key: ${AWS_SECRET_ACCESS_KEY} # This is a secret injected via an environment variable
+          access_key_id: ${AWS_ACCESS_KEY_ID} # This is a secret injected via an environment variable
     blocks_storage:
       s3:
         bucket_name: mimir-blocks
@@ -26,15 +22,15 @@ mimir:
       s3:
         bucket_name: mimir-ruler
 runtimeConfig:
- ingester_limits: # limits that each ingester replica enforces
+  ingester_limits: # limits that each ingester replica enforces
     max_ingestion_rate: 20000
     max_series: 1500000
     max_tenants: 1000
     max_inflight_push_requests: 30000
- distributor_limits: # limits that each distributor replica enforces
-   max_ingestion_rate: 20000
-   max_inflight_push_requests: 30000
-   max_inflight_push_requests_bytes: 50000000
+  distributor_limits: # limits that each distributor replica enforces
+    max_ingestion_rate: 20000
+    max_inflight_push_requests: 30000
+    max_inflight_push_requests_bytes: 50000000
 
 alertmanager:
   replicas: 1
@@ -42,53 +38,90 @@ alertmanager:
     usage-stats.enabled: false
   zoneAwareReplication:
     enabled: false
+  extraEnvFrom:
+    - configMapRef:
+        name: mimir-alertmanager
+    - secretRef:
+        name: mimir-alertmanager
+
 ingester:
   replicas: 2
   extraArgs:
     usage-stats.enabled: false
   zoneAwareReplication:
     enabled: false
+  extraEnvFrom:
+    - secretRef:
+        name: mimir-blocks
+    - secretRef:
+        name: mimir-blocks
+
 overrides_exporter:
   extraArgs:
     usage-stats.enabled: false
+
 store_gateway:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
   zoneAwareReplication:
     enabled: false
+  extraEnvFrom:
+    - secretRef:
+        name: mimir-blocks
+    - secretRef:
+        name: mimir-blocks
+
 distributor:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+
 querier:
   replicas: 2
   extraArgs:
     usage-stats.enabled: false
+  extraEnvFrom:
+    - secretRef:
+        name: mimir-blocks
+    - secretRef:
+        name: mimir-blocks
+
 query_frontend:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+
 query_scheduler:
   replicas: 2
   extraArgs:
     usage-stats.enabled: false
+
 ruler:
-  replicas: 1
+  replicas: 0
   extraArgs:
     usage-stats.enabled: false
+  extraEnvFrom:
+    - configMapRef:
+        name: mimir-ruler
+    - secretRef:
+        name: mimir-ruler
+
 ruler_querier:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+
 ruler_query_frontend:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+
 ruler_query_scheduler:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+
 compactor:
   replicas: 1
   extraArgs:
@@ -96,23 +129,32 @@ compactor:
     compactor.block-upload-enabled: true
     compactor.block-ranges: 14400h
     compactor.block-upload-max-block-size-bytes: "15000000000"
+  extraEnvFrom:
+    - secretRef:
+        name: mimir-blocks
+    - secretRef:
+        name: mimir-blocks
 
 index-cache:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+
 metadata-cache:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+
 results-cache:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+
 chunks-cache:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+
 admin-cache:
   replicas: 1
   extraArgs:
@@ -121,6 +163,7 @@ admin-cache:
 nginx:
   # Deprecated, use gateway
   enabled: false
+
 gateway:
   enabledNonEnterprise: true
   replicas: 1
@@ -129,6 +172,7 @@ gateway:
   nginx:
     config:
       clientMaxBodySize: 15G
+      enableIPv6: false
 
 # Use standalone minio installation
 minio:

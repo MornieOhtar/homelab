@@ -1,25 +1,25 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: rook-storage
+  name: k8up-extra
+  annotations:
+    # Ignore extra secrets, created by replicator
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
 spec:
   project: homelab
 
   sources:
     - repoURL: https://github.com/MornieOhtar/homelab.git
       targetRevision: HEAD
-      path: backend/rook
-    - repoURL: https://gitea.dev-env/MornieOhtar/homelab-argocd.git
-      targetRevision: HEAD
-      path: personal/s3
+      ref: homelab
+      path: "operators/k8up-extra"
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: rook-ceph
+    namespace: operators
 
   syncPolicy:
-    automated:
-      prune: true
+    automated: {}
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
