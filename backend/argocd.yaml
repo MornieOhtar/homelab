@@ -6,7 +6,7 @@ spec:
   project: homelab
 
   sources:
-    - repoURL: https://github.com/MornieOhtar/homelab.git
+    - repoURL: ssh://git@gitea.dev-env:22/MornieOhtar/homelab-argocd.git
       targetRevision: HEAD
       ref: homelab
       path: "backend/argocd"
@@ -15,7 +15,7 @@ spec:
         include: "*.yaml"
         exclude: 'values.yaml'
     - repoURL: https://argoproj.github.io/argo-helm
-      targetRevision: 7.7.16
+      targetRevision: 8.3.0
       chart: argo-cd
       helm:
         valueFiles:
@@ -26,14 +26,11 @@ spec:
     namespace: argocd
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
       - RespectIgnoreDifferences=true
-      - ApplyOutOfSyncOnly=true # For ArgoCD to properly manage himself it is safer to sync only changed resources
     retry:
       limit: 5
       backoff:

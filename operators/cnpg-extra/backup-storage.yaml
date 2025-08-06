@@ -28,19 +28,6 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: cnpg-local-s3
-  namespace: rook-ceph
-  annotations:
-    replicator.v1.mittwald.de/replicate-to: "automation,backend,dev-env,home,operators"
-    avp.kubernetes.io/path: "kv/data/argocd"
-type: Opaque
-data:
-  ACCESS_KEY_ID: <CNPG_MINIO_KEY_ID | base64encode>
-  ACCESS_SECRET_KEY: <CNPG_MINIO_SECRET | base64encode>
----
-apiVersion: v1
-kind: Secret
-metadata:
   name: cnpg-remote-s3
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"

@@ -28,19 +28,6 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: k8up-local-s3
-  namespace: rook-ceph
-  annotations:
-    replicator.v1.mittwald.de/replicate-to: "backend,dev-env,home,operators"
-    avp.kubernetes.io/path: "kv/data/argocd"
-type: Opaque
-data:
-  ACCESS_KEY_ID: <K8UP_MINIO_KEY_ID | base64encode>
-  ACCESS_SECRET_KEY: <K8UP_MINIO_SECRET | base64encode>
----
-apiVersion: v1
-kind: Secret
-metadata:
   name: k8up-remote-s3
   annotations:
     avp.kubernetes.io/path: "kv/data/argocd"
@@ -50,17 +37,6 @@ data:
   REMOTE_ACCESS_SECRET_KEY: <K8UP_REMOTE_SECRET | base64encode>
   REMOTE_HOST: <K8UP_REMOTE_HOST | base64encode>
   REMOTE_BUCKET: <K8UP_REMOTE_BUCKET | base64encode>
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: k8up-local-restic
-  annotations:
-    replicator.v1.mittwald.de/replicate-to: "backend,dev-env,home"
-    avp.kubernetes.io/path: "kv/data/argocd"
-type: Opaque
-data:
-  restic-password: <k8up-local-restic>
 ---
 apiVersion: batch/v1
 kind: CronJob

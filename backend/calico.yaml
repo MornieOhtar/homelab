@@ -15,8 +15,6 @@ spec:
     namespace: tigera-operator
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
