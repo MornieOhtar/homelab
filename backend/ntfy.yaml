@@ -1,22 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: grafana-mimir-extra
+  name: ntfy
 spec:
   project: homelab
 
   source:
-    repoURL: https://github.com/MornieOhtar/homelab.git
+    repoURL: ssh://git@gitea.dev-env:22/MornieOhtar/homelab-argocd.git
     targetRevision: HEAD
-    path: backend/grafana-mimir-extra
+    path: backend/ntfy
 
   destination:
     server: https://kubernetes.default.svc
     namespace: backend
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
@@ -28,3 +26,11 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+  ignoreDifferences:
+    - kind: Secret
+      name: "csi-node-driver"
+      jsonPointers:
+        - /data
+        - /data/ca.crt
+        - /data/namespace
+        - /data/token

@@ -1,27 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: s3-operator
+  name: monitoring
 spec:
   project: homelab
 
-  sources:
-    - repoURL: https://github.com/MornieOhtar/homelab.git
-      targetRevision: HEAD
-      ref: homelab
-    - repoURL: https://inseefrlab.github.io/helm-charts
-      targetRevision: 0.6.0
-      chart: s3-operator
-      helm:
-        valueFiles:
-          - $homelab/operators/s3/values.yaml
+  source:
+    repoURL: ssh://git@gitea.dev-env:22/MornieOhtar/homelab-argocd.git
+    targetRevision: HEAD
+    path: monitoring
+    directory:
+      include: '*.yaml'
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: operators
+    namespace: argocd
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground

@@ -19,16 +19,19 @@ spec:
     namespace: operators
 
   syncPolicy:
-    automated: {}
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
       - RespectIgnoreDifferences=true
-      - ApplyOutOfSyncOnly=true
     retry:
       limit: 5
       backoff:
         duration: 5s
         factor: 2
         maxDuration: 3m
+  ignoreDifferences:
+    - kind: ObjectBucketClaim
+      group: objectbucket.io
+      jsonPointers:
+        - /metadata/labels

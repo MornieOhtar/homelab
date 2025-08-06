@@ -73,7 +73,7 @@ spec:
     # serve the dashboard using SSL
     ssl: true
     # The url of the Prometheus instance
-    prometheusEndpoint: http://prometheus-operated.operators:9090
+    prometheusEndpoint: http://prometheus-operated.monitoring:9090
     # Whether SSL should be verified if the Prometheus server is using https
     # Default is false
     #prometheusEndpointSSLVerify: false
