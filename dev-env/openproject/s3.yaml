@@ -1,7 +1,0 @@
-apiVersion: objectbucket.io/v1alpha1
-kind: ObjectBucketClaim
-metadata:
-  name: openproject
-spec:
-  bucketName: openproject-data
-  storageClassName: rook-ceph-system-ssd-bucket

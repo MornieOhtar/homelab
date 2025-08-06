@@ -1,9 +1,0 @@
-csi:
-  enableCSIHostNetwork: false
-  serviceMonitor:
-    enabled: true
-
-obcAllowAdditionalConfigFields: "maxObjects,maxSize,bucketPolicy,bucketOwner"
-
-monitoring:
-  enabled: true

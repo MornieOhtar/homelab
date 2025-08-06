@@ -12,7 +12,7 @@ spec:
   project: homelab
 
   source:
-    repoURL: https://github.com/MornieOhtar/homelab.git
+    repoURL: ssh://git@gitea.dev-env:22/MornieOhtar/homelab-argocd.git
     targetRevision: HEAD
     path: app-in-app
     directory:
@@ -24,8 +24,6 @@ spec:
     namespace: argocd
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
