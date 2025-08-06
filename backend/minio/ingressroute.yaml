@@ -5,7 +5,6 @@ metadata:
 spec:
   entryPoints:
     - websecure
-    - external
   routes:
     - kind: Rule
       # Rule on the Host

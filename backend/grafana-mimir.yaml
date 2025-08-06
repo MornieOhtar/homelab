@@ -15,7 +15,7 @@ spec:
         include: '*.yaml'
         exclude: 'values.yaml'
     - repoURL: https://grafana.github.io/helm-charts
-      targetRevision: 5.7.0-weekly.332
+      targetRevision: 5.8.0-weekly.354
       chart: mimir-distributed
       helm:
         valueFiles:

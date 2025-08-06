@@ -1,4 +1,35 @@
 global:
+  extraEnv:
+    - name: BLOCKS_AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: mimir-blocks
+          key: AWS_SECRET_ACCESS_KEY
+    - name: BLOCKS_AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: mimir-blocks
+          key: AWS_ACCESS_KEY_ID
+    - name: RULER_AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: mimir-ruler
+          key: AWS_SECRET_ACCESS_KEY
+    - name: RULER_AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: mimir-ruler
+          key: AWS_ACCESS_KEY_ID
+    - name: ALERTMANAGER_AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: mimir-alertmanager
+          key: AWS_SECRET_ACCESS_KEY
+    - name: ALERTMANAGER_AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: mimir-alertmanager
+          key: AWS_ACCESS_KEY_ID
   extraArgs:
     - -config.expand-env=true
 
@@ -10,25 +41,29 @@ mimir:
         s3:
           insecure: true
           endpoint: rook-ceph-rgw-system-ssd.rook-ceph.svc:80
-          secret_access_key: ${AWS_SECRET_ACCESS_KEY} # This is a secret injected via an environment variable
-          access_key_id: ${AWS_ACCESS_KEY_ID} # This is a secret injected via an environment variable
     blocks_storage:
       s3:
         bucket_name: mimir-blocks
+        secret_access_key: ${BLOCKS_AWS_SECRET_ACCESS_KEY}
+        access_key_id: ${BLOCKS_AWS_ACCESS_KEY_ID}
     alertmanager_storage:
       s3:
         bucket_name: mimir-alertmanager
+        secret_access_key: ${ALERTMANAGER_AWS_SECRET_ACCESS_KEY}
+        access_key_id: ${ALERTMANAGER_AWS_ACCESS_KEY_ID}
     ruler_storage:
       s3:
         bucket_name: mimir-ruler
+        secret_access_key: ${RULER_AWS_SECRET_ACCESS_KEY}
+        access_key_id: ${RULER_AWS_ACCESS_KEY_ID}
 runtimeConfig:
   ingester_limits: # limits that each ingester replica enforces
-    max_ingestion_rate: 20000
+    max_ingestion_rate: 2000000
     max_series: 1500000
     max_tenants: 1000
     max_inflight_push_requests: 30000
   distributor_limits: # limits that each distributor replica enforces
-    max_ingestion_rate: 20000
+    max_ingestion_rate: 2000000
     max_inflight_push_requests: 30000
     max_inflight_push_requests_bytes: 50000000
 
@@ -38,11 +73,6 @@ alertmanager:
     usage-stats.enabled: false
   zoneAwareReplication:
     enabled: false
-  extraEnvFrom:
-    - configMapRef:
-        name: mimir-alertmanager
-    - secretRef:
-        name: mimir-alertmanager
 
 ingester:
   replicas: 2
@@ -50,11 +80,6 @@ ingester:
     usage-stats.enabled: false
   zoneAwareReplication:
     enabled: false
-  extraEnvFrom:
-    - secretRef:
-        name: mimir-blocks
-    - secretRef:
-        name: mimir-blocks
 
 overrides_exporter:
   extraArgs:
@@ -66,26 +91,18 @@ store_gateway:
     usage-stats.enabled: false
   zoneAwareReplication:
     enabled: false
-  extraEnvFrom:
-    - secretRef:
-        name: mimir-blocks
-    - secretRef:
-        name: mimir-blocks
 
 distributor:
   replicas: 1
   extraArgs:
     usage-stats.enabled: false
+    distributor.ingestion-rate-limit: "50000"
+    distributor.ingestion-burst-size: "1000000"
 
 querier:
   replicas: 2
   extraArgs:
     usage-stats.enabled: false
-  extraEnvFrom:
-    - secretRef:
-        name: mimir-blocks
-    - secretRef:
-        name: mimir-blocks
 
 query_frontend:
   replicas: 1
@@ -98,14 +115,9 @@ query_scheduler:
     usage-stats.enabled: false
 
 ruler:
-  replicas: 0
+  replicas: 1
   extraArgs:
     usage-stats.enabled: false
-  extraEnvFrom:
-    - configMapRef:
-        name: mimir-ruler
-    - secretRef:
-        name: mimir-ruler
 
 ruler_querier:
   replicas: 1
@@ -129,11 +141,6 @@ compactor:
     compactor.block-upload-enabled: true
     compactor.block-ranges: 14400h
     compactor.block-upload-max-block-size-bytes: "15000000000"
-  extraEnvFrom:
-    - secretRef:
-        name: mimir-blocks
-    - secretRef:
-        name: mimir-blocks
 
 index-cache:
   replicas: 1
