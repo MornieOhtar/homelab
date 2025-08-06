@@ -1,5 +1,7 @@
 global:
   namespace: backend
+  serverTelemetry:
+    prometheusOperator: true
 
 injector:
   metrics:
@@ -15,6 +17,39 @@ server:
   volumeMounts:
     - mountPath: /vault/data
       name: vault-data
+  standalone:
+    config: |-
+      ui = true
+      
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+        # Enable unauthenticated metrics access (necessary for Prometheus Operator)
+        telemetry {
+          unauthenticated_metrics_access = "true"
+        }
+      }
+      storage "file" {
+        path = "/vault/data"
+      }
+      
+      # Example configuration for using auto-unseal, using Google Cloud KMS. The
+      # GKMS keys must already exist, and the cluster must have a service account
+      # that is authorized to access GCP KMS.
+      #seal "gcpckms" {
+      #   project     = "vault-helm-dev"
+      #   region      = "global"
+      #   key_ring    = "vault-helm-unseal-kr"
+      #   crypto_key  = "vault-helm-unseal-key"
+      #}
+      
+      # Example configuration for enabling Prometheus metrics in your config.
+      telemetry {
+        prometheus_retention_time = "24h"
+        disable_hostname = true
+      }
+      
 
 ui:
   enabled: true
@@ -22,3 +57,61 @@ ui:
 serverTelemetry:
   serviceMonitor:
     enabled: true
+  prometheusRules:
+    enabled: true
+    selectors:
+      release: prometheus-operator
+    rules:
+      - alert: VSO-vault-auth
+        annotations:
+          description: Authentication to Vault has failed
+        expr: |-
+          controller_resource_status{controller="vaultauth"} == 0
+        for: 10m
+        labels:
+          severity: critical
+      - alert: VSO-vault-connection
+        annotations:
+          description: Connection to Vault has failed
+        expr: |-
+          controller_resource_status{controller="vaultconnection"} == 0
+        for: 10m
+        labels:
+          severity: critical
+      - alert: VaultSealed
+        expr: vault_core_unsealed == 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: Vault sealed (instance {{ $labels.instance }})
+          description: "Vault instance is sealed on {{ $labels.cluster }}"
+      - alert: VaultTooManyPendingTokens
+        expr: avg(vault_token_create_count - vault_token_store_count) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Vault too many pending tokens (instance {{ $labels.instance }})
+          description: "Too many pending tokens {{ $labels.cluster }}: {{ $value | printf \"%.2f\"}}%\n  VALUE = {{ $value }}"
+      - alert: VaultTooManyInfinityTokens
+        expr: vault_token_count_by_ttl{creation_ttl="+Inf"} > 3
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Vault too many infinity tokens (instance {{ $labels.instance }})
+          description: "Too many infinity tokens {{ $labels.cluster }}: {{ $value | printf \"%.2f\"}}%\n  VALUE = {{ $value }}"
+      - alert: VaultClusterHealth
+        expr: sum(vault_core_active) / count(vault_core_active) <= 0.5
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: Vault cluster health (instance {{ $labels.instance }})
+          description: "Vault cluster is not healthy {{ $labels.cluster }}: {{ $value | printf \"%.2f\"}}%\n  VALUE = {{ $value }}"
+
+
+
+
+

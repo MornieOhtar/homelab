@@ -22,6 +22,8 @@ spec:
       osd_deep_scrub_interval: "2419200" # 1 month
       osd_deep_scrub_stride: "1048576" # 1MiB
       mon_max_pg_per_osd: "300"
+      osd_max_backfills: "3"
+      osd_mclock_override_recovery_settings: "true"
   # The path on the host where configuration files will be persisted. Must be specified. If there are multiple clusters, the directory must be unique for each cluster.
   # Important: if you reinstall the cluster, make sure you delete this directory from each host or else the mons will fail to start on the new cluster.
   # In Minikube, the '/data' directory is configured to persist across reboots. Use "/data/rook" in Minikube environment.
@@ -73,7 +75,7 @@ spec:
     # serve the dashboard using SSL
     ssl: true
     # The url of the Prometheus instance
-    prometheusEndpoint: http://prometheus-operated.operators:9090
+    prometheusEndpoint: http://prometheus-operated.monitoring:9090
     # Whether SSL should be verified if the Prometheus server is using https
     # Default is false
     #prometheusEndpointSSLVerify: false
@@ -306,6 +308,7 @@ spec:
       - name: "n002.homelab"
         config:
           metadataDevice: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH1T9HMLT-00005_S455NW0R131934"
+          databaseSizeMB: "200000" # 200GB
         devices:
           # System/fast drives - REQUIRES metadataDevice override
           - name: "/dev/disk/by-id/ata-SAMSUNG_MZ7L33T8HBLT-00A07_S6ERNG0W400181"
@@ -313,12 +316,26 @@ spec:
               osdsPerDevice: "1"
               deviceClass: "ssd"
               metadataDevice: ""
+          # Slow drives - NO metadataDevice override
+          - name: "/dev/disk/by-id/ata-ST24000NM000C-3WD103_ZXA0KXDA"
+            config:
+              osdsPerDevice: "1"
+              deviceClass: "hdd"
       - name: "nas001.<NODES_DOMAIN>"
+        config:
+          metadataDevice: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH1T9HMLT-00005_S455NC0R219093"
         devices:
-          - name: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH1T9HMLT-00005_S455NC0R219093"
+          # System/fast drives - REQUIRES metadataDevice override
+          - name: "/dev/disk/by-id/ata-SAMSUNG_MZ7LH3T8HMLT-00005_S456NY0M303290"
             config:
               osdsPerDevice: "1"
               deviceClass: "ssd"
+              metadataDevice: ""
+          # Slow drives - NO metadataDevice override
+          - name: "/dev/disk/by-id/ata-ST20000NM007D-3DJ103_ZVT5KCNG"
+            config:
+              osdsPerDevice: "1"
+              deviceClass: "hdd"
 
     # Whether to always schedule OSD pods on nodes declared explicitly in the "nodes" section, even if they are
     # temporarily not schedulable. If set to true, consider adding placement tolerations for unschedulable nodes.

@@ -34,6 +34,20 @@ spec:
       parameters:
         compression_mode:
           none
+    - name: media-ec21
+      application: ''
+      deviceClass: hdd
+      enableCrushUpdates: true
+      failureDomain: host
+      mirroring: {}
+      quotas: {}
+      statusCheck:
+        mirror: {}
+      erasureCoded:
+        codingChunks: 1
+        dataChunks: 2
+      parameters:
+        compression_mode: "none"
     - name: media-r1
       application: ''
       deviceClass: hdd
@@ -215,6 +229,36 @@ parameters:
   # Ceph pool into which the volume shall be created
   # Required for provisionVolume: "true"
   pool: rook-fs-media-r1
+  provisionVolume: "true"
+
+  # The secrets contain Ceph admin credentials. These are generated automatically by the operator
+  # in the same namespace as the cluster.
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+
+reclaimPolicy: Delete
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: rook-media-ec21
+provisioner: rook-ceph.cephfs.csi.ceph.com
+allowVolumeExpansion: true
+parameters:
+  # clusterID is the namespace where the rook cluster is running
+  # If you change this namespace, also change the namespace below where the secret namespaces are defined
+  clusterID: rook-ceph
+
+  # CephFS filesystem name into which the volume shall be created
+  fsName: rook-fs
+
+  # Ceph pool into which the volume shall be created
+  # Required for provisionVolume: "true"
+  pool: rook-fs-media-ec21
   provisionVolume: "true"
 
   # The secrets contain Ceph admin credentials. These are generated automatically by the operator

@@ -23,12 +23,12 @@ spec:
     schedule: '25 */1 * * *'
     failedJobsHistoryLimit: 2
     successfulJobsHistoryLimit: 0
-    promURL: http://prometheus-pushgateway.operators:9091
+    promURL: http://prometheus-pushgateway.monitoring:9091
   check:
     schedule: '@daily-random'
     failedJobsHistoryLimit: 2
     successfulJobsHistoryLimit: 0
-    promURL: http://prometheus-pushgateway.operators:9091
+    promURL: http://prometheus-pushgateway.monitoring:9091
   prune:
     schedule: '@daily-random'
     failedJobsHistoryLimit: 2

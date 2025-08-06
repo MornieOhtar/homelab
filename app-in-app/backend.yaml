@@ -1,9 +1,3 @@
-###################################################################################################
-#
-# Backend (generic, shared) applications, that are usually not used directly, but provide services
-# to other applications or to Kubernetes cluster itself
-#
-###################################################################################################
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -16,7 +10,6 @@ spec:
     targetRevision: HEAD
     path: backend
     directory:
-      recurse: false
       include: '*.yaml'
 
   destination:
@@ -24,14 +17,11 @@ spec:
     namespace: argocd
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
       - RespectIgnoreDifferences=true
-      - ApplyOutOfSyncOnly=true
     retry:
       limit: 5
       backoff:

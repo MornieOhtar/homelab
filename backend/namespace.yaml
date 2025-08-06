@@ -14,8 +14,6 @@ spec:
     namespace: backend
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground

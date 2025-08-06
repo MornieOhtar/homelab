@@ -6,7 +6,7 @@ spec:
   project: homelab
 
   sources:
-    - repoURL: https://github.com/MornieOhtar/homelab.git
+    - repoURL: ssh://git@gitea.dev-env:22/MornieOhtar/homelab-argocd.git
       targetRevision: HEAD
       ref: homelab
       path: 'backend/traefik'
@@ -15,7 +15,7 @@ spec:
         include: '*.yaml'
         exclude: 'values.yaml'
     - repoURL: https://traefik.github.io/charts
-      targetRevision: 36.0.0
+      targetRevision: 37.1.0
       chart: traefik
       helm:
         valueFiles:
@@ -26,14 +26,11 @@ spec:
     namespace: backend
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
       - RespectIgnoreDifferences=true
-      - ApplyOutOfSyncOnly=true
     retry:
       limit: 5
       backoff:
