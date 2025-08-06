@@ -9,7 +9,7 @@ spec:
     - repoURL: https://github.com/MornieOhtar/homelab.git
       targetRevision: HEAD
       path: backend/rook
-    - repoURL: https://gitea.dev-env/MornieOhtar/homelab-argocd.git
+    - repoURL: ssh://git@gitea.dev-env:22/MornieOhtar/homelab-argocd.git
       targetRevision: HEAD
       path: personal/s3
 

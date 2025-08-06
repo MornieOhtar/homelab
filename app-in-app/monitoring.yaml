@@ -1,27 +1,29 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: grafana-mimir-extra
+  name: monitoring
 spec:
   project: homelab
 
   source:
-    repoURL: https://github.com/MornieOhtar/homelab.git
+    repoURL: ssh://git@gitea.dev-env:22/MornieOhtar/homelab-argocd.git
     targetRevision: HEAD
-    path: backend/grafana-mimir-extra
+    path: monitoring
+    directory:
+      recurse: false
+      include: '*.yaml'
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: backend
+    namespace: argocd
 
   syncPolicy:
-    automated:
-      prune: true
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
       - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
     retry:
       limit: 5
       backoff:
